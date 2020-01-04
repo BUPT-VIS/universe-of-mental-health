@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>
+    <title>Circle</title>
+</head>
+
+<body>
+    <script>
+
+        // polygon array and number of verts
+        let poly = []
+        let n = 1//边数
+
+        // 振荡器
+        let chord = []
+        let root = 30
+        let major = [4, 5, 6]
+        let minor = [10, 12, 15]
+
+
+        let DataLoad = []; //全局数组
+        var datas = [];
+        //载入数据
+        function preload() {
+            data = loadJSON("2016.json");
+        }
+
+        //数据处理
+        function loadData() {
+            for (let i in data) {
+                let d = {};
+                d[i] = data[i];
+                DataLoad.push(d);
+            }
+            for (let i = 0; i < DataLoad.length; i++) {
+                var o = data[i];
+                datas[i] = new drawPerson(o);
+
+            }
+        }
+
+
+        // setup and draw functions ---
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            strokeWeight(30)
+            noFill()
+            cursor(HAND)
+            noStroke()
+            n++ // 添加额外的点以封闭多边形
+            loadData();
+            // initialize with major chord intervals
+            //以大和弦间隔初始化
+            for (let i = 0; i < chord.length; i++) {
+                chord[i].freq(major[i] * root)
+                chord[i].amp(0.0)
+                chord[i].stop()
+            }
+        }
+
+        function draw() {
+            // use default blend mode for background
+            blendMode(BLEND)
+            background(250, 200, 20)
+            let NumW = 20;
+            let NumH = 20;
+            let NumJ = 100;
+            for (let k = 0; k < n; k++) {
+                // populate regular polygon vertices given number of points n
+                //给定点数n填充规则多边形顶点
+                let a = {
+                    x: 100 * sin(map(k, 0, n - 1, 0, TAU)),
+                    y: 100 * cos(map(k, 0, n - 1, 0, TAU))
+                }
+                poly.push(a)
+            }
+
+            //矩阵坐标
+            for (var i = 0; i < datas.length; i++) {
+                let x = 200 + (i % NumW) * NumJ;
+                let y = 10 + parseInt(i / NumH) * NumJ;
+                datas[i].display(x, y);
+                //console.log(datas[i]);
+            }
+            // 失真振荡器
+            warpOsc();
+        }
+
+
+
+        function drawPerson(f) {
+
+            this.x = f.x * 20;
+            this.y = f.y * 20;
+            this.age = f.age / 2
+            // this.R = 100;
+
+            this.self_employed = f.self_employed;
+            this.mentalVSphysical = f.mentalVSphysical;
+            this.family_history = f.family_history;
+            //福利
+            this.health_benefits = f.health_benefits;
+            this.options = f.options;
+            this.discussed = f.discussed;
+            this.resources_seeking_help = f.resources_seeking_help;
+            //不好的影响
+            this.observed_negative = f.observed_negative;
+
+            //倾诉
+            this.employer_negative = f.employer_negative;
+            this.coworkers = f.coworkers;
+            this.supervisor = f.supervisor;
+            //过去的倾诉
+            this.previous_employers_negative = f.previous_employers_negative;
+            this.previous_coworkers = f.previous_coworkers;
+            this.Oldsupervisor = f.Oldsupervisor;
+
+            //心理疾病类型
+            this.medical_professional = f.medical_professional;
+            this.condition_PH1 = f.condition_PH1;
+            this.condition_PH2 = f.condition_PH2;
+            this.condition_PH3 = f.condition_PH3;
+            this.condition_PH4 = f.condition_PH4;
+            this.condition_PH5 = f.condition_PH5;
+
+            this.display = function (x, y) {
+
+
+                //fill(200,10,10);
+                // ellipse(x, y, 20, 20);
+
+                push();
+                translate(x, y);
+                //使用添加混合模式来分离颜色通道
+                blendMode(MULTIPLY);
+                //console.log(this.condition_PH1);
+
+                if (this.condition_PH1 = 'Mood Disorder (Depression, Bipolar Disorder, etc') {
+                    stroke(255, 0, 0);
+                    drawPoly(10, 1000);
+                }
+                if(condition_PH2 = 'Mood Disorder (Depression, Bipolar Disorder, etc'){
+                    stroke(0,150, 200);
+                    drawPoly(10, 1000);
+                }
+
+                // stroke(0, 255, 0);
+                // drawPoly(1200, 1500);
+                // stroke(0, 0, 255);
+                // drawPoly(2000, 1700);
+                pop();
+
+            }
+
+        }
+
+        // helper function implementations ---
+
+        function logMap(value, start1, stop1, start2, stop2) {
+            // based off of linear regression + existing p5.map function
+
+            start2 = log(start2)
+            stop2 = log(stop2)
+
+            return exp(start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1)))
+        }
+
+        function drawPoly(dx, dy) {
+            // draws polygon given vertices in the poly[] array, adds mouse bias using params
+
+            let g = 0
+            if (mouseIsPressed)
+                g = random(-2, 2)
+
+            beginShape()
+            for (let i = 0; i < n; i++) {
+                let bias = dist(mouseX, mouseY, poly[i].x, poly[i].y)
+                vertex(poly[i].x + dx / logMap(bias, windowWidth, 0, dx, 45) + g, poly[i].y + dy / logMap(bias, windowHeight, 0, dy, 45) + g)
+            }
+            endShape()
+        }
+
+        function warpOsc() {
+            // uses max dist to determine the frequency distortion
+
+            let bias = 0
+            for (let i = 0; i < n; i++)
+                bias = max(bias, dist(mouseX, mouseY, poly[i].x, poly[i].y))
+
+            for (let i = 0; i < chord.length; i++)
+                chord[i].freq(map(bias, windowWidth, 0, major[i], minor[i]) * root)
+        }
+
+        function mousePressed() {
+            // toggles synths on
+
+            for (let i = 0; i < chord.length; i++) {
+                chord[i].start()
+                chord[i].amp(0.3, 0.5)
+            }
+        }
+
+        function mouseReleased() {
+            // toggles synths off
+
+            for (let i = 0; i < chord.length; i++) {
+                chord[i].amp(0.0, 0.05)
+                chord[i].stop()
+            }
+        }
+    </script>
+
+</body>
+
+</html>
