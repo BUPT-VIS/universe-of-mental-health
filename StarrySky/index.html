@@ -1,14 +1,22 @@
-<!-- @format -->
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>
-  <title>test</title>
+  <meta charset="UTF-8">
+  <title>Untitled</title>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/addons/p5.sound.min.js"></script>
+
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    canvas {
+      vertical-align: top;
+    }
+  </style>
 </head>
 
 <body>
@@ -16,7 +24,7 @@
     let data = {}; //全局对象
     let bubbles = []; //全局数组
     var datas = [];
-    let CanvasSlider;
+    let CanvasSlider, SizeSlider;
 
     //载入JSON
     function preload() {
@@ -43,759 +51,225 @@
       noStroke();
       loadData();
       //更改画布大小
-      CanvasSlider = createSlider(30, 100, 50);
-      CanvasSlider.position(windowWidth / 2, windowHeight / 2 - 300);
-      slider.style('width', '80px');
-
+      CanvasSlider = createSlider(1, 500, 1);
+      CanvasSlider.position(windowWidth / 2 - 200, windowHeight - 100);
+      CanvasSlider.style('width', '300px');
+      SizeSlider = createSlider(0, windowWidth, windowWidth / 2 + 300);
+      SizeSlider.position(windowWidth / 2 - 200, windowHeight - 50);
+      SizeSlider.style('width', '300px');
     }
 
     function draw() {
+
       background(0);
       var t = millis() / 1000;
       var vul = CanvasSlider.value();
+      var Svul = SizeSlider.value();
+      push();
+      fill(255);
+      textSize(15);
+      text('放大', windowWidth / 2 + 120, windowHeight - 80);
+      text('位移', windowWidth / 2 + 120, windowHeight - 30);
+      pop();
 
-      for (var i = 0; i < datas.length; i++) {
-        //blendMode(LIGHTEST);
-
-        datas[i].display(t, i, vul);
-        datas[i].MouseOver();
-
+      for (let i = 0; i < datas.length; i++) {
+        datas[i].Classified(t, i, vul, Svul);
+        // datas[i].MouseOver(vul);
       }
 
     }
     function Bubble(f) {
 
+      //亮度计算
+
+      // 载入数据
+
+      this.age = f['What is your age?'];
+      this.gender = f['What is your gender?'];
+      this.country = f["What country do you work in?"];
+      this.company = f["Is your employer primarily a tech company/organization?"];
+      this.TechRole = f["Is your primary role within your company related to tech/IT?"];
+      //个体户
+      this.self_employed = f["Are you self-employed?"];
+      //个体户是不是之前有雇主
+
+      this.family_history = f["Do you have a family history of mental illness?"];
+      //公司环境-提供福利
+      this.health_benefits = f["Does your employer provide mental health benefits as part of healthcare coverage?"];
+      this.options = f["Do you know the options for mental health care available under your employer-provided coverage?"];
+      this.discussed = f["Has your employer ever formally discussed mental health (for example, as part of a wellness campaign or other official communication)?"];
+      this.resources_seeking_help = f["Does your employer offer resources to learn more about mental health concerns and options for seeking help?"];
+
+      //公司环境-提供匿名保护
+      this.anonymity = f["Is your anonymity protected if you choose to take advantage of mental health or substance abuse treatment resources provided by your employer?"];
+      //公司环境-请假
+      this.leave = f["If a mental health issue prompted you to request a medical leave from work, asking for that leave would be:"];
+      //不好的影响
+      this.observed_negative = f.observed_negative;
+
+      //倾诉
+      this.employer_negative = f["Do you think that discussing a mental health disorder with your employer would have negative consequences?"];
+      this.coworkers = f["Would you feel comfortable discussing a mental health disorder with your coworkers?"];
+      this.supervisor = f["Would you feel comfortable discussing a mental health disorder with your direct supervisor(s)?"];
+      //老板是否重视心理疾病
+      this.mentalVSphysical = f["Do you feel that your employer takes mental health as seriously as physical health?"];
+
+      //过去的雇主
+      this.preEmployers = f["Do you have previous employers?"];
+      //过去的公司环境（福利、匿名保护、请假和负面情况）
+      this.preHealth_benefits = f["Have your previous employers provided mental health benefits?"];
+      this.preOptions = f["Were you aware of the options for mental health care provided by your previous employers?"];
+      this.preDiscussed = f["Did your previous employers ever formally discuss mental health (as part of a wellness campaign or other official communication)?"];
+      this.preResources_seeking_help = f["Did your previous employers provide resources to learn more about mental health issues and how to seek help?"];
+      //过去的匿名保护
+      this.preAnonymity = f["Was your anonymity protected if you chose to take advantage of mental health or substance abuse treatment resources with previous employers?"];
+      //过去的倾诉
+      this.previous_employers_negative = f["Do you think that discussing a mental health disorder with previous employers would have negative consequences?"];
+      this.previous_coworkers = f["Would you have been willing to discuss a mental health issue with your previous co-workers?"];
+      this.Oldsupervisor = f["Would you have been willing to discuss a mental health issue with your direct supervisor(s)?"];
+
+      //潜在雇主-面试会不会提起心理问题
+      this.potential_employerPH = f["Would you be willing to bring up a physical health issue with a potential employer in an interview?"];
+      this.potential_employerMT = f["Would you bring up a mental health issue with a potential employer in an interview?"];
+      this.WhyPH = f["Why or why not?"];
+      this.WhyMT = f["Why or why not?__1"];
+
+      //会影响以后找工作
+      this.hurt_career = f["Do you feel that being identified as a person with a mental health issue would hurt your career?"];
+      //担心公司同事歧视
+      this.team_negative = f["Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?"];
+      //不愿意倾诉
+      this.less_reveal = f["Have your observations of how another individual who discussed a mental health disorder made you less likely to reveal a mental health issue yourself in your current workplace?"];
+
+      //心理疾病类型
+      this.medical_professional = f["Have you been diagnosed with a mental health condition by a medical professional?"];
+      this.condition_PH = f["If so, what condition(s) were you diagnosed with?"];
+
+      //工作岗位
+      this.work_position = f["Which of the following best describes your work position?"];
 
       //设置位置布局
       this.x = f.x;
       this.y = f.y;
       var size = 10;//星星大小
-      var c;//颜色
-      var a = TWO_PI / 5;//角度1
-      var b = TWO_PI / 10;//角度2
-      var R = 5;//五角布局的半径
-      var dy = R * cos(a), dx = R * sin(a);//位置偏移量
-      var dy1 = R * cos(b), dx1 = R * sin(b);
-      //亮度计算
-      var B = 10;
-      var Bcount = 0;
+      var R;//布局的半径
 
-      //个人信息
-      this.age = f.age;
-      this.gender = f.gender;
-      this.country = f.country;
-      //数据传递
-      this.self_employed = f.self_employed;
-      this.mentalVSphysical = f.mentalVSphysical;
-      this.family_history = f.family_history;
-      //福利
-      this.health_benefits = f.health_benefits;
-      this.options = f.options;
-      this.discussed = f.discussed;
-      this.resources_seeking_help = f.resources_seeking_help;
-      //不好的影响
-      this.observed_negative = f.observed_negative;
-      //会影响以后找工作
-      this.hurt_career = f.hurt_career;
 
-      //倾诉
-      this.employer_negative = f.employer_negative;
-      this.coworkers = f.coworkers;
-      this.supervisor = f.supervisor;
-      //过去的倾诉
-      this.previous_employers_negative = f.previous_employers_negative;
-      this.previous_coworkers = f.previous_coworkers;
-      this.Oldsupervisor = f.Oldsupervisor;
-      //心理疾病类型
-      this.medical_professional = f.medical_professional;
-      this.condition_PH1 = f.condition_PH1;
-      this.condition_PH2 = f.condition_PH2;
-      this.condition_PH3 = f.condition_PH3;
-      this.condition_PH4 = f.condition_PH4;
-      this.condition_PH5 = f.condition_PH5;
-      //工作岗位
-      this.work_position1 = f.work_position1;
-      this.work_position2 = f.work_position2;
-      this.work_position3 = f.work_position3;
-      this.work_position4 = f.work_position4;
 
       this.display = function (t, flicker, v) {
+        var CanX = this.x * v;
+        var CanY = this.y * v;
         push();
-        translate(windowWidth / 2, windowHeight / 2);
-        if (this.condition_PH1 != "") {
-          B = 10;
-          if (this.condition_PH2 != "") {
-            B = 50; size = size * 1.001;
-            if (this.condition_PH3 != "") {
-              B = 60; size = size * 1.01;
-              if (this.condition_PH4 != "") {
-                B = 75; size = size * 1;
-                if (this.condition_PH5 != "") {
-                  B = 100; size = size * 3;
-                }
-              }
-            }
-          }
-        }
-
-        CanX = this.x * v;
-        CanY = this.y * v;
+        // translate(windowWidth / 2, windowHeight / 2);
         //认为疾病会对自己工作带来负面影响 动效：闪烁频率快
-        if (this.hurt_career == "Yes, it has") {
-
-          size = size * 5 * sin(t * 3.5 + 0.1 * flicker);
-        } if (this.hurt_career == "Yes, I think it would") {
-
-          size = size * 2.5 * sin(t * 1.5 + 0.1 * flicker);
-        } if (this.hurt_career == "Maybe") {
-
-          size = size * 1.25 * sin(t * 1 + 0.1 * flicker);
-        } if (this.hurt_career == "No, I don't think it would") {
-
-          size = size * 1 * sin(t * 0.5 + 0.1 * flicker);
-        }
+        // if (this.hurt_career == "Yes, it has") {
+        //   size = size * 5 * sin(t * 3.5 + 0.1 * flicker);
+        // } if (this.hurt_career == "Yes, I think it would") {
+        //   size = size * 2.5 * sin(t * 1.5 + 0.1 * flicker);
+        // } if (this.hurt_career == "Maybe") {
+        //   size = size * 1.25 * sin(t * 1 + 0.1 * flicker);
+        // } if (this.hurt_career == "No, I don't think it would") {
+        //   size = size * 1 * sin(t * 0.5 + 0.1 * flicker);
+        // }
 
         //认为雇主重视心理健康问题:星环
-        if (this.mentalVSphysical == "Yes") {
-          push();
-          stroke(255, B * 5);
-          strokeWeight(1);
-          noFill();
-          ellipse(CanX, CanY, size * 5, size * 5);
-          pop();
-        }
+        // if (this.mentalVSphysical == "Yes") {
+        //   push();
+        //   stroke(255, B);
+        //   strokeWeight(1);
+        //   noFill();
+        //   ellipse(CanX, CanY, size * 2, size * 2);
+        //   pop();
+        // }
+        var Conditions = split(this.condition_PH, '|')
+        for (let i = 0; i <= Conditions.length; i++) {
+          // var B = Conditions.length * 20;
+          // console.log(Conditions.length);
+          if (Conditions.length >= 5) {
+            B = 200; R = v / 5;
+          } if (Conditions.length == 4) {
+            B = 90; R = v / 10;
+          } if (Conditions.length == 3) {
+            B = 80; R = v / 15;
+          } if (Conditions.length == 2) {
+            B = 75; R = v / 18;
+          } if (Conditions.length == 1) {
+            B = 70;
+          }
+          var a = TWO_PI / Conditions.length * i;//角度v
 
-        //疾病类型：颜色叠加  
-        var CY = CanY + R;
-        // 疾病类型1：情绪障碍(抑郁、躁郁症等)
-        if (this.condition_PH1 == 'Mood Disorder (Depression, Bipolar Disorder, etc)') {
+          var dy = R * cos(a), dx = R * sin(a);//位置偏移量
           push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(1, 100, B);
-          fill(c);
-          ellipse(CanX, CY, size, size);
-          pop();
-        }
-        // 疾病类型2：焦虑障碍(广泛性、社会性、恐惧症等)
-        if (this.condition_PH1 == 'Anxiety Disorder (Generalized, Social, Phobia, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(10, 100, B);
-          fill(c);
-          ellipse(CanX, CY, size, size);
-          pop();
-        }
-        // 疾病类型3：注意缺陷多动障碍
-        if (this.condition_PH1 == 'Attention Deficit Hyperactivity Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(19, 100, B);
-          fill(c);
-          ellipse(CanX, CY, size, size);
-          pop();
-        }
-        // 疾病类型4：创伤后压力心理障碍症
-        if (this.condition_PH1 == 'Post-traumatic Stress Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(28, 100, B);
-          fill(c);
-          ellipse(CanX, CY, size, size);
-          pop();
-        }
-        // 疾病类型5：强迫症
-        if (this.condition_PH1 == 'Obsessive-Compulsive Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(37, 100, B);
-          fill(c);
-          ellipse(CanX, CY, size, size);
-          pop();
-        }
-        // 疾病类型6：物质使用障碍     
-        if (this.condition_PH1 == 'Substance Use Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(46, 100, B);
-          fill(c);
-          ellipse(CanX, CY, size, size);
-          pop();
-        }
-        // 疾病类型7：人格障碍(边缘型、反社会、偏执等)     
-        if (this.condition_PH1 == 'Personality Disorder (Borderline, Antisocial, Paranoid, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(55, 100, B);
-          fill(c);
-          ellipse(CanX, CY, size, size);
-          pop();
-        }
-        // 疾病类型8：应激反应综合症    
-        if (this.condition_PH1 == 'Stress Response Syndromes') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(64, 100, B);
-          fill(c);
-          ellipse(CanX, CY, size, size);
-          pop();
-        }
-        // 疾病类型9：成瘾症     
-        if (this.condition_PH1 == 'Addictive Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(73, 100, B);
-          fill(c);
-          ellipse(CanX, CY, size, size);
-          pop();
-        }
-        // 疾病类型10：进食障碍(厌食、贪食等)    
-        if (this.condition_PH1 == 'Eating Disorder (Anorexia, Bulimia, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(82, 100, B);
-          fill(c);
-          ellipse(CanX, CY, size, size);
-          pop();
-        }
-        // 疾病类型11：解离性障碍    
-        if (this.condition_PH1 == 'Dissociative Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(91, 100, B);
-          fill(c);
-          ellipse(CanX, CY, size, size);
-          pop();
-        }
-        // 疾病类型12：精神疾病(精神分裂症、分裂情感性精神分裂症等)     
-        if (this.condition_PH1 == 'Psychotic Disorder (Schizophrenia, Schizoaffective, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(100, 100, B);
-          fill(c);
-          ellipse(CanX, CY, size, size);
-          pop();
-        }
 
 
-        var CX2 = CanX + dx;
-        var CY2 = CanY + dy;
-        // 疾病类型1：情绪障碍(抑郁、躁郁症等)
-        if (this.condition_PH2 == 'Mood Disorder (Depression, Bipolar Disorder, etc)') {
-          push();
+          colorMode(HSB, 360, 100, 100, 100);
+          fill(240, 1, B, B / 10);
           blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(1, 100, B);
-          fill(c);
-          ellipse(CX2, CY2, size, size);
-          pop();
-        }
-        // 疾病类型2：焦虑障碍(广泛性、社会性、恐惧症等)
-        if (this.condition_PH2 == 'Anxiety Disorder (Generalized, Social, Phobia, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(10, 100, B);
-          fill(c);
-          ellipse(CX2, CY2, size, size);
-          pop();
-        }
-        // 疾病类型3：注意缺陷多动障碍
-        if (this.condition_PH2 == 'Attention Deficit Hyperactivity Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(19, 100, B);
-          fill(c);
-          ellipse(CX2, CY2, size, size);
-          pop();
-        }
-        // 疾病类型4：创伤后压力心理障碍症
-        if (this.condition_PH2 == 'Post-traumatic Stress Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(28, 100, B);
-          fill(c);
-          ellipse(CX2, CY2, size, size);
-          pop();
-        }
-        // 疾病类型5：强迫症
-        if (this.condition_PH2 == 'Obsessive-Compulsive Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(37, 100, B);
-          fill(c);
-          ellipse(CX2, CY2, size, size);
-          pop();
-        }
-        // 疾病类型6：物质使用障碍     
-        if (this.condition_PH2 == 'Substance Use Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(46, 100, B);
-          fill(c);
-          ellipse(CX2, CY2, size, size);
-          pop();
-        }
-        // 疾病类型7：人格障碍(边缘型、反社会、偏执等)     
-        if (this.condition_PH2 == 'Personality Disorder (Borderline, Antisocial, Paranoid, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(55, 100, B);
-          fill(c);
-          ellipse(CX2, CY2, size, size);
-          pop();
-        }
-        // 疾病类型8：应激反应综合症    
-        if (this.condition_PH2 == 'Stress Response Syndromes') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(64, 100, B);
-          fill(c);
-          ellipse(CX2, CY2, size, size);
-          pop();
-        }
-        // 疾病类型9：成瘾症     
-        if (this.condition_PH2 == 'Addictive Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(73, 100, B);
-          fill(c);
-          ellipse(CX2, CY2, size, size);
-          pop();
-        }
-        // 疾病类型10：进食障碍(厌食、贪食等)    
-        if (this.condition_PH2 == 'Eating Disorder (Anorexia, Bulimia, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(82, 100, B);
-          fill(c);
-          ellipse(CX2, CY2, size, size);
-          pop();
-        }
-        // 疾病类型11：解离性障碍    
-        if (this.condition_PH2 == 'Dissociative Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(91, 100, B);
-          fill(c);
-          ellipse(CX2, CY2, size, size);
-          pop();
-        }
-        // 疾病类型12：精神疾病(精神分裂症、分裂情感性精神分裂症等)     
-        if (this.condition_PH2 == 'Psychotic Disorder (Schizophrenia, Schizoaffective, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(100, 100, B);
-          fill(c);
-          ellipse(CX2, CY2, size, size);
-          pop();
-        } B
+          //疾病类型1：情绪障碍(抑郁、躁郁症等) 红色
+          if (Conditions[i] == 'Mood Disorder (Depression, Bipolar Disorder, etc)') {
+            fill(5, 100, B);
+          }
+          // 疾病类型2：焦虑障碍(广泛性、社会性、恐惧症等) 橙色
+          if (Conditions[i] == 'Anxiety Disorder (Generalized, Social, Phobia, etc)') {
+            fill(30, 100, B);
+          }
+          // 疾病类型3：注意缺陷多动障碍 黄色
+          if (Conditions[i] == 'Attention Deficit Hyperactivity Disorder') {
+            fill(60, 100, B);
+          }
+          // 疾病类型4：创伤后压力心理障碍症  草绿
+          if (Conditions[i] == 'Post-traumatic Stress Disorder') {
+            fill(90, 100, B);
+          }
+          // 疾病类型5：强迫症   青
+          if (Conditions[i] == 'Obsessive-Compulsive Disorder') {
+            fill(170, 100, B);
+          }
+          // 疾病类型6：物质使用障碍   蓝 
+          if (Conditions[i] == 'Substance Use Disorder') {
+            fill(240,100,B);
+          }
+          // 疾病类型7：人格障碍(边缘型、反社会、偏执等)     
+          if (Conditions[i] == 'Personality Disorder (Borderline, Antisocial, Paranoid, etc)') {
+            //fill(55,100,B);
+          }
+          // 疾病类型8：应激反应综合症    
+          if (Conditions[i] == 'Stress Response Syndromes') {
 
-        var CX3 = CanX - dx;
-        var CY3 = CanY + dy;
-        // 疾病类型1：情绪障碍(抑郁、躁郁症等)
-        if (this.condition_PH3 == 'Mood Disorder (Depression, Bipolar Disorder, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(1, 100, B);
-          fill(c);
-          ellipse(CX3, CY3, size, size);
-          pop();
-        }
-        // 疾病类型2：焦虑障碍(广泛性、社会性、恐惧症等)
-        if (this.condition_PH3 == 'Anxiety Disorder (Generalized, Social, Phobia, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(10, 100, B);
-          fill(c);
-          ellipse(CX3, CY3, size, size);
-          pop();
-        }
-        // 疾病类型3：注意缺陷多动障碍
-        if (this.condition_PH3 == 'Attention Deficit Hyperactivity Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(19, 100, B);
-          fill(c);
-          ellipse(CX3, CY3, size, size);
-          pop();
-        }
-        // 疾病类型4：创伤后压力心理障碍症
-        if (this.condition_PH3 == 'Post-traumatic Stress Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(28, 100, B);
-          fill(c);
-          ellipse(CX3, CY3, size, size);
-          pop();
-        }
-        // 疾病类型5：强迫症
-        if (this.condition_PH3 == 'Obsessive-Compulsive Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(37, 100, B);
-          fill(c);
-          ellipse(CX3, CY3, size, size);
-          pop();
-        }
-        // 疾病类型6：物质使用障碍     
-        if (this.condition_PH3 == 'Substance Use Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(46, 100, B);
-          fill(c);
-          ellipse(CX3, CY3, size, size);
-          pop();
-        }
-        // 疾病类型7：人格障碍(边缘型、反社会、偏执等)     
-        if (this.condition_PH3 == 'Personality Disorder (Borderline, Antisocial, Paranoid, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(55, 100, B);
-          fill(c);
-          ellipse(CX3, CY3, size, size);
-          pop();
-        }
-        // 疾病类型8：应激反应综合症    
-        if (this.condition_PH3 == 'Stress Response Syndromes') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(64, 100, B);
-          fill(c);
-          ellipse(CX3, CY3, size, size);
-          pop();
-        }
-        // 疾病类型9：成瘾症     
-        if (this.condition_PH3 == 'Addictive Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(73, 100, B);
-          fill(c);
-          ellipse(CX3, CY3, size, size);
-          pop();
-        }
-        // 疾病类型10：进食障碍(厌食、贪食等)    
-        if (this.condition_PH3 == 'Eating Disorder (Anorexia, Bulimia, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(82, 100, B);
-          fill(c);
-          ellipse(CX3, CY3, size, size);
-          pop();
-        }
-        // 疾病类型11：解离性障碍    
-        if (this.condition_PH3 == 'Dissociative Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(91, 100, B);
-          fill(c);
-          ellipse(CX3, CY3, size, size);
-          pop();
-        }
-        // 疾病类型12：精神疾病(精神分裂症、分裂情感性精神分裂症等)     
-        if (this.condition_PH2 == 'Psychotic Disorder (Schizophrenia, Schizoaffective, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(100, 100, B);
-          fill(c);
-          ellipse(CX3, CY3, size, size);
-          pop();
-        }
+            //fill(64,100,B);
+          }
+          // 疾病类型9：成瘾症     
+          if (Conditions[i] == 'Addictive Disorder') {
+            // fill(73,100,B);
+          }
+          // 疾病类型10：进食障碍(厌食、贪食等)    
+          if (Conditions[i] == 'Eating Disorder (Anorexia, Bulimia, etc)') {
 
-
-        var CX4 = CanX + dx1;
-        var CY4 = CanY - dy1;
-        // 疾病类型1：情绪障碍(抑郁、躁郁症等)
-        if (this.condition_PH3 == 'Mood Disorder (Depression, Bipolar Disorder, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(1, 100, B);
-          fill(c);
-          ellipse(CX4, CY4, size, size);
+            //fill(82,100,B);
+          }
+          // 疾病类型11：解离性障碍    
+          if (Conditions[i] == 'Dissociative Disorder') {
+            // fill(91, 100, B);
+          }
+          // 疾病类型12：精神疾病(精神分裂症、分裂情感性精神分裂症等)     
+          if (Conditions[i] == 'Psychotic Disorder (Schizophrenia, Schizoaffective, etc)') {
+            // fill(90,100,B);
+          }
+          ellipse(CanX + dx, CanY + dy, size, size);
           pop();
         }
-        // 疾病类型2：焦虑障碍(广泛性、社会性、恐惧症等)
-        if (this.condition_PH3 == 'Anxiety Disorder (Generalized, Social, Phobia, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(10, 100, B);
-          fill(c);
-          ellipse(CX4, CY4, size, size);
-          pop();
-        }
-        // 疾病类型3：注意缺陷多动障碍
-        if (this.condition_PH3 == 'Attention Deficit Hyperactivity Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(19, 100, B);
-          fill(c);
-          ellipse(CX4, CY4, size, size);
-          pop();
-        }
-        // 疾病类型4：创伤后压力心理障碍症
-        if (this.condition_PH3 == 'Post-traumatic Stress Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(28, 100, B);
-          fill(c);
-          ellipse(CX4, CY4, size, size);
-          pop();
-        }
-        // 疾病类型5：强迫症
-        if (this.condition_PH3 == 'Obsessive-Compulsive Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(37, 100, B);
-          fill(c);
-          ellipse(CX4, CY4, size, size);
-          pop();
-        }
-        // 疾病类型6：物质使用障碍     
-        if (this.condition_PH3 == 'Substance Use Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(46, 100, B);
-          fill(c);
-          ellipse(CX4, CY4, size, size);
-          pop();
-        }
-        // 疾病类型7：人格障碍(边缘型、反社会、偏执等)     
-        if (this.condition_PH3 == 'Personality Disorder (Borderline, Antisocial, Paranoid, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(55, 100, B);
-          fill(c);
-          ellipse(CX4, CY4, size, size);
-          pop();
-        }
-        // 疾病类型8：应激反应综合症    
-        if (this.condition_PH3 == 'Stress Response Syndromes') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(64, 100, B);
-          fill(c);
-          ellipse(CX4, CY4, size, size);
-          pop();
-        }
-        // 疾病类型9：成瘾症     
-        if (this.condition_PH3 == 'Addictive Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(73, 100, B);
-          fill(c);
-          ellipse(CX4, CY4, size, size);
-          pop();
-        }
-        // 疾病类型10：进食障碍(厌食、贪食等)    
-        if (this.condition_PH3 == 'Eating Disorder (Anorexia, Bulimia, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(82, 100, B);
-          fill(c);
-          ellipse(CX4, CY4, size, size);
-          pop();
-        }
-        // 疾病类型11：解离性障碍    
-        if (this.condition_PH3 == 'Dissociative Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(91, 100, B);
-          fill(c);
-          ellipse(CX4, CY4, size, size);
-          pop();
-        }
-        // 疾病类型12：精神疾病(精神分裂症、分裂情感性精神分裂症等)     
-        if (this.condition_PH2 == 'Psychotic Disorder (Schizophrenia, Schizoaffective, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(100, 100, B);
-          fill(c);
-          ellipse(CX4, CY4, size, size);
-          pop();
-        }
-
-        var CX5 = CanX - dx1;
-        var CY5 = CanY - dy1;
-        // 疾病类型1：情绪障碍(抑郁、躁郁症等)
-        if (this.condition_PH3 == 'Mood Disorder (Depression, Bipolar Disorder, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(1, 100, B);
-          fill(c);
-          ellipse(CX5, CY5, size, size);
-          pop();
-        }
-        // 疾病类型2：焦虑障碍(广泛性、社会性、恐惧症等)
-        if (this.condition_PH3 == 'Anxiety Disorder (Generalized, Social, Phobia, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(10, 100, B);
-          fill(c);
-          ellipse(CX5, CY5, size, size);
-          pop();
-        }
-        // 疾病类型3：注意缺陷多动障碍
-        if (this.condition_PH3 == 'Attention Deficit Hyperactivity Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(19, 100, B);
-          fill(c);
-          ellipse(CX5, CY5, size, size);
-          pop();
-        }
-        // 疾病类型4：创伤后压力心理障碍症
-        if (this.condition_PH3 == 'Post-traumatic Stress Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(28, 100, B);
-          fill(c);
-          ellipse(CX5, CY5, size, size);
-          pop();
-        }
-        // 疾病类型5：强迫症
-        if (this.condition_PH3 == 'Obsessive-Compulsive Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(37, 100, B);
-          fill(c);
-          ellipse(CX5, CY5, size, size);
-          pop();
-        }
-        // 疾病类型6：物质使用障碍     
-        if (this.condition_PH3 == 'Substance Use Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(46, 100, B);
-          fill(c);
-          ellipse(CX5, CY5, size, size);
-          pop();
-        }
-        // 疾病类型7：人格障碍(边缘型、反社会、偏执等)     
-        if (this.condition_PH3 == 'Personality Disorder (Borderline, Antisocial, Paranoid, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(55, 100, B);
-          fill(c);
-          ellipse(CX5, CY5, size, size);
-          pop();
-        }
-        // 疾病类型8：应激反应综合症    
-        if (this.condition_PH3 == 'Stress Response Syndromes') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(64, 100, B);
-          fill(c);
-          ellipse(CX5, CY5, size, size);
-          pop();
-        }
-        // 疾病类型9：成瘾症     
-        if (this.condition_PH3 == 'Addictive Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(73, 100, B);
-          fill(c);
-          ellipse(CX5, CY5, size, size);
-          pop();
-        }
-        // 疾病类型10：进食障碍(厌食、贪食等)    
-        if (this.condition_PH3 == 'Eating Disorder (Anorexia, Bulimia, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(82, 100, B);
-          fill(c);
-          ellipse(CX5, CY5, size, size);
-          pop();
-        }
-        // 疾病类型11：解离性障碍    
-        if (this.condition_PH3 == 'Dissociative Disorder') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(91, 100, B);
-          fill(c);
-          ellipse(CX5, CY5, size, size);
-          pop();
-        }
-        // 疾病类型12：精神疾病(精神分裂症、分裂情感性精神分裂症等)     
-        if (this.condition_PH2 == 'Psychotic Disorder (Schizophrenia, Schizoaffective, etc)') {
-          push();
-          blendMode(LIGHTEST);
-          colorMode(HSB, 100);
-          c = color(100, 100, B);
-          fill(c);
-          ellipse(CX5, CY5, size, size);
-          pop();
-        }
-
-        else {
-          c = color(255, B * 10);
-        }
-
-        fill(c);
-        ellipse(CanX, CanY, size, size);
-        size = 3;//闪烁归零
-
+        s = map(v, 1, 100, 1, 8);
+        size = (B / 50) * s;//闪烁归零
+        // fill();
+        // ellipse(CanX, CanY, size / 4, size / 4);
         pop();
       }
 
-      this.MouseOver = function () {
-        let d = dist(mouseX, mouseY, CanX + windowWidth / 2, CanY + windowHeight / 2);
+      this.MouseOver = function (v) {
+        var CanX = this.x * v;
+        var CanY = this.y * v;
 
+        let d = dist(mouseX, mouseY, CanX + windowWidth / 2, CanY + windowHeight / 2);
         var dPos = 50;//行间距
         var yPos = 200;
         var xPos = 300;
@@ -824,7 +298,7 @@
           //textSize(50);
 
 
-          if (this.condition_PH1 != "") {
+          if (Conditions[0] != "") {
             push();
             textSize(40);
             text("Not Healthy", xPos, yPos - dPos);
@@ -851,7 +325,6 @@
           push();
           stroke(255);
           noFill();
-          //rect(xPos - dPos, yPos - dPos * 2, dPos * 15, YPos_MC - yPos + dPos * 3)
           pop();
 
 
@@ -860,11 +333,77 @@
 
       }
 
+      //人群分类
+      this.Classified = function (t_, f_, v_, NS) {
+        var t = t_;
+        var flicker = f_;
+        var v = v_;
+        var CanX = this.x * v;
+        var CanY = this.y * v;
+        var inter = 150;//间隔
+        // s = map(v, 1, 100, 1, 5);
+        // var R = 5 * s;//闪烁归零
+        //R = 5;
+        push();
+        translate(0, windowHeight / 2);
+        if (this.self_employed == 1) {//老板
+
+          if (this.preEmployers == 1) {//辞职单干的老板
+            push();
+            translate(NS, this.y);
+            this.display(t, flicker, v);
+            // fill(255, 0, 0);
+            // rect(CanX, CanY, 2 * s, 2 * s);
+            pop();
+          }
+          if (this.preEmployers == 0) {//单纯的老板
+            push();
+            translate(NS - inter, this.y);
+            this.display(t, flicker, v);
+            pop();
+          }
+
+
+        }
+        if (this.self_employed == 0) {
+
+          if (this.company == 1) {//科技公司
+            if (this.preEmployers == 1) {//辞职过的科技公司职员
+              push();
+              translate(NS - inter * 2, this.y);
+              this.display(t, flicker, v);
+              // fill(0, 255, 0);
+              // rect(CanX, CanY, 2 * s, 2 * s);
+              pop();
+            }
+            if (this.preEmployers == 0) {//单纯的科技公司职员
+              push();
+              translate(NS - inter * 3, this.y);
+              this.display(t, flicker, v);
+              pop();
+            }
+
+          }
+          if (this.company == 0) {//非科技公司的科技岗位
+            if (this.TechRole == 1) {
+              if (this.preEmployers == 1) {//辞职过的科技岗员工
+                push();
+                translate(NS - inter * 4, this.y);
+                this.display(t, flicker, v);
+                pop();
+              }
+              if (this.preEmployers == 0) {//没辞职过的科技岗职员
+                push();
+                translate(NS - inter * 5, this.y);
+                this.display(t, flicker, v);
+                pop();
+              }
+            }
+          }
+        }
+        pop();
+      }
     }
-
-
-
-
 
   </script>
 </body>
