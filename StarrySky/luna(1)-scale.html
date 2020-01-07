@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FUCK</title>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.min.js"></script>
+<script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+
+</head>
+<body>
+<script>
+
+let data = {}, posData = [], wheelScale = 1;
+
+function preload() {
+    data = loadJSON("2016(1).json");
+}
+
+function setup() {
+    console.log(typeof(data), data);
+
+    var xScale = windowWidth/(170*2);
+    var yScale = windowHeight/(170*2);
+
+    // process data
+    for (let i in data) {
+        //if (i < 10) {
+            //console.log(data[i].x, data[i].y);
+            posData.push({
+                // 画面中心坐标 +- 比例尺
+                'x': windowWidth/2 + xScale*data[i].x,
+                'y': windowHeight/2 + yScale*data[i].y,
+                'ox': 0,
+                'oy': 0
+            })
+        //}        
+    }
+    //console.log(posData);
+
+    // create window
+    createCanvas(windowWidth, windowHeight);
+}
+
+function draw() {
+    background(0,0,0);
+    posData.forEach((pos) => {
+        push();
+        fill('yellow');
+        ellipse(pos.x, pos.y, 6, 6);
+        pop();
+    })
+}
+
+function mousePressed() {
+    drag = true;
+    // 偏移量 = 鼠标位置 - 元素位置
+    posData.forEach((pos, i) => {
+        pos.ox = mouseX - pos.x;
+        pos.oy = mouseY - pos.y;
+    })
+}
+
+function mouseDragged() {
+    if (drag) {
+        // 元素位置 = 鼠标位置 - 偏移量
+        posData.forEach((pos, i) => {
+            pos.x = mouseX - pos.ox;
+            pos.y = mouseY - pos.oy;
+        })
+    }
+}
+
+function mouseReleased() {
+    drag = false;
+}
+
+// 滚轮改变缩放没有过渡效果，但触控板连续变化
+function mouseWheel(event) {
+    // delta = 125 滚动一格的默认高度值，wheelScale 缩放比率
+    if (event.delta < 0) {
+        wheelScale = Math.abs(event.delta)/100; // 上滚放大
+    } else {
+        wheelScale = 100/Math.abs(event.delta); // 下滚缩小 取倒数
+    }
+    console.log(event.delta, wheelScale);
+    
+    posData.forEach((pos, i) => {
+        // 偏移量 = 缩放比率 * (元素位置 - 画面中心)
+        pos.ox = wheelScale * (pos.x - windowWidth/2);
+        pos.oy = wheelScale * (pos.y - windowHeight/2);
+
+        // 画面中心 + 偏移量 = 元素位置
+        pos.x = windowWidth/2 + pos.ox;
+        pos.y = windowHeight/2 + pos.oy;
+    })
+
+    // 禁用浏览器默认滚动
+    return false;
+}
+</script>
+</body>
+</html>

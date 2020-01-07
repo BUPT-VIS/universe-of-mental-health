@@ -1,30 +1,327 @@
+<!-- @format -->
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Untitled</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script> -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.min.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/addons/p5.sound.min.js"></script>
-
+  <script src="/p5.collide2d.min.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <!-- <script src="p5.dom.js"></script> -->
+  <title>test</title>
   <style>
-    body {
-      padding: 0;
-      margin: 0;
+
+    #defaultCanvas0 {
+      position: absolute;
+      /* top: 800px; */
     }
 
-    canvas {
-      vertical-align: top;
+    .popupBox {
+      background-color: #ffffff;
+      box-shadow: 0 0 2px 2px #999;
+      padding: 5px;
+      position: fixed;
+      top: 800px;
+      right: 200px;
+      width: 800px;
+      /* height: 200px; */
     }
+    #selectBenefits {
+      position: fixed;
+      top: 220px;
+      right: 200px;
+    }
+
+    #selectOptions {
+      position: fixed;
+      top: 280px;
+      right: 200px;
+    }
+
+    #selectWellness {
+      position: fixed;
+      top: 340px;
+      right: 200px;
+    }
+
+    #selectSeekHelp {
+      position: fixed;
+      top: 400px;
+      right: 200px;
+    }
+
+    #selectAnonymity {
+      position: fixed;
+      top: 460px;
+      right: 200px;
+    }
+
+    #selectLeave {
+      position: fixed;
+      top: 520px;
+      right: 200px;
+    }
+
+    #svgContainer {
+      background-color: #000;
+      width: 500px;
+      height: 1000px;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      position: fixed;
+      top: 15%;
+      right: 2%;
+      z-index: 5;
+      border: 1px #eee solid;
+      background-color: rgba(255,255,255, .08);
+      border-radius: 20px;
+      /* display: none; */
+    }
+
+    .desc-box__title {
+      position: fixed;
+      top: 5%;
+      right: 5%;
+      z-index: 5;
+      color: #fff
+    }
+
+    .system {
+      display: inline-block;
+      position: relative;
+      vertical-align: middle;
+      width: 50px;
+      height: 50px;
+    }
+
+    .planet {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50px;
+      height: 50px;
+      -moz-animation-name: rotate;
+      -moz-animation-iteration-count: infinite;
+      -moz-animation-timing-function: linear;
+      -webkit-animation-name: rotate;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-timing-function: linear;
+      animation-name: rotate;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+    }
+
+    .slidedown {
+      -moz-animation-name: slidedown;
+      -moz-animation-iteration-count: 1;
+      -moz-animation-timing-function: linear;
+      -webkit-animation-name: slidedown;
+      -webkit-animation-iteration-count: 1;
+      -webkit-animation-timing-function: linear;
+      animation-name: slidedown;
+      animation-iteration-count: 1;
+      animation-timing-function: linear;
+    }
+
+    .drag-icon {
+      background-image: url('4x/drag-icon.png');
+      background-position:center;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      width: 50px;
+      height: 50px;
+    }
+
+    .lasso-icon {
+      background-image: url('4x/lasso-icon.png');
+      background-position:center;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      width: 50px;
+      height: 50px;
+    }
+
+    .interact-button {
+      display: flex;
+      flex-wrap: wrap;
+      height: 70px;
+      width: 50px;
+      position: fixed;
+      bottom: 6%;
+      right: 30%;
+      z-index: 5;
+      color: #fff;
+      justify-content: center;
+    }
+
+    p {
+       margin: 0
+    }
+
+    @-moz-keyframes slidedown {
+      from { -moz-transform: translateY(0); }
+      to { -moz-transform: translateY(-20); }
+    }
+
+    @-webkit-keyframes slidedown {
+      from { -webkit-transform: translateY(0); }
+      to { -webkit-transform: translateY(-20); }
+    }
+
+    @keyframes slidedown {
+      from { transform: translateY(0); }
+      to { transform: translateY(-20); }
+    }
+
+    .slider-interval {
+      position: fixed;
+      width: 300px;
+      bottom: 30%;
+      left: 30%
+    }
+
+    .move-state {
+      cursor:move;
+    }
+
+    .sys__title {
+      position: fixed;
+      top: 2%;
+      left: 50%;
+      transform:  translateX(-50%);
+      z-index: 5;
+      color: #fff;
+      font-size: 40px;
+      font-weight: 200;
+    }
+/* 
+    .slider-scale {
+      position: fixed;
+      width: 300px;
+      bottom: 13%;
+      left: 30%
+    } */
+
+   
+
+    /* @-moz-keyframes rotate {
+      from { -moz-transform: rotateZ(0deg); }
+      to { -moz-transform: rotateZ(-360deg); }
+    }
+
+    @-webkit-keyframes rotate {
+      from { -webkit-transform: rotateZ(0deg); }
+      to { -webkit-transform: rotateZ(-360deg); }
+    }
+
+    @keyframes rotate {
+      from { transform: rotateZ(0deg); }
+      to { transform: rotateZ(-360deg); }
+    }
+
+    .planet-individual {
+      position: absolute;
+      top: 0;
+      left: 0;
+      /* width: 50px;
+      height: 50px; */
+      /* -moz-animation-name: scale;
+      -moz-animation-iteration-count: infinite;
+      -moz-animation-timing-function: linear;
+      -webkit-animation-name: scale;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-timing-function: linear;
+      animation-name: scale;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+    }
+
+    @-moz-keyframes scale {
+      0% { -moz-transform: scale(0,0); }
+      50% { -moz-transform: scale(1,1); }
+      100% { -moz-transform: scale(0,0); }
+    }
+
+    @-webkit-keyframes scale {
+      0% { -webkit-transform: scale(0,0); }
+      50% { -webkit-transform: scale(1,1); }
+      100% { -webkit-transform: scale(0,0); }
+    }
+
+    @keyframes scale {
+      0% { transform: scale(0,0); }
+      50% { transform: scale(1,1); }
+      100% { transform: scale(0,0); }
+    }
+
+    .planet-opacity {
+      position: absolute;
+      top: 0;
+      left: 0;
+      /* width: 50px;
+      height: 50px; */
+      /* -moz-animation-name: opacity;
+      -moz-animation-iteration-count: infinite;
+      -moz-animation-timing-function: linear;
+      -webkit-animation-name: opacity;
+      -webkit-animation-iteration-count: infinite;
+      -webkit-animation-timing-function: linear;
+      animation-name: opacity;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+    }
+
+    @-moz-keyframes opacity {
+      0% { opacity: 0 }
+      50% { opacity: 1 }
+      100% { opacity: 0 }
+    }
+
+    @-webkit-keyframes opacity {
+      0% { opacity: 0 }
+      50% { opacity: 1 }
+      100% { opacity: 0}
+    }
+
+    @keyframes opacity {
+      0% { opacity: 0 }
+      50% { opacity: 1 }
+      100% { opacity: 0 }
+    }  */
   </style>
 </head>
 
 <body>
+  <p class="sys__title">The Universe Of <span style="font-weight: 800;">Mental Health</span> In Tech Company</p>
+  <!-- <h1 class="desc-box__title">Detail</h1> -->
+  <div id="svgContainer"></div>
+  <div class="interact-button">
+    <p class="drag-icon"></p>
+    <p>drag</p>
+  </div>
+  <div class="interact-button" style="bottom: 14%;" onclick="showLasso = true">
+    <p class="lasso-icon"></p>
+    <p>lasso</p>
+  </div>
+  <!-- <input></input> -->
   <script>
     let data = {}; //全局对象
     let bubbles = []; //全局数组
     var datas = [];
-    let CanvasSlider, SizeSlider;
+    let CanvasSlider;
+    let SizeSlider;
+    var idList = [] //每次圈选的item的id
+    var newDataSet = [] //每次圈选的全局数据
+    var dataSet = []; //全局数据
+    var item_interval; //每个气泡的间距
+    var posData = [];//存放点的最终位置的数组
+
+    var showLasso = false
 
     //载入JSON
     function preload() {
@@ -37,8 +334,14 @@
         let d = {};
         d[i] = data[i];
         bubbles.push(d);
+        //坐标数组存放最新的位置 - luna
+        posData.push({
+                'x': data[i].x,
+                'y': data[i].y,
+                'ox': 0,
+                'oy': 0
+            })
       }
-
 
       for (let i = 0; i < bubbles.length; i++) {
         var o = data[i];
@@ -47,369 +350,1306 @@
     }
 
     function setup() {
-      createCanvas(windowWidth * 2, windowHeight * 2);
+      createCanvas(windowWidth, windowHeight * 2);
       noStroke();
       loadData();
+      
       //更改画布大小
-      CanvasSlider = createSlider(1, 500, 1);
-      CanvasSlider.position(windowWidth / 2 - 200, windowHeight - 100);
-      CanvasSlider.style('width', '300px');
-      SizeSlider = createSlider(0, windowWidth, windowWidth / 2 + 300);
-      SizeSlider.position(windowWidth / 2 - 200, windowHeight - 50);
-      SizeSlider.style('width', '300px');
+      // CanvasSlider = createSlider(10, 500, 50);
+      // CanvasSlider.class('slider-interval');
+
+      // //slider左右
+      // SizeSlider = createSlider(0, windowWidth, windowWidth / 2 + 300);
+      // SizeSlider.class('slider-scale');
+
+      // for (var i = 0; i < datas.length; i++) {
+      //   datas[i].lassoOver(i);
+      //   // console.log(datas[i],'datas[i]')
+      // }
+    }
+
+    let recPosX, recPosY, recWidth, recHeight, endPosX, endPosY;
+    
+    function mousePressed() {
+        if(mouseButton === CENTER) {
+          drag = true;
+          // 记录鼠标相对元素的偏移量
+          posData.forEach((pos, i) => {
+              pos.ox = mouseX - pos.x;
+              pos.oy = mouseY - pos.y;
+          })
+          document.getElementsByTagName('canvas')[0].setAttribute('class','move-state')
+        }
+        if(showLasso === true) {
+          idList = []
+          newDataSet = []
+          recWidth = 0;
+          recHeight = 0;
+          recPosX = mouseX;
+          recPosY = mouseY;
+          // console.log(recPosX , 'mouseX-start')
+          // console.log(recPosY , 'mouseY-start')
+          // document.getElementById('svgContainer').style.display = 'none'
+          d3.select('#svgWrapper').remove()
+        }
+        return false
+    }
+
+    function mouseDragged() {
+        if (drag) {
+          // 根据偏移量修改位置坐标
+          posData.forEach((pos, i) => {
+              pos.x = mouseX - pos.ox;
+              pos.y = mouseY - pos.oy;
+          })
+        }
+      // console.log(mouseX - recPosX, 'recPosX')
+        if(showLasso === true) {
+          recWidth = mouseX - recPosX;
+          recHeight = mouseY - recPosY;
+        }
+        document.getElementsByTagName('canvas')[0].setAttribute('class','move-state')
+    }
+
+    function mouseReleased() {
+      drag = false;
+      if(showLasso === true) {
+        useLasso()
+      }
+      document.getElementsByTagName('canvas')[0].removeAttribute('class','move-state')
+    }
+
+    function useLasso() {
+      recWidth = 0;
+      recHeight = 0;
+      endPosX = mouseX;
+      endPosY = mouseY;
+      //值得注意的是不同的拖动方向（左上，右上，左下，右下），绘制的方法有区别，需要交换一下值 
+      let tempSwitchX, tempSwitchY
+      if(endPosX < recPosX) {
+        tempSwitchX = recPosX
+        recPosX = endPosX
+        endPosX = tempSwitchX
+      }
+      if(endPosY < recPosY) {
+        tempSwitchY = recPosY
+        recPosY = endPosY
+        endPosY = tempSwitchY
+      }
+      //遍历每个bubble，符合位置的即为选中
+      for (let i = 0; i < datas.length; i++) {
+        let CanXX = datas[i].x*item_interval + windowWidth/2
+        let CanYY = datas[i].y*item_interval + windowHeight/2
+        if(Number(CanXX) < Number(endPosX) && Number(CanXX) > Number(recPosX) && Number(CanYY) < Number(endPosY) && Number(CanYY) > Number(recPosY)) {
+          if(idList.indexOf(i) === -1) {
+            idList.push(i)
+          }
+        } else {
+          console.log('lasso false!!!')
+        }
+      }
+      for(let i=0; i< idList.length; i++) {
+           newDataSet.push(dataSet[idList[i]])
+      }
+      drawPlanet(newDataSet)
+      document.getElementById('svgContainer').style.display = 'block'
+      document.getElementById('svgContainer').setAttribute('class', 'slidedown')
     }
 
     function draw() {
-
       background(0);
       var t = millis() / 1000;
-      var vul = CanvasSlider.value();
-      var Svul = SizeSlider.value();
-      push();
-      fill(255);
-      textSize(15);
-      text('放大', windowWidth / 2 + 120, windowHeight - 80);
-      text('位移', windowWidth / 2 + 120, windowHeight - 30);
-      pop();
+      var vul = 50;
+      item_interval = 50;
+      // var Svul = SizeSlider.value();
+      var Svul = 10;
+      // push();
+      rect(recPosX, recPosY, recWidth, recHeight);
+      fill('rgba(255,255,255, 0.2)')
+      // pop();
+      
+      // print("colliding? " + hit);
 
-      for (let i = 0; i < datas.length; i++) {
+
+      for (var i = 0; i < datas.length; i++) {
+        //blendMode(LIGHTEST);
+        datas[i].x = posData[i].x
+        datas[i].y = posData[i].y
         datas[i].Classified(t, i, vul, Svul);
-        // datas[i].MouseOver(vul);
+        // datas[i].MouseOver();
+        // datas[i].checkCollision()
+        // datas[i].lassoOver(i);
+        // console.log(datas[i],'datas[i]')
       }
 
+      
+
     }
+
+
+    // // var dragstate = false;
+    //   let offsetX = 0
+    //   let offsetY = 0
+    //   let preMouseX = 0
+    //   let preMouseY = 0
+
+    // function mousePressed() {
+    //   // console.log(mouseX, 'mouseXDrag')
+    //   preMouseX = mouseX
+    //   preMouseY = mouseY
+    //   dragstate = true
+    //   // console.log(dragstate,'dragstate')
+    // }   
+    //  function mouseReleased() {
+    //   // console.log(mouseX, 'mouseXRealse')
+    //   dragstate = false
+    //   // console.log(dragstate,'dragstate')
+    // }
+    // // var tempX = windowWidth/2;
+    // // var tempY = windowHeight/2;
+    // // // var canvasPosX = windowWidth/2,canvasPosY = windowHeight/2;
+
+    
     function Bubble(f) {
 
-      //亮度计算
+//亮度计算
 
-      // 载入数据
+// 载入数据
 
-      this.age = f['What is your age?'];
-      this.gender = f['What is your gender?'];
-      this.country = f["What country do you work in?"];
-      this.company = f["Is your employer primarily a tech company/organization?"];
-      this.TechRole = f["Is your primary role within your company related to tech/IT?"];
-      //个体户
-      this.self_employed = f["Are you self-employed?"];
-      //个体户是不是之前有雇主
+this.age = f['What is your age?'];
+this.gender = f['What is your gender?'];
+this.country = f["What country do you work in?"];
+this.company = f["Is your employer primarily a tech company/organization?"];
+this.TechRole = f["Is your primary role within your company related to tech/IT?"];
+//个体户
+this.self_employed = f["Are you self-employed?"];
+//个体户是不是之前有雇主
 
-      this.family_history = f["Do you have a family history of mental illness?"];
-      //公司环境-提供福利
-      this.health_benefits = f["Does your employer provide mental health benefits as part of healthcare coverage?"];
-      this.options = f["Do you know the options for mental health care available under your employer-provided coverage?"];
-      this.discussed = f["Has your employer ever formally discussed mental health (for example, as part of a wellness campaign or other official communication)?"];
-      this.resources_seeking_help = f["Does your employer offer resources to learn more about mental health concerns and options for seeking help?"];
+this.family_history = f["Do you have a family history of mental illness?"];
+//公司环境-提供福利
+this.health_benefits = f["Does your employer provide mental health benefits as part of healthcare coverage?"];
+this.options = f["Do you know the options for mental health care available under your employer-provided coverage?"];
+this.discussed = f["Has your employer ever formally discussed mental health (for example, as part of a wellness campaign or other official communication)?"];
+this.resources_seeking_help = f["Does your employer offer resources to learn more about mental health concerns and options for seeking help?"];
 
-      //公司环境-提供匿名保护
-      this.anonymity = f["Is your anonymity protected if you choose to take advantage of mental health or substance abuse treatment resources provided by your employer?"];
-      //公司环境-请假
-      this.leave = f["If a mental health issue prompted you to request a medical leave from work, asking for that leave would be:"];
-      //不好的影响
-      this.observed_negative = f.observed_negative;
+//公司环境-提供匿名保护
+this.anonymity = f["Is your anonymity protected if you choose to take advantage of mental health or substance abuse treatment resources provided by your employer?"];
+//公司环境-请假
+this.leave = f["If a mental health issue prompted you to request a medical leave from work, asking for that leave would be:"];
+//不好的影响
+this.observed_negative = f.observed_negative;
 
-      //倾诉
-      this.employer_negative = f["Do you think that discussing a mental health disorder with your employer would have negative consequences?"];
-      this.coworkers = f["Would you feel comfortable discussing a mental health disorder with your coworkers?"];
-      this.supervisor = f["Would you feel comfortable discussing a mental health disorder with your direct supervisor(s)?"];
-      //老板是否重视心理疾病
-      this.mentalVSphysical = f["Do you feel that your employer takes mental health as seriously as physical health?"];
+//倾诉
+this.employer_negative = f["Do you think that discussing a mental health disorder with your employer would have negative consequences?"];
+this.coworkers = f["Would you feel comfortable discussing a mental health disorder with your coworkers?"];
+this.supervisor = f["Would you feel comfortable discussing a mental health disorder with your direct supervisor(s)?"];
+//老板是否重视心理疾病
+this.mentalVSphysical = f["Do you feel that your employer takes mental health as seriously as physical health?"];
 
-      //过去的雇主
-      this.preEmployers = f["Do you have previous employers?"];
-      //过去的公司环境（福利、匿名保护、请假和负面情况）
-      this.preHealth_benefits = f["Have your previous employers provided mental health benefits?"];
-      this.preOptions = f["Were you aware of the options for mental health care provided by your previous employers?"];
-      this.preDiscussed = f["Did your previous employers ever formally discuss mental health (as part of a wellness campaign or other official communication)?"];
-      this.preResources_seeking_help = f["Did your previous employers provide resources to learn more about mental health issues and how to seek help?"];
-      //过去的匿名保护
-      this.preAnonymity = f["Was your anonymity protected if you chose to take advantage of mental health or substance abuse treatment resources with previous employers?"];
-      //过去的倾诉
-      this.previous_employers_negative = f["Do you think that discussing a mental health disorder with previous employers would have negative consequences?"];
-      this.previous_coworkers = f["Would you have been willing to discuss a mental health issue with your previous co-workers?"];
-      this.Oldsupervisor = f["Would you have been willing to discuss a mental health issue with your direct supervisor(s)?"];
+//过去的雇主
+this.preEmployers = f["Do you have previous employers?"];
+//过去的公司环境（福利、匿名保护、请假和负面情况）
+this.preHealth_benefits = f["Have your previous employers provided mental health benefits?"];
+this.preOptions = f["Were you aware of the options for mental health care provided by your previous employers?"];
+this.preDiscussed = f["Did your previous employers ever formally discuss mental health (as part of a wellness campaign or other official communication)?"];
+this.preResources_seeking_help = f["Did your previous employers provide resources to learn more about mental health issues and how to seek help?"];
+//过去的匿名保护
+this.preAnonymity = f["Was your anonymity protected if you chose to take advantage of mental health or substance abuse treatment resources with previous employers?"];
+//过去的倾诉
+this.previous_employers_negative = f["Do you think that discussing a mental health disorder with previous employers would have negative consequences?"];
+this.previous_coworkers = f["Would you have been willing to discuss a mental health issue with your previous co-workers?"];
+this.Oldsupervisor = f["Would you have been willing to discuss a mental health issue with your direct supervisor(s)?"];
 
-      //潜在雇主-面试会不会提起心理问题
-      this.potential_employerPH = f["Would you be willing to bring up a physical health issue with a potential employer in an interview?"];
-      this.potential_employerMT = f["Would you bring up a mental health issue with a potential employer in an interview?"];
-      this.WhyPH = f["Why or why not?"];
-      this.WhyMT = f["Why or why not?__1"];
+//潜在雇主-面试会不会提起心理问题
+this.potential_employerPH = f["Would you be willing to bring up a physical health issue with a potential employer in an interview?"];
+this.potential_employerMT = f["Would you bring up a mental health issue with a potential employer in an interview?"];
+this.WhyPH = f["Why or why not?"];
+this.WhyMT = f["Why or why not?__1"];
 
-      //会影响以后找工作
-      this.hurt_career = f["Do you feel that being identified as a person with a mental health issue would hurt your career?"];
-      //担心公司同事歧视
-      this.team_negative = f["Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?"];
-      //不愿意倾诉
-      this.less_reveal = f["Have your observations of how another individual who discussed a mental health disorder made you less likely to reveal a mental health issue yourself in your current workplace?"];
+//会影响以后找工作
+this.hurt_career = f["Do you feel that being identified as a person with a mental health issue would hurt your career?"];
+//担心公司同事歧视
+this.team_negative = f["Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?"];
+//不愿意倾诉
+this.less_reveal = f["Have your observations of how another individual who discussed a mental health disorder made you less likely to reveal a mental health issue yourself in your current workplace?"];
 
-      //心理疾病类型
-      this.medical_professional = f["Have you been diagnosed with a mental health condition by a medical professional?"];
-      this.condition_PH = f["If so, what condition(s) were you diagnosed with?"];
+//心理疾病类型
+this.medical_professional = f["Have you been diagnosed with a mental health condition by a medical professional?"];
+this.condition_PH = f["If so, what condition(s) were you diagnosed with?"];
 
-      //工作岗位
-      this.work_position = f["Which of the following best describes your work position?"];
+//工作岗位
+this.work_position = f["Which of the following best describes your work position?"];
 
-      //设置位置布局
-      this.x = f.x;
-      this.y = f.y;
-      var size = 10;//星星大小
-      var R;//布局的半径
+//设置位置布局
+this.x = f.x;
+this.y = f.y;
+var size = 10;//星星大小
+var R = 2;//布局的半径
 
 
 
-      this.display = function (t, flicker, v) {
-        var CanX = this.x * v;
-        var CanY = this.y * v;
+this.display = function (t, flicker, v) {
+  var CanX = this.x * v;
+  var CanY = this.y * v;
+  push();
+  //  translate(windowWidth / 2, windowHeight / 2);
+  //认为疾病会对自己工作带来负面影响 动效：闪烁频率快
+  if (this.hurt_career == "Yes, it has") {
+    size = size * sin(t * 3.5 + 0.1 * flicker);
+  } if (this.hurt_career == "Yes, I think it would") {
+    size = size * sin(t * 1.5 + 0.1 * flicker);
+  } if (this.hurt_career == "Maybe") {
+    size = size * sin(t * 1 + 0.1 * flicker);
+  } if (this.hurt_career == "No, I don't think it would") {
+    size = size * sin(t * 0.5 + 0.1 * flicker);
+  }
+
+
+  // var Conditions = split(this.condition_PH, '|')
+  // for (let i = 0; i < Conditions.length; i++) {
+  //   if (Conditions.length >= 5) {
+  //     B = 150; R = v / 10;
+  //   } if (Conditions.length == 4) {
+  //     B = 100; R = v / 50;
+  //   } if (Conditions.length == 3) {
+  //     B = 90; R = v / 50;
+  //   } if (Conditions.length == 2) {
+  //     B = 75; R = v / 50;
+  //   } if (Conditions.length == 1) {
+  //     B = 75;
+  //   }
+
+  var Conditions = split(this.condition_PH, '|')
+  for (let i = 0; i < Conditions.length; i++) {
+    if (Conditions.length >= 5) {
+      B = 150; 
+    } if (Conditions.length == 4) {
+      B = 100; 
+    } if (Conditions.length == 3) {
+      B = 90; 
+    } if (Conditions.length == 2) {
+      B = 75; 
+    } if (Conditions.length == 1) {
+      B = 75;
+    }
+
+    //认为雇主重视心理健康问题:星环
+    if (this.mentalVSphysical == "Yes") {
+      push();
+      stroke(255, B);
+      strokeWeight(v/100);
+      noFill();
+      ellipse(CanX, CanY, size * 3, size * 3);
+      pop();
+    }
+
+
+    var a = TWO_PI / Conditions.length * i;//角度v
+    var dy = R * cos(a), dx = R * sin(a);//位置偏移量
+    push();
+
+
+    colorMode(HSB, 360, 100, 100, 100);
+    blendMode(LIGHTEST);
+    fill(240, 1, B, 0);
+    // blendMode(LIGHTEST);
+    //疾病类型1：情绪障碍(抑郁、躁郁症等) 红色
+    if (Conditions[i] == 'Mood Disorder (Depression, Bipolar Disorder, etc)') {
+      fill(354.24, 354.24, B);
+    }
+    // 疾病类型2：焦虑障碍(广泛性、社会性、恐惧症等) 粉红
+    if (Conditions[i] == 'Anxiety Disorder (Generalized, Social, Phobia, etc)') {
+      fill(285.47, 78.84, B);
+    }
+    // 疾病类型3：注意缺陷多动障碍 紫色
+    if (Conditions[i] == 'Attention Deficit Hyperactivity Disorder') {
+      fill(253.71, 80.41, B);
+    }
+    // 疾病类型4：创伤后压力心理障碍症  蓝
+    if (Conditions[i] == 'Post-traumatic Stress Disorder') {
+      fill(230.61, 73.06, B);
+    }
+    // 疾病类型5：强迫症   湖蓝
+    if (Conditions[i] == 'Obsessive-Compulsive Disorder') {
+      fill(220.66, 74.09, B);
+    }
+    // 疾病类型6：物质使用障碍  青
+    if (Conditions[i] == 'Substance Use Disorder') {
+      fill(190.54, 58.73, B);
+    }
+    // 疾病类型7：人格障碍(边缘型、反社会、偏执等)  青绿  
+    if (Conditions[i] == 'Personality Disorder (Borderline, Antisocial, Paranoid, etc)') {
+      fill(157.82, 51.97, B);
+    }
+    // 疾病类型8：应激反应综合症  浅绿
+    if (Conditions[i] == 'Stress Response Syndromes') {
+      fill(132.4, 53.54, B);
+    }
+    // 疾病类型9：成瘾症    草绿
+    if (Conditions[i] == 'Addictive Disorder') {
+      fill(93.29, 68.92, B);
+    }
+    // 疾病类型10：进食障碍(厌食、贪食等)  明黄  
+    if (Conditions[i] == 'Eating Disorder (Anorexia, Bulimia, etc)') {
+      fill(53.76, 68.65, B);
+    }
+    // 疾病类型11：解离性障碍  橙色  
+    if (Conditions[i] == 'Dissociative Disorder') {
+      fill(30.65, 77.18, B);
+    }
+    // 疾病类型12：精神疾病(精神分裂症、分裂情感性精神分裂症等)  红
+    if (Conditions[i] == 'Psychotic Disorder (Schizophrenia, Schizoaffective, etc)') {
+      fill(12.24, 83.4, B);
+    } if (Conditions[i] == '') {
+      push();
+      fill(255, 50);
+      ellipse(CanX, CanY, sizeHealth, sizeHealth);
+      pop();
+    }
+    ellipse(CanX + dx, CanY + dy, size, size);
+    //filter(BLUR, 3);
+    pop();
+  }
+  s = map(v, 1, 100, 1, 8);
+  size = (B / 40) * s;//闪烁归零
+  sizeHealth = (this.age / 70) * s;
+  pop();
+}
+
+this.MouseOver = function (v) {
+  var CanX = this.x * v;
+  var CanY = this.y * v;
+
+  let d = dist(mouseX, mouseY, CanX + windowWidth / 2, CanY + windowHeight / 2);
+  var dPos = 50;//行间距
+  var yPos = 200;
+  var xPos = 300;
+  if (d <= size * 1.5) {
+    fill(255);
+    textSize(20);
+    text("Age：" + this.age, xPos, yPos);
+    text("Gender：" + this.gender, xPos, yPos + dPos);
+    text("Country：" + this.country, xPos, yPos + dPos * 2);
+    text("Work Position：", xPos, yPos + dPos * 3);
+    //textSize(50);
+    var YPos_wp = yPos + dPos * 4;
+    text("1." + this.work_position1, xPos + dPos, YPos_wp);
+    if (this.work_position2 != "") {
+      YPos_wp = YPos_wp + dPos;
+      text("2." + this.work_position2, xPos + dPos, YPos_wp);
+    } if (this.work_position3 != "") {
+      YPos_wp = YPos_wp + dPos;
+      text("3." + this.work_position3, xPos + dPos, YPos_wp);
+    } if (this.work_position4 != "") {
+      YPos_wp = YPos_wp + dPos;
+      text("4." + this.work_position4, xPos + dPos, YPos_wp);
+    }
+    var YPos_MC = YPos_wp + dPos;
+
+    //textSize(50);
+
+
+    if (Conditions[0] != "") {
+      push();
+      textSize(40);
+      text("Not Healthy", xPos, yPos - dPos);
+      pop();
+      text("Mental Condition：", xPos, YPos_MC);
+      YPos_MC = YPos_MC + dPos;
+      text("1." + this.condition_PH1, xPos + dPos, YPos_MC);
+    } if (this.condition_PH2 != "") {
+      YPos_MC = YPos_MC + dPos;
+      text("2." + this.condition_PH2, xPos + dPos, YPos_MC);
+    } if (this.condition_PH3 != "") {
+      YPos_MC = YPos_MC + dPos;
+      text("3." + this.condition_PH3, xPos + dPos, YPos_MC);
+    } if (this.condition_PH4 != "") {
+      YPos_MC = YPos_MC + dPos;
+      text("4." + this.condition_PH4, xPos + dPos, YPos_MC);
+    } if (this.condition_PH5 != "") {
+      YPos_MC = YPos_MC + dPos;
+      text("5." + this.condition_PH5, xPos + dPos, YPos_MC);
+    } else {
+      textSize(40);
+      text("Healthy", xPos, yPos - dPos);
+    }
+    push();
+    stroke(255);
+    noFill();
+    pop();
+
+
+
+  }
+
+}
+
+//人群分类
+this.Classified = function (t_, f_, v_, NS) {
+  var t = t_;
+  var flicker = f_;
+  var v = v_;
+  var CanX = this.x * v;
+  var CanY = this.y * v;
+  var inter = 150;//间隔
+  // s = map(v, 1, 100, 1, 5);
+  // var R = 5 * s;//闪烁归零
+  //R = 5;
+  push();
+  translate(windowWidth/2, windowHeight / 2);
+  if (this.self_employed == 1) {//老板
+
+    if (this.preEmployers == 1) {//辞职单干的老板
+      push();
+      // translate(NS, this.y);
+      this.display(t, flicker, v);
+      // fill(255, 0, 0);
+      // rect(CanX, CanY, 2 * s, 2 * s);
+      pop();
+    }
+    if (this.preEmployers == 0) {//单纯的老板
+      push();
+      // translate(NS - inter, this.y);
+      this.display(t, flicker, v);
+      pop();
+    }
+
+
+  }
+  if (this.self_employed == 0) {
+
+    if (this.company == 1) {//科技公司
+      if (this.preEmployers == 1) {//辞职过的科技公司职员
         push();
-        //  translate(windowWidth / 2, windowHeight / 2);
-        //认为疾病会对自己工作带来负面影响 动效：闪烁频率快
-        if (this.hurt_career == "Yes, it has") {
-          size = size * sin(t * 3.5 + 0.1 * flicker);
-        } if (this.hurt_career == "Yes, I think it would") {
-          size = size * sin(t * 1.5 + 0.1 * flicker);
-        } if (this.hurt_career == "Maybe") {
-          size = size * sin(t * 1 + 0.1 * flicker);
-        } if (this.hurt_career == "No, I don't think it would") {
-          size = size * sin(t * 0.5 + 0.1 * flicker);
-        }
-
-
-        var Conditions = split(this.condition_PH, '|')
-        for (let i = 0; i < Conditions.length; i++) {
-          if (Conditions.length >= 5) {
-            B = 150; R = v / 10;
-          } if (Conditions.length == 4) {
-            B = 100; R = v / 50;
-          } if (Conditions.length == 3) {
-            B = 90; R = v / 50;
-          } if (Conditions.length == 2) {
-            B = 75; R = v / 50;
-          } if (Conditions.length == 1) {
-            B = 75;
-          }
-
-
-          //认为雇主重视心理健康问题:星环
-          if (this.mentalVSphysical == "Yes") {
-            push();
-            stroke(255, B);
-            strokeWeight(v/200);
-            noFill();
-            ellipse(CanX, CanY, size * 3, size * 3);
-            pop();
-          }
-
-
-          var a = TWO_PI / Conditions.length * i;//角度v
-          var dy = R * cos(a), dx = R * sin(a);//位置偏移量
-          push();
-
-
-          colorMode(HSB, 360, 100, 100, 100);
-          blendMode(LIGHTEST);
-          fill(240, 1, B, 0);
-          // blendMode(LIGHTEST);
-          //疾病类型1：情绪障碍(抑郁、躁郁症等) 红色
-          if (Conditions[i] == 'Mood Disorder (Depression, Bipolar Disorder, etc)') {
-            fill(354.24, 354.24, B);
-          }
-          // 疾病类型2：焦虑障碍(广泛性、社会性、恐惧症等) 粉红
-          if (Conditions[i] == 'Anxiety Disorder (Generalized, Social, Phobia, etc)') {
-            fill(285.47, 78.84, B);
-          }
-          // 疾病类型3：注意缺陷多动障碍 紫色
-          if (Conditions[i] == 'Attention Deficit Hyperactivity Disorder') {
-            fill(253.71, 80.41, B);
-          }
-          // 疾病类型4：创伤后压力心理障碍症  蓝
-          if (Conditions[i] == 'Post-traumatic Stress Disorder') {
-            fill(230.61, 73.06, B);
-          }
-          // 疾病类型5：强迫症   湖蓝
-          if (Conditions[i] == 'Obsessive-Compulsive Disorder') {
-            fill(220.66, 74.09, B);
-          }
-          // 疾病类型6：物质使用障碍  青
-          if (Conditions[i] == 'Substance Use Disorder') {
-            fill(190.54, 58.73, B);
-          }
-          // 疾病类型7：人格障碍(边缘型、反社会、偏执等)  青绿  
-          if (Conditions[i] == 'Personality Disorder (Borderline, Antisocial, Paranoid, etc)') {
-            fill(157.82, 51.97, B);
-          }
-          // 疾病类型8：应激反应综合症  浅绿
-          if (Conditions[i] == 'Stress Response Syndromes') {
-            fill(132.4, 53.54, B);
-          }
-          // 疾病类型9：成瘾症    草绿
-          if (Conditions[i] == 'Addictive Disorder') {
-            fill(93.29, 68.92, B);
-          }
-          // 疾病类型10：进食障碍(厌食、贪食等)  明黄  
-          if (Conditions[i] == 'Eating Disorder (Anorexia, Bulimia, etc)') {
-            fill(53.76, 68.65, B);
-          }
-          // 疾病类型11：解离性障碍  橙色  
-          if (Conditions[i] == 'Dissociative Disorder') {
-            fill(30.65, 77.18, B);
-          }
-          // 疾病类型12：精神疾病(精神分裂症、分裂情感性精神分裂症等)  红
-          if (Conditions[i] == 'Psychotic Disorder (Schizophrenia, Schizoaffective, etc)') {
-            fill(12.24, 83.4, B);
-          } if (Conditions[i] == '') {
-            push();
-            fill(255, 50);
-            ellipse(CanX, CanY, sizeHealth, sizeHealth);
-            pop();
-          }
-          ellipse(CanX + dx, CanY + dy, size, size);
-          //filter(BLUR, 3);
-          pop();
-        }
-        s = map(v, 1, 100, 1, 8);
-        size = (B / 50) * s;//闪烁归零
-        sizeHealth = (this.age / 70) * s;
+        // translate(NS - inter * 2, this.y);
+        this.display(t, flicker, v);
+        // fill(0, 255, 0);
+        // rect(CanX, CanY, 2 * s, 2 * s);
+        pop();
+      }
+      if (this.preEmployers == 0) {//单纯的科技公司职员
+        push();
+        // translate(NS - inter * 3, this.y);
+        this.display(t, flicker, v);
         pop();
       }
 
-      this.MouseOver = function (v) {
-        var CanX = this.x * v;
-        var CanY = this.y * v;
-
-        let d = dist(mouseX, mouseY, CanX + windowWidth / 2, CanY + windowHeight / 2);
-        var dPos = 50;//行间距
-        var yPos = 200;
-        var xPos = 300;
-        if (d <= size * 1.5) {
-          fill(255);
-          textSize(20);
-          text("Age：" + this.age, xPos, yPos);
-          text("Gender：" + this.gender, xPos, yPos + dPos);
-          text("Country：" + this.country, xPos, yPos + dPos * 2);
-          text("Work Position：", xPos, yPos + dPos * 3);
-          //textSize(50);
-          var YPos_wp = yPos + dPos * 4;
-          text("1." + this.work_position1, xPos + dPos, YPos_wp);
-          if (this.work_position2 != "") {
-            YPos_wp = YPos_wp + dPos;
-            text("2." + this.work_position2, xPos + dPos, YPos_wp);
-          } if (this.work_position3 != "") {
-            YPos_wp = YPos_wp + dPos;
-            text("3." + this.work_position3, xPos + dPos, YPos_wp);
-          } if (this.work_position4 != "") {
-            YPos_wp = YPos_wp + dPos;
-            text("4." + this.work_position4, xPos + dPos, YPos_wp);
-          }
-          var YPos_MC = YPos_wp + dPos;
-
-          //textSize(50);
-
-
-          if (Conditions[0] != "") {
-            push();
-            textSize(40);
-            text("Not Healthy", xPos, yPos - dPos);
-            pop();
-            text("Mental Condition：", xPos, YPos_MC);
-            YPos_MC = YPos_MC + dPos;
-            text("1." + this.condition_PH1, xPos + dPos, YPos_MC);
-          } if (this.condition_PH2 != "") {
-            YPos_MC = YPos_MC + dPos;
-            text("2." + this.condition_PH2, xPos + dPos, YPos_MC);
-          } if (this.condition_PH3 != "") {
-            YPos_MC = YPos_MC + dPos;
-            text("3." + this.condition_PH3, xPos + dPos, YPos_MC);
-          } if (this.condition_PH4 != "") {
-            YPos_MC = YPos_MC + dPos;
-            text("4." + this.condition_PH4, xPos + dPos, YPos_MC);
-          } if (this.condition_PH5 != "") {
-            YPos_MC = YPos_MC + dPos;
-            text("5." + this.condition_PH5, xPos + dPos, YPos_MC);
-          } else {
-            textSize(40);
-            text("Healthy", xPos, yPos - dPos);
-          }
+    }
+    if (this.company == 0) {//非科技公司的科技岗位
+      if (this.TechRole == 1) {
+        if (this.preEmployers == 1) {//辞职过的科技岗员工
           push();
-          stroke(255);
-          noFill();
+          // translate(NS - inter * 4, this.y);
+          this.display(t, flicker, v);
           pop();
-
-
-
         }
-
-      }
-
-      //人群分类
-      this.Classified = function (t_, f_, v_, NS) {
-        var t = t_;
-        var flicker = f_;
-        var v = v_;
-        var CanX = this.x * v;
-        var CanY = this.y * v;
-        var inter = 150;//间隔
-        // s = map(v, 1, 100, 1, 5);
-        // var R = 5 * s;//闪烁归零
-        //R = 5;
-        push();
-        translate(0, windowHeight / 2);
-        if (this.self_employed == 1) {//老板
-
-          if (this.preEmployers == 1) {//辞职单干的老板
-            push();
-            translate(NS, this.y);
-            this.display(t, flicker, v);
-            // fill(255, 0, 0);
-            // rect(CanX, CanY, 2 * s, 2 * s);
-            pop();
-          }
-          if (this.preEmployers == 0) {//单纯的老板
-            push();
-            translate(NS - inter, this.y);
-            this.display(t, flicker, v);
-            pop();
-          }
-
-
+        if (this.preEmployers == 0) {//没辞职过的科技岗职员
+          push();
+          // translate(NS - inter * 5, this.y);
+          this.display(t, flicker, v);
+          pop();
         }
-        if (this.self_employed == 0) {
-
-          if (this.company == 1) {//科技公司
-            if (this.preEmployers == 1) {//辞职过的科技公司职员
-              push();
-              translate(NS - inter * 2, this.y);
-              this.display(t, flicker, v);
-              // fill(0, 255, 0);
-              // rect(CanX, CanY, 2 * s, 2 * s);
-              pop();
-            }
-            if (this.preEmployers == 0) {//单纯的科技公司职员
-              push();
-              translate(NS - inter * 3, this.y);
-              this.display(t, flicker, v);
-              pop();
-            }
-
-          }
-          if (this.company == 0) {//非科技公司的科技岗位
-            if (this.TechRole == 1) {
-              if (this.preEmployers == 1) {//辞职过的科技岗员工
-                push();
-                translate(NS - inter * 4, this.y);
-                this.display(t, flicker, v);
-                pop();
-              }
-              if (this.preEmployers == 0) {//没辞职过的科技岗职员
-                push();
-                translate(NS - inter * 5, this.y);
-                this.display(t, flicker, v);
-                pop();
-              }
-            }
-          }
-        }
-        pop();
       }
     }
+  }
+  pop();
+}
+}
+    
+        /* 数组分段函数 */
+    function sliceArray(array, size) {
+      var result = []; //Math.ceil有多余的小数点都取最大整数
+        for (var x = 0; x < Math.ceil(array.length / size); x++) {
+          var start = x * size;
+          var end = start + size;
+          result.push(array.slice(start, end));
+        }
+        return result;
+    }
+
+    d3.csv('2016-csv-pre.csv').then(function(rawData) {
+      dataSet = rawData
+      // drawPlanet(dataSet)
+      // console.log(dataSet) //有数据
+      // let treatment = dataSet.filter(d=>{return d['treatment'] === 'Yes' && d['comments'] !== 'NA'})
+      
+    })
+    function drawPlanet(dataSet) {
+        /* 开始分隔, 分割后的数据用来直接data()绑定,排序的转折点 */
+        var sampleNum = 5
+        var len = dataSet.length
+        var rowLen = len/sampleNum
+        /*求年龄最大值 最小值*/
+        var ageList = dataSet.map(function(d) {
+          let age = Number(d['What is your age?'])
+          if(age > 0 && age < 100) {
+            return age
+          }
+        })
+        
+        var rowDataSet = sliceArray(dataSet, sampleNum);
+        var width = 500
+        var height = 70*(rowLen+10)
+        var svg = d3.select('#svgContainer').append('svg').attr('id','svgWrapper').attr('width', width).attr('height', height)
+        /* 通过循环row数组达到每行绘制的效果 */
+        rowDataSet.forEach((item, i) => {
+        let row = svg.append('g').attr('rowKey', i).attr('transform', function() {
+          return 'translate(50, '+ (i+1)*100 +')'
+        })
+        let g = row.selectAll('.element').data(item).enter().append('g').attr('class','element')
+        .attr('transform', function(d, i) {
+          return 'translate(' + i*90 +','+ 0 +'), rotate(0)'
+          // return 'translate(' + posData[i]['x'] +','+ posData[i]['y'] +'), rotate(0)'
+        })
+        .on("mouseover", function(d, i) {
+          showPopup(d)
+          // console.log('000')
+        })
+
+        function showPopup(infoElem) {
+          let popupBox = document.getElementsByClassName('popupBox')[0]
+          let age = infoElem.Age
+          let noEmployees = infoElem['no_employees']
+          let comment = infoElem['comments']
+          popupBox.innerHTML = age + '<br/>' +noEmployees + '<br/>' + comment
+          // console.log(infoElem)
+          popupBox.style.display = 'block'
+        }
+        // g.append('rect')
+        // .attr('height','35').attr('width','35')
+        // .attr('x','0').attr('y','-25')
+        // .attr('rx','5').attr('ry','5')
+        // .attr("transform", "rotate(45, 0, -25)")
+        // .attr('fill','black')
+
+        var sizeScale = d3.scaleLinear().domain([d3.min(ageList), d3.max(ageList)]).range([0, 300]);
+        var transformScale = d3.scaleLinear().domain([d3.min(ageList), d3.max(ageList)]).range([.5, 1.8]);
+
+        //十字架
+        // fruit.append('path')
+        // .attr('d', d3.symbol().type(d3.symbolCross).size(20))
+        // .attr('fill',function(d) {
+        //   if (d['seek_help'] === 'Yes') {
+        //     return 'white'
+        //   } else {
+        //     return 'transparent'
+        //   }
+        // })
+        //Always start by appending a defs (definitions) element
+        var defs = svg.append("defs");
+
+        //Initialize the filter
+        defs.append("filter")
+            .attr("id", "motionFilter") //Give it a unique ID
+            //Increase the width of the filter region to remove blur "boundary"
+            .attr("width", "300%")
+            //Put center of the "width" back in the middle of the element
+            .attr("x", "-100%")
+            .append("feGaussianBlur") //Append a filter technique
+            .attr("class", "blurValues") //Needed to select later on
+            .attr("in", "SourceGraphic") //Apply blur on the applied element
+            //Do a blur of 8 standard deviations in the horizontal
+            //direction and 0 in vertical
+            .attr("stdDeviation", "5 5");
+        
+  
+        let light_radius = 20
+        let single_angle = 360/13
+        let pos_radius = light_radius - 5
+        let opacity_value = .5
+            // Detect the appropriate vendor prefix.
+        var prefix = "-webkit-transform" in document.body.style ? "-webkit-"
+        : "-moz-transform" in document.body.style ? "-moz-"
+        : "";
+        
+        //疾病类型1 : Mood Disorder
+         g.append('circle')
+        .attr('r', light_radius)
+        .attr('cy', function(d) {
+          let angle = single_angle*1
+          let light_y = Math.sin(angle)*pos_radius
+          return light_y
+        })
+        .attr('cx', function(d) {
+          let angle = single_angle*1
+          let light_x = Math.cos(angle)*pos_radius
+          return light_x
+        })
+        .attr('fill',function(d) {
+          let str = d['If so, what condition(s) were you diagnosed with?']
+          let state = str.indexOf('Mood Disorder')
+          if(state !== -1) {
+            return '#eb3a4b'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill-opacity', opacity_value)
+        .style("filter", "url(#motionFilter)")
+        
+        
+
+        //疾病类型2 : Anxiety Disorder
+        g.append('circle')
+        .attr('r', light_radius)
+        .attr('cy', function(d) {
+          let angle = single_angle*2
+          let light_y = Math.sin(angle)*pos_radius
+          return light_y
+        })
+        .attr('cx', function(d) {
+          let angle = single_angle*2
+          let light_x = Math.cos(angle)*pos_radius
+          return light_x
+        })
+        .attr('fill',function(d) {
+          let str = d['If so, what condition(s) were you diagnosed with?']
+          let state = str.indexOf('Anxiety Disorder')
+          if(state !== -1) {
+            return '#c333f1'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill-opacity', opacity_value)
+        .style("filter", "url(#motionFilter)")
+
+        
+
+        //疾病类型3 : Attention Deficit Hyperactivity Disorder
+        g.append('circle')
+        .attr('r', light_radius)
+        .attr('cy', function(d) {
+          let angle = single_angle*3
+          let light_y = Math.sin(angle)*pos_radius
+          return light_y
+        })
+        .attr('cx', function(d) {
+          let angle = single_angle*3
+          let light_x = Math.cos(angle)*pos_radius
+          return light_x
+        })
+        .attr('fill',function(d) {
+          let str = d['If so, what condition(s) were you diagnosed with?']
+          let state = str.indexOf('Attention Deficit Hyperactivity Disorder')
+          if(state !== -1) {
+            return '#5d30f5'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill-opacity', opacity_value)
+        .style("filter", "url(#motionFilter)")
+
+        //疾病类型4 : Post-traumatic Stress Disorder
+        g.append('circle')
+        .attr('r', light_radius)
+        .attr('cy', function(d) {
+          let angle = single_angle*4
+          let light_y = Math.sin(angle)*pos_radius
+          return light_y
+        })
+        .attr('cx', function(d) {
+          let angle = single_angle*4
+          let light_x = Math.cos(angle)*pos_radius
+          return light_x
+        })
+        .attr('fill',function(d) {
+          let str = d['If so, what condition(s) were you diagnosed with?']
+          let state = str.indexOf('Post-traumatic Stress Disorder')
+          if(state !== -1) {
+            return '#425ef5'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill-opacity', opacity_value)
+        .style("filter", "url(#motionFilter)")
+
+        //疾病类型5 : Obsessive-Compulsive Disorder
+        g.append('circle')
+        .attr('r', light_radius)
+        .attr('cy', function(d) {
+          let angle = single_angle*5
+          let light_y = Math.sin(angle)*pos_radius
+          return light_y
+        })
+        .attr('cx', function(d) {
+          let angle = single_angle*5
+          let light_x = Math.cos(angle)*pos_radius
+          return light_x
+        })
+        .attr('fill',function(d) {
+          let str = d['If so, what condition(s) were you diagnosed with?']
+          let state = str.indexOf('Obsessive-Compulsive Disorder')
+          if(state !== -1) {
+            return '#407bf7'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill-opacity', opacity_value)
+        .style("filter", "url(#motionFilter)")
+
+        //疾病类型6 : Substance Use Disorder
+        g.append('circle')
+        .attr('r', light_radius)
+        .attr('cy', function(d) {
+          let angle = single_angle*6
+          let light_y = Math.sin(angle)*pos_radius
+          return light_y
+        })
+        .attr('cx', function(d) {
+          let angle = single_angle*6
+          let light_x = Math.cos(angle)*pos_radius
+          return light_x
+        })
+        .attr('fill',function(d) {
+          let str = d['If so, what condition(s) were you diagnosed with?']
+          let state = str.indexOf('Substance Use Disorder')
+          if(state !== -1) {
+            return '#68e2fc'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill-opacity', opacity_value)
+        .style("filter", "url(#motionFilter)")
+
+
+        //疾病类型7 : Personality Disorder 
+        g.append('circle')
+        .attr('r', light_radius)
+        .attr('cy', function(d) {
+          let angle = single_angle*7
+          let light_y = Math.sin(angle)*pos_radius
+          return light_y
+        })
+        .attr('cx', function(d) {
+          let angle = single_angle*7
+          let light_x = Math.cos(angle)*pos_radius
+          return light_x
+        })
+        .attr('fill',function(d) {
+          let str = d['If so, what condition(s) were you diagnosed with?']
+          let state = str.indexOf('Personality Disorder')
+          if(state !== -1) {
+            return '#6ee5b9'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill-opacity', opacity_value)
+        .style("filter", "url(#motionFilter)")
+
+        //疾病类型8 : Stress Response Syndromes
+        g.append('circle')
+        .attr('r', light_radius)
+        .attr('cy', function(d) {
+          let angle = single_angle*8
+          let light_y = Math.sin(angle)*pos_radius
+          return light_y
+        })
+        .attr('cx', function(d) {
+          let angle = single_angle*8
+          let light_x = Math.cos(angle)*pos_radius
+          return light_x
+        })
+        .attr('fill',function(d) {
+          let str = d['If so, what condition(s) were you diagnosed with?']
+          let state = str.indexOf('Stress Response Syndromes')
+          if(state !== -1) {
+            return '#69e282'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill-opacity', opacity_value)
+        .style("filter", "url(#motionFilter)")
+
+       //疾病类型9 : Addictive Disorder
+       g.append('circle')
+        .attr('r', light_radius)
+        .attr('cy', function(d) {
+          let angle = single_angle*9
+          let light_y = Math.sin(angle)*pos_radius
+          return light_y
+        })
+        .attr('cx', function(d) {
+          let angle = single_angle*9
+          let light_x = Math.cos(angle)*pos_radius
+          return light_x
+        })
+        .attr('fill',function(d) {
+          let str = d['If so, what condition(s) were you diagnosed with?']
+          let state = str.indexOf('Addictive Disorder')
+          if(state !== -1) {
+            return '#9bfb4e'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill-opacity', opacity_value)
+        .style("filter", "url(#motionFilter)")
+        
+
+      //疾病类型10 : Eating Disorder
+       g.append('circle')
+        .attr('r', light_radius)
+        .attr('cy', function(d) {
+          let angle = single_angle*10
+          let light_y = Math.sin(angle)*pos_radius
+          return light_y
+        })
+        .attr('cx', function(d) {
+          let angle = single_angle*10
+          let light_x = Math.cos(angle)*pos_radius
+          return light_x
+        })
+        .attr('fill',function(d) {
+          let str = d['If so, what condition(s) were you diagnosed with?']
+          let state = str.indexOf('Eating Disorder')
+          if(state !== -1) {
+            return '#fcea4f'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill-opacity', opacity_value)
+        .style("filter", "url(#motionFilter)")
+
+       //疾病类型11 : Dissociative Disorder
+       g.append('circle')
+        .attr('r', light_radius)
+        .attr('cy', function(d) {
+          let angle = single_angle*11
+          let light_y = Math.sin(angle)*pos_radius
+          return light_y
+        })
+        .attr('cx', function(d) {
+          let angle = single_angle*11
+          let light_x = Math.cos(angle)*pos_radius
+          return light_x
+        })
+        .attr('fill',function(d) {
+          let str = d['If so, what condition(s) were you diagnosed with?']
+          let state = str.indexOf('Dissociative Disorder')
+          if(state !== -1) {
+            return '#f19637'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill-opacity', opacity_value)
+        .style("filter", "url(#motionFilter)")
+        
+
+       //疾病类型12 : Psychotic Disorder
+       g.append('circle')
+        .attr('r', light_radius)
+        .attr('cy', function(d) {
+          let angle = single_angle*12
+          let light_y = Math.sin(angle)*pos_radius
+          return light_y
+        })
+        .attr('cx', function(d) {
+          let angle = single_angle*12
+          let light_x = Math.cos(angle)*pos_radius
+          return light_x
+        })
+        .attr('fill',function(d) {
+          let str = d['If so, what condition(s) were you diagnosed with?']
+          let state = str.indexOf('Psychotic Disorder')
+          if(state !== -1) {
+            return '#eb4f27'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill-opacity', opacity_value)
+        .style("filter", "url(#motionFilter)")
+
+        //公司环境：benefits
+        g.append("ellipse")
+        .attr("rx", 25)
+        .attr("ry", 1)
+        .attr('stroke',function(d) {
+          if(d['Does your employer provide mental health benefits as part of healthcare coverage?'] === 'Yes') {
+            return '#fff'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill', 'transparent')
+        .attr('stroke-width', .5)
+        .attr("transform", "rotate(45)")
+        .attr('stroke-dasharray', 1)
+
+        //公司环境：options
+        g.append("ellipse")
+        .attr("rx", 25)
+        .attr("ry", 1)
+        .attr('stroke',function(d) {
+          if(d['Do you know the options for mental health care available under your employer-provided coverage?'] === 'Yes') {
+            return '#fff'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill', 'transparent')
+        .attr('stroke-width', .5)
+        .attr("transform", "rotate(-45)")
+        .attr('stroke-dasharray', 1)
+
+         //公司环境：discussion
+         g.append("ellipse")
+        .attr("rx", 25)
+        .attr("ry", 1)
+        .attr('stroke',function(d) {
+          if(d['Has your employer ever formally discussed mental health (for example, as part of a wellness campaign or other official communication)?'] === 'Yes') {
+            return '#fff'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('stroke-width', .5)
+        .attr('fill', 'transparent')
+        .attr("transform", "rotate(90)")
+        .attr('stroke-dasharray', 1)
+
+        //公司环境：seek_help
+        g.append("ellipse")
+        .attr("rx", 25)
+        .attr("ry", 1)
+        .attr('stroke',function(d) {
+          if(d['Does your employer offer resources to learn more about mental health concerns and options for seeking help?'] === 'Yes') {
+            return '#fff'
+          } else {
+            return 'transparent'
+          }
+        })
+        .attr('fill', 'transparent')
+        .attr('stroke-width', .5)
+        .attr("transform", "rotate(0)")
+        .attr('stroke-dasharray', 1)
+
+        // //保护：anonymity
+        // g.append('path')
+        // .attr('d', d3.symbol().type(d3.symbolCircle).size(800))
+        // .attr('stroke','#fff')
+        // .attr('fill', 'transparent')
+        // .attr('stroke-width', .5)
+        // .attr('stroke-dasharray', 1)
+
+        /****  绘制卫星啦  ****/
+        let satellite_radius = 25
+        let single_satellite_angle = 360/8
+        
+        //绘制卫星: 雇主+精神+不会负面影响
+        g.append("circle")
+        .attr("r", 1)
+        .attr('fill',function(d) {
+          if(d['Do you think that discussing a mental health disorder with your employer would have negative consequences?'] === 'No') {
+            return '#fff'
+          } else {
+            return 'transparent'
+          }
+        })
+        // .attr('fill', 'transparent')
+        // .attr('stroke-dasharray', 1)
+        // .attr('stroke-width', .3)
+        .attr("transform", function(d) {
+          let angle = single_satellite_angle*1
+          let satellite_x = Math.cos(angle)*satellite_radius
+          let satellite_y = Math.sin(angle)*satellite_radius
+          return 'translate('+ satellite_x + ',' + satellite_y +')'
+        })
+
+        //绘制卫星: 雇主+身体+不会负面影响
+        g.append("circle")
+        .attr("r", 1)
+        .attr('fill',function(d) {
+          if(d['Do you think that discussing a physical health issue with your employer would have negative consequences?'] === 'No') {
+            return '#fff'
+          } else {
+            return 'transparent'
+          }
+        })
+        // .attr('fill', 'transparent')
+        // .attr('stroke-dasharray', 1)
+        // .attr('stroke-width', .3)
+        .attr("transform", function(d) {
+          let angle = single_satellite_angle*2
+          let satellite_x = Math.cos(angle)*satellite_radius
+          let satellite_y = Math.sin(angle)*satellite_radius
+          return 'translate('+ satellite_x + ',' + satellite_y +')'
+        })
+
+        //绘制卫星: 同事+精神+愿意
+        g.append("circle")
+        .attr("r", 1)
+        .attr('fill',function(d) {
+          if(d['Would you feel comfortable discussing a mental health disorder with your coworkers?'] === 'Yes') {
+            return '#fff'
+          } else {
+            return 'transparent'
+          }
+        })
+        // .attr('fill', 'transparent')
+        // .attr('stroke-dasharray', 1)
+        // .attr('stroke-width', .3)
+        .attr("transform", function(d) {
+          let angle = single_satellite_angle*3
+          let satellite_x = Math.cos(angle)*satellite_radius
+          let satellite_y = Math.sin(angle)*satellite_radius
+          return 'translate('+ satellite_x + ',' + satellite_y +')'
+        })
+        
+
+        //绘制卫星: 上司+精神+愿意
+        g.append("circle")
+        .attr("r", 1)
+        .attr('fill',function(d) {
+          if(d['Would you feel comfortable discussing a mental health disorder with your direct supervisor(s)?'] === 'Yes') {
+            return '#fff'
+          } else {
+            return 'transparent'
+          }
+        })
+        // .attr('fill', 'transparent')
+        // .attr('stroke-dasharray', 1)
+        // .attr('stroke-width', .3)
+        .attr("transform", function(d) {
+          let angle = single_satellite_angle*4
+          let satellite_x = Math.cos(angle)*satellite_radius
+          let satellite_y = Math.sin(angle)*satellite_radius
+          return 'translate('+ satellite_x + ',' + satellite_y +')'
+        })
+
+        
+
+        //绘制菱形
+        g.append('path')
+        .attr('d', d3.symbol().type(d3.symbolDiamond).size(function(d) {
+          let age = Number(d['What is your age?'])
+          if(d['What is your gender?'] === 'Male' && age > 0 && age < 100) {
+            return sizeScale(Number(d['What is your age?']))
+          } else {
+            return 0
+          }
+        }))
+        .attr('fill',function(d) {
+          if(d['What is your gender?'] === 'Male') {
+            return '#fff'
+          }  else {
+            return 'transparent'
+          }
+        })
+        .attr('class', 'planet-opacity')
+        .style(prefix + "animation-duration", function(d) {
+          let question_str = d['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
+          if( question_str === 'Yes, they do') {
+            return '1s'
+          } else if (question_str === 'Yes, I think they would') {
+            return '2s'
+           }else if (question_str === "Maybe") {
+            return '3s'
+           }else if (question_str === "No, I don't think they would") {
+            return '4s'
+           }else if (question_str === "No, they do not") {
+            return '5s'
+           } else {
+             return '0s'
+           }
+        })
+
+        //绘制圆形
+        g.append('path')
+        .attr('d', d3.symbol().type(d3.symbolCircle).size(function(d) {
+          let age = Number(d['What is your age?'])
+          if(d['What is your gender?'] === 'Female' && age > 0 && age < 100) {
+            return sizeScale(Number(d['What is your age?']))
+          } else {
+            return 0
+          }
+        }))
+        .attr('fill',function(d) {
+          if(d['What is your gender?'] === 'Female') {
+            return '#fff'
+          }  else {
+            return 'transparent'
+          }
+        })
+        .attr('class', 'planet-opacity')
+        .style(prefix + "animation-duration", function(d) {
+          let question_str = d['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
+          if( question_str === 'Yes, they do') {
+            return '1s'
+          } else if (question_str === 'Yes, I think they would') {
+            return '2s'
+           }else if (question_str === "Maybe") {
+            return '3s'
+           }else if (question_str === "No, I don't think they would") {
+            return '4s'
+           }else if (question_str === "No, they do not") {
+            return '5s'
+           } else {
+             return '0s'
+           }
+        })
+
+
+        //绘制三角形
+        g.append('path')
+        .attr('d', d3.symbol().type(d3.symbolTriangle).size(function(d) {
+          let age = Number(d['What is your age?'])
+          if(d['What is your gender?'] !== 'Female' && d['What is your gender?'] !== 'Male' && age > 0 && age < 100) {
+            return sizeScale(Number(d['What is your age?']))
+          } else {
+            return 0
+          }
+        }))
+        .attr('fill','#fff')
+        .attr('class', 'planet-opacity')
+        .style(prefix + "animation-duration", function(d) {
+          let question_str = d['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
+          if( question_str === 'Yes, they do') {
+            return '1s'
+          } else if (question_str === 'Yes, I think they would') {
+            return '2s'
+           }else if (question_str === "Maybe") {
+            return '3s'
+           }else if (question_str === "No, I don't think they would") {
+            return '4s'
+           }else if (question_str === "No, they do not") {
+            return '5s'
+           } else {
+             return '0s'
+           }
+        })
+        
+
+        // //绘制匿名保护
+        // g.append('path')
+        // .attr('d', d3.symbol().type(d3.symbolCircle).size(function(d) {
+        //   let age = Number(d['What is your age?'])
+        //   if(d['What is your gender?'] === 'Female' && age > 0 && age < 100 && d['Is your anonymity protected if you choose to take advantage of mental health or substance abuse treatment resources provided by your employer?'] === 'Yes') {
+        //     return sizeScale(age+20)
+        //   } else {
+        //     return 0
+        //   }
+        // }))
+        // .attr('stroke',function(d) {
+        //   if(d['What is your gender?'] === 'Female' && d['Is your anonymity protected if you choose to take advantage of mental health or substance abuse treatment resources provided by your employer?'] === 'Yes') {
+        //     return '#fff'
+        //   }  else {
+        //     return 'transparent'
+        //   }
+        // })
+        // .attr('fill','transparent')
+
+
+    
+
+        //职位映射！
+        // g.append('g')
+        // .attr('class','system')
+        // .append('g')
+        // .attr('class', 'planet')
+        // .style(prefix + "animation-duration", function(d) {
+        //   let jobs =  d['Which of the following best describes your work position?'].split('|')
+        //   if(jobs.length === 4) {
+        //     return '40s'
+        //   } else if(jobs.length === 3) {
+        //     return '30s'
+        //   } else if(jobs.length === 2) {
+        //     return '20s'
+        //   } else if(jobs.length === 1) {
+        //     return '10s'
+        //   } else {
+        //     return '0s'
+        //   }
+        // })
+        // .style(prefix + "transform-origin", '0px 0px')
+        // .append('circle')
+        // .attr('cx', 15)
+        // .attr('r', 2)
+        // .attr('fill', '#fff')
+
+        // //右边叶子
+        // var littleGroup = g.append('g')
+        // littleGroup.append("ellipse")
+        // .attr("cx", -8)
+        // .attr("cy", 20)
+        // .attr("rx", 6)
+        // .attr("ry", 3)
+        // .attr("transform", "rotate(-40)")
+        // .attr('fill-opacity', function(d) {
+        //   if(d['coworkers'] === 'Some of them' ) {
+        //     return .35
+        //   } else if (d['coworkers'] === 'No' ) {
+        //     return 0
+        //   }
+        // })
+        // //左边叶子
+        // littleGroup.append("ellipse")
+        // .attr("cx", 8)
+        // .attr("cy", 20)
+        // .attr("rx", 6)
+        // .attr("ry", 3)
+        // .attr("transform", "rotate(40)")
+        // .attr('fill-opacity', function(d) {
+        //   if(d['supervisor'] === 'Some of them' ) {
+        //     return .35
+        //   } else if (d['coworkers'] === 'No' ) {
+        //     return 0
+        //   }
+        // })
+
+        // //茎
+        // g.append('path')
+        // .attr('d', function(d) {
+        //   if(d['remote_work'] === 'Yes') {
+        //     return 'M0,23 Q8,34,-2,50'
+        //   } else {
+        //     return 'M0,23 Q8,32,0,40'
+        //   }
+        // })
+        // .attr("stroke", "black")
+        // .attr("stroke-width", function(d,i) {
+        //   if(d['no_employees'] === '1-5') {
+        //     return '1px'
+        //   } else if(d['no_employees'] === '6-25') {
+        //     return '2px'
+        //   } else if(d['no_employees'] === '26-100') {
+        //     return '3px'
+        //   } else if(d['no_employees'] === '100-500') {
+        //     return '4px'
+        //   } else if(d['no_employees'] === '500-1000') {
+        //     return '5px'
+        //   } else if(d['no_employees'] === 'More than 1000') {
+        //     return '6px'
+        //   } else {
+        //     return '0'
+        //   }
+        // })
+        // .attr("fill", "transparent")
+
+
+        g.on('click', function(d) {
+          console.log(d,'this')
+        })
+
+      })
+    }
+      // var g = svg.selectAll('.element').data(dataSet).enter().append('g').attr('class','element')
+      // .attr('transform', function(d, i) {
+      //   return 'translate(' + i*50 +','+ 10 +')'
+      // })
+
+
+
+
 
   </script>
 </body>

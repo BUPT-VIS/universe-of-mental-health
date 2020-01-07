@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FUCK</title>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.min.js"></script>
+<script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+
+</head>
+<body>
+<img src="a.png" onmousewheel="zoom()"/>
+<script>
+
+
+var canvasWidth = 800, canvasHeight = 800;
+
+var xScale = d3.scaleLinear()
+.domain([-150, 160])
+.range([0, canvasWidth]);
+
+var yScale = d3.scaleLinear()
+.domain([-125, 150])
+.range([0, canvasHeight]);
+
+let data = {}, posData = [];
+
+function preload() {
+    data = loadJSON("2016(1).json");
+}
+
+function setup() {
+    console.log(typeof(data), data);
+
+    // process data
+    for (let i in data) {
+        //if (i < 10) {
+            //console.log(data[i].x, data[i].y);
+            posData.push({
+                'x': xScale(data[i].x),
+                'y': yScale(data[i].y),
+                'ox': 0,
+                'oy': 0
+            })
+        //}        
+    }
+    console.log(posData);
+
+    // create canvas
+    createCanvas(800, 800);
+}
+
+function draw() {
+    background(0,0,0);
+    posData.forEach((pos) => {
+        push();
+        fill('yellow');
+        ellipse(pos.x, pos.y, 6, 6);
+        pop();
+    })
+}
+
+function mousePressed() {
+    drag = true;
+    // 记录鼠标相对元素的偏移量
+    posData.forEach((pos, i) => {
+        pos.ox = mouseX - pos.x;
+        pos.oy = mouseY - pos.y;
+    })
+}
+
+function mouseDragged() {
+    if (drag) {
+        // 根据偏移量修改位置坐标
+        posData.forEach((pos, i) => {
+            pos.x = mouseX - pos.ox;
+            pos.y = mouseY - pos.oy;
+        })
+    }
+}
+
+function mouseReleased() {
+  drag = false;
+}
+</script>
+</body>
+</html>
