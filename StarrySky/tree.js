@@ -1,29 +1,29 @@
 //准备数据   
 var root = {
-  'name': 'self-employed',
+  'name': 'Self-employed',
   'children': [
     {
-      'name': 'Y have pre-employers 1',
+      'name': 'Y Pre-employers 1',
       'children': [
         {'name': 'Y star6'},
         {'name': 'N star5'}
       ]
     },
     {
-      'name': 'N tech/IT company',
+      'name': 'N Tech-company',
       'children': [
         {
-          'name': 'Y have pre-employers 2',
+          'name': 'Y Pre-employers 2',
           'children': [
             {'name': 'Y star2'},
             {'name': 'N star1'}
           ]
         },
         {
-          'name': 'N tech/IT role',
+          'name': 'N Tech-role',
           'children': [
             {
-              'name': 'Y have pre-employers 3',
+              'name': 'Y Pre-employers 3',
               'children': [
                 {'name': 'Y star4'},
                 {'name': 'N star3'}
@@ -36,8 +36,6 @@ var root = {
     }
   ]
 }
-var treeWidth  = 400;	//SVG绘制区域的宽度
-var treeHeight = 200;	//SVG绘制区域的高度
   
 //1. 根据root整理出数结构的数据
 const hierarchyData = d3.hierarchy(root)
@@ -47,7 +45,7 @@ const hierarchyData = d3.hierarchy(root)
 // console.log(hierarchyData, 'hierarchyData')
 //2. 生成树状布局(数据获取器)
 var tree = d3.tree()
-.size([treeHeight-50, treeWidth-90])
+.size([200, 350])
 .separation(function (a, b) {
   return (a.parent === b.parent ? 1 : 2) / a.depth
 })
@@ -62,114 +60,83 @@ var links = treeData.links();
 var treeSvg = d3.select("body")			//选择<body>
       .append('div').attr('id', 'tree-wrap')
       .append("svg")			//在<body>中添加<svg>
-      .attr("width", treeWidth)	//设定<svg>的宽度属性
-      .attr("height", treeHeight)
+      .attr("width", 450)	//设定<svg>的宽度属性
+      .attr("height", 250)
       // .style("border", "solid 1px #000")//设定<svg>的高度属性
       .attr('class', 'svg-tree')
-      // .attr('transform','translate(50, -50)')
+      .append("g")
+      .attr('transform','translate(50, 20)')
 
-var link = treeSvg.selectAll('.link')
-  .data(links)
-  .enter()
-  .append('path')
-  .attr('class', 'link')
-  .attr('d', d3.linkHorizontal()  //linkHorizontal生成的曲线在曲线的终点和起点处的切线是水平方向
-    .x(d=>d.y).y(d=>d.x))
-    .attr('transform', 'translate(50, 0)')
+var horizontal = d3.linkHorizontal() //linkHorizontal生成的曲线在曲线的终点和起点处的切线是水平方向
+  .x(d => d.y)
+  .y(d => d.x);
 
-var node = treeSvg.selectAll('.node')
-  .data(nodes)
-  .enter()
-  .append('g')
-  .attr('class', 'node')
-  .attr('transform', function (d) { return 'translate(' + (d.y+50) + ',' + d.x + ')' })
-  // console.log('nodes', nodes);
-  // console.log('links', links);
+var link = treeSvg.selectAll(".link")
+.data(links)
+.enter()
+.append("path")
+.style("fill", "none")
+.style("stroke", "white")
+.style("stroke-width", 3)
+.attr('d', horizontal)
+.on("click", function(d) {
+    console.log(d.source.data.name, d.target.data.name);
+});
 
-var nodess = node.append('circle')
-  .attr('r', 5)
-  .attr("class", function(d) {
-    // console.log(d.data.name, 'd.name???')
-    return d.data.name;
-  })
-  .style("fill", "white")
-  .on("mouseover", function(d,i) {
-    d3.select(this).style("fill", "#00ffd4");
-  })
-  .on("mouseout", function(d,i) {
-    d3.select(this).style("fill", "#00ffd4");
-  })
-  .on("click", function(d) {
-    /* 父节点变色 */
-    var current = d;
-    // console.log(current.data.name, 'current.name');
-    var parents = [current.data.name];
-    for (var depth = 0; depth < d.depth; depth++) {
-      current = current.parent;
-      //d3.select(this).style("fill", "#00ffd4");
-      parents.push(current.data.name);
+var node = treeSvg.selectAll(".node")
+.data(nodes)
+.enter()
+.append("g")
+.attr("class", "node")
+.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+  
+var nodes = node.append("circle")
+.attr("r", 5)
+.style("fill", "white")
+.style("cursor", "pointer")
+.on("mouseover", function(d,i) {
+  d3.select(this).style("stroke", "#00ffd4").style("stroke-width", 2);
+})
+.on("mouseout", function(d,i) {
+  d3.select(this).style("stroke", "none");
+})
+.on("click", function(d) {
+  var current_node = d;
+  console.log(current_node.data.name);
+  var parent_nodes = [current_node.data.name];
+    var parent_links = [];
+  for (var depth = 0; depth < d.depth; depth++) {
+        var current_link = current_node.data.name;
+    current_node = current_node.parent;
+        current_link = current_node.data.name + " To " + current_link;
+    parent_nodes.push(current_node.data.name);
+        parent_links.push(current_link);
+  }
+  console.log(parent_nodes, parent_links);
+
+  nodes.each(function(d) {
+    if (parent_nodes.indexOf(d.data.name) > -1) {
+      d3.select(this).style("fill", "#00ffd4");
+    } else {
+      d3.select(this). style("fill", "white");
     }
-    // console.log(parents, 'parents');
-    nodess.each(function(d) {
-      if (parents.indexOf(d.data.name) > -1) {
-        d3.select(this).style("fill", "#00ffd4");
-      } else {
-        d3.select(this). style("fill", "white");
-      }
-    });
-    /* 筛选 */
-    let selectedNode = d3.select(this).node()
-    selectedNodeName = selectedNode.getAttribute('class')
-    // console.log(data,'data')
-    let newData = []
-    for(let i in data) {
-      newData.push(data[i])
-    }
-    data = newData.filter(d=> {return d['Are you self-employed?'] === 1})
-    console.log(data, 'success')
-    // console.log(selectedNodeName,'name')
   });
 
-var texts = node.append('text')
-  .attr('dy', -10)
-  .attr('dx', 40)
-  // .style('text-anchor', function (d) { return d.children ? 'end' : 'start' })
-  .style('text-anchor', 'end')
-  .text(function (d) {
-    return d.data.name
-  })
-  .style("fill", "#ccc")
-  .style('font-size', '11px')
-
-  // var nodes = node.append("circle")
-  //   .attr("r", 5)
-  //   .attr("class", function(d) {
-  //     return d.name;
-  //   })
-    // .style("fill", "white")
-    // .on("mouseover", function(d,i) {
-    //   d3.select(this).style("fill", "#00ffd4");
-    // })
-    // .on("mouseout", function(d,i) {
-    //   d3.select(this).style("fill", "white");
-    // })
-    // .on("click", function(d) {
-    //   var current = d;
-    //   console.log(current.name);
-    //   var parents = [current.name];
-    //   for (var depth = 0; depth < d.depth; depth++) {
-    //     current = current.parent;
-    //     //d3.select(this).style("fill", "#00ffd4");
-    //     parents.push(current.name);
-    //   }
-    //   console.log(parents);
-
-    //   nodes.each(function(d) {
-    //     if (parents.indexOf(d.name) > -1) {
-    //       d3.select(this).style("fill", "#00ffd4");
-    //     } else {
-    //       d3.select(this). style("fill", "white");
-    //     }
-    //   });
-    // });
+    link.each(function(d) {
+        if (parent_links.indexOf(d.source.data.name + " To " + d.target.data.name) > -1) {
+            d3.select(this).style("stroke", "#00ffd4");
+        } else {
+            d3.select(this). style("stroke", "white");
+        }
+    });
+});
   
+var texts = node.append("text")
+.attr("dx", function(d) { return d.children ? -8 : 8; })
+.attr("dy", 15)
+.style("text-anchor", "middle"/*function(d) { return d.children ? "end" : "start"; }*/)
+.style("fill", "#aaa")
+.style("stroke", "#aaa")
+.style("stroke-width", 0.1)
+.style("font-size", 10)
+.text(function(d) { return d.data.name; });
