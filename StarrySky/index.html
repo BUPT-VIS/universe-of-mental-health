@@ -634,8 +634,6 @@ img{
         let CanXX = posData[i].x
         let CanYY = posData[i].y
         if(Number(CanXX) < Number(endPosX) && Number(CanXX) > Number(recPosX) && Number(CanYY) < Number(endPosY) && Number(CanYY) > Number(recPosY)) {
-          if(idList.indexOf(i) === -1) {
-            idList.push(i)
           if(idList.indexOf(posData[i].id) === -1) {
             idList.push(posData[i].id)
           }
