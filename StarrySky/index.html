@@ -634,6 +634,8 @@ img{
         if(Number(CanXX) < Number(endPosX) && Number(CanXX) > Number(recPosX) && Number(CanYY) < Number(endPosY) && Number(CanYY) > Number(recPosY)) {
           if(idList.indexOf(i) === -1) {
             idList.push(i)
+          if(idList.indexOf(posData[i].id) === -1) {
+            idList.push(posData[i].id)
           }
         } else {
           // console.log('lasso false!!!')
@@ -754,7 +756,8 @@ img{
           let halos = []
           for(let i = 0; i < conditions.length; i++) {
             let currentColorForConditionsIndex = conditionsList.indexOf(conditions[i])
-            let conColor = condition_colors[currentColorForConditionsIndex] !== -1 ? condition_colors[currentColorForConditionsIndex] : 13
+            currentColorForConditionsIndex= currentColorForConditionsIndex !== -1 ? currentColorForConditionsIndex : 12
+            let conColor = condition_colors[currentColorForConditionsIndex]
             let haloObj = {
               'cx': angleForXY[i].x,
               'cy': angleForXY[i].y,
@@ -950,7 +953,7 @@ img{
         /****  映射职业啦:卫星  ****/
         let satellite_self_radius = 1
         let satellite_radius = 25
-        let single_satellite_angle = Math.PI/13
+        let single_satellite_angle = Math.PI/12
         let pos_list = ['Back-end Developer', 'Front-end Developer', 'Supervisor/Team Lead', 
         'DevOps/SysAdmin', 'Support', 'One-person shop', 
         'Designer', 'Dev Evangelist/Advocate', 'Executive Leadership',
@@ -960,12 +963,12 @@ img{
           g.append('circle')
           .attr('r', satellite_self_radius)
           .attr('cy', function(d) {
-            let angle = single_satellite_angle * (i+1)
+            let angle = single_satellite_angle*i - Math.PI/2
             let light_y = Math.sin(angle)*satellite_radius
             return light_y
           })
           .attr('cx', function(d) {
-            let angle = single_satellite_angle * (i+1)
+            let angle = single_satellite_angle*i - Math.PI/2
             let light_x = Math.cos(angle)*satellite_radius
             return light_x
           })
