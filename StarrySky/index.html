@@ -9,237 +9,377 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script> -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.min.js"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/addons/p5.sound.min.js"></script>
-  <script src="/p5.collide2d.min.js"></script>
+  <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/addons/p5.sound.min.js"></script> -->
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <!-- <script src="p5.dom.js"></script> -->
   <title>test</title>
-  <link rel="stylesheet" type="text/css" href="css/luna.css" />
-  <style>
-    body {
-      color: white;
-      background-color: black;
-    }
-    p,h1 {
-       margin: 0;
-    }
-    #defaultCanvas0 {
-      position: absolute;
-      /* top: 800px; */
-    }
+  <link rel="stylesheet" href="style.css">
+<style type="text/css">
+p,h1 {
+  margin: 0
+}
+#defaultCanvas0 {
+ position: absolute;
+ /* top: 800px; */
+}
 
-    .popupBox {
-      background-color: #ffffff;
-      box-shadow: 0 0 2px 2px #999;
-      padding: 5px;
+#popupBox {
+ background-color: #ffffff;
+ box-shadow: 0 0 2px 2px #999;
+ padding: 5px;
+ position: absolute;
+ /* position: fixed; */
+ right: 200px;
+ width: 300px;
+ z-index: 6;
+ /* height: 200px; */
+}
+#selectBenefits {
+ position: fixed;
+ top: 220px;
+ right: 200px;
+}
+
+#selectOptions {
+ position: fixed;
+ top: 280px;
+ right: 200px;
+}
+
+#selectWellness {
+ position: fixed;
+ top: 340px;
+ right: 200px;
+}
+
+#selectSeekHelp {
+ position: fixed;
+ top: 400px;
+ right: 200px;
+}
+
+#selectAnonymity {
+ position: fixed;
+ top: 460px;
+ right: 200px;
+}
+
+#selectLeave {
+ position: fixed;
+ top: 520px;
+ right: 200px;
+}
+
+.right-desc__box {
+ display: flex;
+ height: 100%;
+ width: 400px;
+ flex-wrap: wrap;
+ border: 1px #eee solid;
+ background-color: rgba(0,0,0);
+ /* background-color: #000; */
+ border-radius: 20px;
+ color: #fff
+}
+
+#svgContainer {
+ width: 400px;
+ height: 85%;
+ overflow-y: scroll;
+ overflow-x: hidden;
+ padding: 0 10px;
+ /* display: none; */
+}
+
+#svgWrapper {
+ margin-top: -50px;
+}
+
+.desc-box__title {
+ color: #fff;
+ /* line-height: 40px; */
+ padding: 20px;
+ text-align: left;
+ height: 5%;
+}
+
+.desc-box__title span {
+  font-size: 14px;
+ font-weight: 200;
+}
+
+.system {
+ display: inline-block;
+ position: relative;
+ vertical-align: middle;
+ width: 50px;
+ height: 50px;
+}
+
+.planet {
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 50px;
+ height: 50px;
+ -moz-animation-name: rotate;
+ -moz-animation-iteration-count: infinite;
+ -moz-animation-timing-function: linear;
+ -webkit-animation-name: rotate;
+ -webkit-animation-iteration-count: infinite;
+ -webkit-animation-timing-function: linear;
+ animation-name: rotate;
+ animation-iteration-count: infinite;
+ animation-timing-function: linear;
+}
+
+.slidedown {
+ -moz-animation-name: slidedown;
+ -moz-animation-iteration-count: 1;
+ -moz-animation-timing-function: linear;
+ -webkit-animation-name: slidedown;
+ -webkit-animation-iteration-count: 1;
+ -webkit-animation-timing-function: linear;
+ animation-name: slidedown;
+ animation-iteration-count: 1;
+ animation-timing-function: linear;
+}
+
+.drag-icon {
+ background-image: url('4x/drag-icon.png');
+ background-position:center;
+ background-size: 100% 100%;
+ background-repeat: no-repeat;
+ width: 50px;
+ height: 50px;
+}
+
+.lasso-icon {
+ background-image: url('4x/lasso-icon.png');
+ background-position:center;
+ background-size: 100% 100%;
+ background-repeat: no-repeat;
+ width: 50px;
+ height: 50px;
+}
+
+.interact-button {
+ display: flex;
+ flex-wrap: wrap;
+ height: 70px;
+ width: 50px;
+ color: #fff;
+ justify-content: center;
+}
+
+.right-side {
+ display: flex;
+ position: fixed;
+ top: 15%;
+ right: 3%;
+ z-index: 5;
+ height: 80%;
+}
+
+.button-box {
+ margin-right: 20px;
+ display: flex;
+ flex-direction: column;
+ justify-content: flex-end;
+}
+
+
+
+@-moz-keyframes slidedown {
+ from { -moz-transform: translateY(0); }
+ to { -moz-transform: translateY(-20); }
+}
+
+@-webkit-keyframes slidedown {
+ from { -webkit-transform: translateY(0); }
+ to { -webkit-transform: translateY(-20); }
+}
+
+@keyframes slidedown {
+ from { transform: translateY(0); }
+ to { transform: translateY(-20); }
+}
+
+.slider-interval {
+ position: fixed;
+ width: 300px;
+ bottom: 30%;
+ left: 30%
+}
+
+.move-state {
+ cursor:move;
+}
+
+.sys__title {
+ position: fixed;
+ top: 5%;
+ left: 50%;
+ transform:  translateX(-50%);
+ z-index: 5;
+ color: #fff;
+ font-size: 40px;
+ font-weight: 200;
+ white-space: nowrap;
+}
+
+.interaction-into {
+ background-color: #fff;
+ left: 50%;
+ transform: translateX(-50%);
+ border-radius: 20px;
+ color: #000;
+ position: fixed;
+ top: 12%;
+ z-index: 5;
+ padding: 10px 20px;
+}
+
+.triangle {
+ width: 30px;
+ height: 30px;
+ position: fixed;
+ left: 50%;
+ transform: translateX(-50%) rotate(45deg);
+ top: 11%;
+ z-index: 5;
+ background-color: #fff;
+}
+
+.size-sliderbar {
+ position: fixed;
+ bottom: 5%;
+ left: 50%;
+ /* width: 500px; */
+ transform: translateX(-50%);
+ z-index: 5;
+}
+
+#tree-wrap {
+ position: fixed;
+ top: 5%;
+ left: 3%;
+ background-color:transparent;
+ z-index: 5;
+ width: 400px;
+ height: 200px;
+}
+
+.svg-tree {
+ border: 0
+}
+
+.link {
+ fill: none;
+ stroke: #fff;
+ stroke-width: 3px;
+} 
+
+.element:hover {
+  cursor: pointer;
+}
+/* 
+    .slider-scale {
       position: fixed;
-      top: 800px;
-      right: 200px;
-      width: 800px;
-      /* height: 200px; */
-    }
-    #selectBenefits {
-      position: fixed;
-      top: 220px;
-      right: 200px;
+      width: 300px;
+      bottom: 13%;
+      left: 30%
+    } */
+
+    /* @-moz-keyframes rotate {
+      from { -moz-transform: rotateZ(0deg); }
+      to { -moz-transform: rotateZ(-360deg); }
     }
 
-    #selectOptions {
-      position: fixed;
-      top: 280px;
-      right: 200px;
+    @-webkit-keyframes rotate {
+      from { -webkit-transform: rotateZ(0deg); }
+      to { -webkit-transform: rotateZ(-360deg); }
     }
 
-    #selectWellness {
-      position: fixed;
-      top: 340px;
-      right: 200px;
+    @keyframes rotate {
+      from { transform: rotateZ(0deg); }
+      to { transform: rotateZ(-360deg); }
     }
 
-    #selectSeekHelp {
-      position: fixed;
-      top: 400px;
-      right: 200px;
-    }
-
-    #selectAnonymity {
-      position: fixed;
-      top: 460px;
-      right: 200px;
-    }
-
-    #selectLeave {
-      position: fixed;
-      top: 520px;
-      right: 200px;
-    }
-
-    .right-desc__box {
-      display: flex;
-      height: 100%;
-      width: 400px;
-      flex-wrap: wrap;
-      border: 1px #eee solid;
-      background-color: rgba(0,0,0);
-      /* background-color: #000; */
-      border-radius: 20px;
-      color: #fff
-    }
-
-    #svgContainer {
-      width: 400px;
-      height: 85%;
-      overflow-y: scroll;
-      overflow-x: hidden;
-      padding: 0 10px;
-      /* display: none; */
-    }
-
-    #svgWrapper {
-      margin-top: -50px;
-    }
-
-    .desc-box__title {
-      color: #fff;
-      /* line-height: 40px; */
-      padding: 20px;
-      text-align: left;
-      height: 5%;
-    }
-
-    .desc-box__title span {
-      font-weight: 200;
-    }
-
-    .system {
-      display: inline-block;
-      position: relative;
-      vertical-align: middle;
-      width: 50px;
-      height: 50px;
-    }
-
-    .planet {
+    .planet-individual {
       position: absolute;
       top: 0;
       left: 0;
-      width: 50px;
-      height: 50px;
-      -moz-animation-name: rotate;
+      /* width: 50px;
+      height: 50px; */
+      /* -moz-animation-name: scale;
       -moz-animation-iteration-count: infinite;
       -moz-animation-timing-function: linear;
-      -webkit-animation-name: rotate;
+      -webkit-animation-name: scale;
       -webkit-animation-iteration-count: infinite;
       -webkit-animation-timing-function: linear;
-      animation-name: rotate;
+      animation-name: scale;
       animation-iteration-count: infinite;
       animation-timing-function: linear;
     }
 
-    .slidedown {
-      -moz-animation-name: slidedown;
-      -moz-animation-iteration-count: 1;
+    @-moz-keyframes scale {
+      0% { -moz-transform: scale(0,0); }
+      50% { -moz-transform: scale(1,1); }
+      100% { -moz-transform: scale(0,0); }
+    }
+
+    @-webkit-keyframes scale {
+      0% { -webkit-transform: scale(0,0); }
+      50% { -webkit-transform: scale(1,1); }
+      100% { -webkit-transform: scale(0,0); }
+    }
+
+    @keyframes scale {
+      0% { transform: scale(0,0); }
+      50% { transform: scale(1,1); }
+      100% { transform: scale(0,0); }
+    }
+
+    .planet-opacity {
+      position: absolute;
+      top: 0;
+      left: 0;
+      /* width: 50px;
+      height: 50px; */
+      /* -moz-animation-name: opacity;
+      -moz-animation-iteration-count: infinite;
       -moz-animation-timing-function: linear;
-      -webkit-animation-name: slidedown;
-      -webkit-animation-iteration-count: 1;
+      -webkit-animation-name: opacity;
+      -webkit-animation-iteration-count: infinite;
       -webkit-animation-timing-function: linear;
-      animation-name: slidedown;
-      animation-iteration-count: 1;
+      animation-name: opacity;
+      animation-iteration-count: infinite;
       animation-timing-function: linear;
     }
 
-    .drag-icon {
-      background-image: url('4x/drag-icon.png');
-      background-position:center;
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      width: 50px;
-      height: 50px;
+    @-moz-keyframes opacity {
+      0% { opacity: 0 }
+      50% { opacity: 1 }
+      100% { opacity: 0 }
     }
 
-    .lasso-icon {
-      background-image: url('4x/lasso-icon.png');
-      background-position:center;
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      width: 50px;
-      height: 50px;
+    @-webkit-keyframes opacity {
+      0% { opacity: 0 }
+      50% { opacity: 1 }
+      100% { opacity: 0}
     }
 
-    .interact-button {
-      display: flex;
-      flex-wrap: wrap;
-      height: 70px;
-      width: 50px;
-      color: #fff;
-      justify-content: center;
-    }
-    .button-box {
-      margin-right: -50px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-    }
+    @keyframes opacity {
+      0% { opacity: 0 }
+      50% { opacity: 1 }
+      100% { opacity: 0 }
+    }  */
 
-    @-moz-keyframes slidedown {
-      from { -moz-transform: translateY(0); }
-      to { -moz-transform: translateY(-20); }
-    }
-
-    @-webkit-keyframes slidedown {
-      from { -webkit-transform: translateY(0); }
-      to { -webkit-transform: translateY(-20); }
-    }
-
-    @keyframes slidedown {
-      from { transform: translateY(0); }
-      to { transform: translateY(-20); }
-    }
-
-    .slider-interval {
-      position: fixed;
-      width: 300px;
-      bottom: 30%;
-      left: 30%
-    }
-
-    .move-state {
-      cursor:move;
-    }
-
-    .interaction-into {
-      background-color: #fff;
-      left: 50%;
-      transform: translateX(-50%);
-      border-radius: 20px;
-      color: #000;
-      position: fixed;
-      top: 12%;
-      z-index: 5;
-      padding: 10px 20px;
-    }
-
-    .triangle {
-      width: 30px;
-      height: 30px;
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%) rotate(45deg);
-      top: 11%;
-      z-index: 5;
-      background-color: #fff;
-    }
-
-    .size-sliderbar {
-      position: fixed;
-      bottom: 5%;
-      left: 50%;
-      /* width: 500px; */
-      transform: translateX(-50%);
-      z-index: 5;
-    }
-
-
+body {
+  background-color: black;
+  color: white;
+}
 .title {
   font-size: 24px;
   font-family: Gilroy;
@@ -258,12 +398,6 @@
   top: 60px;
   right: 0px;
   z-index: 5;*/
-  display: flex;
- position: fixed;
- top: 15%;
- right: 3%;
- z-index: 5;
- height: 600px;
 }
 .left-panel {
   width: 380px;
@@ -316,11 +450,12 @@ img{
   height: auto;
   max-width: 100%;
   max-height: 100%;
-} 
+}
 </style>
 </head>
 
 <body>
+<!-- 标题区域 -->
 <div class="title">The Universe Of Mental Health In Tech Company</div>
 <!-- <span class="triangle"></span>
 <span class="interaction-into"> Middle-click to drag starry sky & Right-click to select an individual </span> -->
@@ -343,55 +478,36 @@ img{
   </div>
 </div>
 <!-- 右边栏区域 -->
-<!-- <div class="right-side">
-  <div class="button-box">
-    <div class="interact-button" id="drag" style="margin-bottom: 20px" onclick="changeButton(this)">
-      <p class="drag-icon"></p>
-      <p>drag</p>
-    </div>
-    <div class="interact-button" id="lasso" onclick="changeButton(this)">
-      <p class="lasso-icon"></p>
-      <p>select</p>
-    </div>
-  </div>
-  <div class="right-panel">
-    <div class="panel-title">Legend</div>
-    <div class="panel-text">Shape & Area - Individual</div>
-    <div class="image-legend"><img src="4x/资源 1.svg"></div>
-    <div class="panel-text">Mental Health Benifits - Orbits</div>
-    <div class="image-legend"><img src="4x/资源 2.svg"></div>
-    <div class="panel-text">Willing to Expose & Work Position</div>
-    <div class="image-legend"><img src="4x/资源 3.svg"></div>
-  </div>
-  <div class="right-panel" style="height: 100%;">
-    <div class="panel-title">Employees</div>
-    <div class="panel-text">Who have changed jobs?</div>    
-    <div id="svgContainer"></div>
-  </div>  
-</div> -->
-<!-- 右边栏区域 -->
 <div class="right-side">
     <!-- 按钮区域 -->
     <div class="button-box">
       <div class="interact-button" id="drag" style="margin-bottom: 20px" onclick="changeButton(this)">
-        <p class="drag-icon"></p >
-        <p>drag</p >
+        <p class="drag-icon"></p>
+        <p>drag</p>
       </div>
       <div class="interact-button" id="lasso" onclick="changeButton(this)">
-        <p class="lasso-icon"></p >
-        <p>select</p >
+        <p class="lasso-icon"></p>
+        <p>select</p>
       </div>
     </div>
     <!-- 细节描述框 -->
-      <div class="right-desc__box">
-        <div class="desc-box__title">
-          <h1>Detail icon</h1>
-          <span>Please CLICK one of the elements to help for analyizing:</span>
-        </div>
-        <div id="svgContainer"></div>
+    <div class="right-desc__box">
+      <div class="desc-box__title">
+        <h1>Detail icon</h1>
+        <span>Please CLICK one of the elements to help for analyizing:</span>
       </div>
+      <div id="svgContainer"></div>
+    </div>
+    <div class="right-panel">
+      <div class="panel-title">Legend</div>
+      <div class="panel-text">Shape & Area - Individual</div>
+      <div class="image-legend"><img src="4x/资源 1.svg"></div>
+      <div class="panel-text">Mental Health Benifits - Orbits</div>
+      <div class="image-legend"><img src="4x/资源 2.svg"></div>
+      <div class="panel-text">Willing to Expose & Work Position</div>
+      <div class="image-legend"><img src="4x/资源 3.svg"></div>
+    </div>
 </div>
-<script src="tree.js"></script>
   <!-- <input></input> -->
   <script>
     var starSVG = d3.select("#color-legend")
@@ -460,7 +576,9 @@ img{
     var dataSet = []; //全局数据
     var item_interval = 10; //每个气泡的间距
     var posData = [];//存放点的最终位置的数组
-    var size = 0.8;//缩放比率
+    var posDataTotal = [];
+    var initPosData = [];
+    var size = 3;//缩放比率
     var R = 0.8;//星球的布局半径  
     var B;
     var drag = false;
@@ -468,6 +586,17 @@ img{
     var currentSliderBarValue; //
     var selectedNodeName; //树：筛选名
     var buttonState ='lasso'; 
+    var xPosScale, yPosScale;
+    var tempWindowWidth, tempWindowHeight
+    var useCanvasValid = false;
+
+    function copyArr(arr) {
+        let res = [];
+        for(let i in arr) {
+          res.push(arr[i]);
+        }
+        return res;
+      }
 
     //载入JSON
     function preload() {
@@ -477,6 +606,8 @@ img{
     function setup() {
       var xScale = windowWidth/(80*2);
       var yScale = windowHeight/(40*2);
+      xPosScale = xScale;
+      yPosScale = yScale;
       // SizeSlider = createSlider(0, 25, 1.5);
       // SizeSlider.class('size-sliderbar')
       // process data
@@ -484,6 +615,10 @@ img{
       //if (i < 100) {
           posData.push({
               // 画面中心坐标 +- 比例尺
+              'self-employed': data[i]['Are you self-employed?'],
+              'IT-company': data[i]['Is your employer primarily a tech company/organization?'],
+              'pre-employers': data[i]['Do you have previous employers?'],
+              'Tech-role': data[i]['Is your primary role within your company related to tech/IT?'],
               'x': windowWidth/2 + xScale*data[i].x,
               'y': windowHeight/2 + yScale*data[i].y,
               'ox': 0,
@@ -492,74 +627,62 @@ img{
               'view': data[i]['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
           })
       } 
-      createCanvas(windowWidth, windowHeight);
+      posDataTotal = posData;
+      initPosData = copyArr(posData)
+      // createCanvas(windowWidth, windowHeight);
       // noStroke();
     }
 
-    // if(selectedNodeName === "Y have pre-employers 1") {
-    //     data = data.filter(d=> {return d['Are you self-employed?'] === 0})
-    //     console.log('success')
-    //   }
+    /* 角度自适应封装方法 */
+    function angleSelfAdaption(arr, r) {
+      let angleArr = []
+      if(arr.length > 0) {
+        for(let i = 0; i < arr.length; i++) {
+          let d = {}
+          // // 没病的人或一种病 无偏移
+          // if (arr.length == 1) {
+          //     d.x = 0; d.y = 0; 
+          // }
+          // // 多于一种病 有偏移
+          // else {
+              d.x = r * sin(i * TWO_PI / arr.length);
+              d.y = r * cos(i * TWO_PI / arr.length);
+          // }
+          angleArr.push(d)
+        } 
+      }
+     return angleArr
+    }
 
-    // function sliderChangeEvent() {
-    //   console.log('asize!!!')
-    //   wheelScale = 0.8
-    //   posData.forEach((pos, i) => {
-    //               // 偏移量 = 缩放比率 * (元素位置 - 画面中心)
-    //               pos.ox = wheelScale * (pos.x - windowWidth/2);
-    //               pos.oy = wheelScale * (pos.y - windowHeight/2);
-
-    //               // 画面中心 + 偏移量 = 元素位置
-    //               pos.x = windowWidth/2 + pos.ox;
-    //               pos.y = windowHeight/2 + pos.oy;
-    //   })
-    // }
-    // if(selectedNodeName === "N tech/IT company") {
-    //     posData = []
-    //     for (let i = 0; i < data.length; i++) {
-    //   //if (i < 100) {
-    //       posData.push({
-    //           // 画面中心坐标 +- 比例尺
-    //           'x': windowWidth/2 + xScale*data[i].x,
-    //           'y': windowHeight/2 + yScale*data[i].y,
-    //           'ox': 0,
-    //           'oy': 0,
-    //           'condition': split(data[i]['If so, what condition(s) were you diagnosed with?'], '|'),
-    //           'view': data[i]['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
-    //       })
-    //     } 
-    //   }
-
-        /* 绘制图像 */
+    /* 绘制图像 */
     function draw() {
+      createCanvas(windowWidth, windowHeight);
       background(0);
       var t = millis() / 1000;
       // size = SizeSlider.value();
       push();
       rect(recPosX, recPosY, recWidth, recHeight);
       fill('rgba(255,255,255, 0.2)')
-      // pop();
-      // process data
-      // posData = []
-      
+      tempWindowWidth = windowWidth;
+      tempWindowHeight = windowHeight;
+
       posData.forEach((pos, i) => {
         // 计算明度
-        var brightness = 70 + 5*pos.condition.length;
-
+        var brightness = 70 + 6*pos.condition.length;
         // 计算小圆半径 星环半径
         var r = 0, ring = 0;
         if (pos.view == "Yes, they do") {
-            r = size * (pos.condition.length*Math.abs(sin(6*t)) + 2);
+            r = size * (pos.condition.length*Math.abs(sin(10*t+0.1*i)));
         } else if (pos.view == "Yes, I think they would") {
-            r = size * (pos.condition.length*Math.abs(sin(6*t)) + 2);
+            r = size * (pos.condition.length*Math.abs(sin(4*t+0.1*i)));
         } else if (pos.view == "Maybe") {
-            r = size * (pos.condition.length*Math.abs(sin(6*t)) + 2);
+            r = size * (pos.condition.length*Math.abs(sin(2*t+0.1*i)));
         } else if (pos.view == "No, I don't think they would") {
-            r = size * (pos.condition.length + 2);
-            ring = 10 * size;
-        } else if (pos.view == "No, they do not") {
-            r = size * (pos.condition.length + 2);
+            r = size * (pos.condition.length );
             ring = 5 * size;
+        } else if (pos.view == "No, they do not") {
+            r = size * (pos.condition.length);
+            ring = 10 * size;
         }
 
         // 星环
@@ -612,7 +735,7 @@ img{
             } else if (condition == 'Psychotic Disorder (Schizophrenia, Schizoaffective, etc)') {
                 fill(12.24, 83.4, brightness);
             } else if (condition == '') {
-                fill(255, 40);
+                fill(255, 70);
                 noStroke();
             } else {
                 fill(100, 100, brightness);
@@ -625,40 +748,48 @@ img{
 
     let recPosX, recPosY, recWidth, recHeight, endPosX, endPosY;
     
-    function mousePressed() {
-      switch (mouseButton) {
-        case LEFT:
-          if(buttonState == 'lasso') {
-            idList = [];
-            newDataSet = [];
-            recWidth = 0;
-            recHeight = 0;
-            recPosX = mouseX;
-            recPosY = mouseY;
-            d3.select('#svgWrapper').remove()
-          }
-          else if(buttonState == 'drag') {
-            posData.forEach((pos, i) => {
-              pos.ox = mouseX - pos.x;
-              pos.oy = mouseY - pos.y;
-            })
-            document.getElementsByTagName('canvas')[0].setAttribute('class','move-state')
-          }
-        break;
-        case CENTER:
-          if(buttonState == 'drag') {
-              // 记录鼠标相对元素的偏移量
+    function mousePressed(e) {
+      //判断是否在svg区域上，是的话禁用鼠标
+      // console.log(d3.event.target,'d3.event.target.localName')
+      if(e.toElement.tagName === 'CANVAS') {
+        // console.log(e.toElement.tagName,'e')
+        switch (mouseButton) {
+          case LEFT:
+            if(buttonState == 'lasso') {
+              idList = [];
+              newDataSet = [];
+              recWidth = 0;
+              recHeight = 0;
+              recPosX = mouseX;
+              recPosY = mouseY;
+              d3.select('#svgWrapper').remove()
+            }
+            else if(buttonState == 'drag') {
               posData.forEach((pos, i) => {
-                  pos.ox = mouseX - pos.x;
-                  pos.oy = mouseY - pos.y;
+                pos.ox = mouseX - pos.x;
+                pos.oy = mouseY - pos.y;
               })
               document.getElementsByTagName('canvas')[0].setAttribute('class','move-state')
-          }
-        break;
+            }
+          break;
+          case CENTER:
+            // if(buttonState == 'drag') {
+                // 记录鼠标相对元素的偏移量
+                posData.forEach((pos, i) => {
+                    pos.ox = mouseX - pos.x;
+                    pos.oy = mouseY - pos.y;
+                })
+                document.getElementsByTagName('canvas')[0].setAttribute('class','move-state')
+            // }
+          break;
+        }
+        document.getElementById("popupBox").style.display = "none";
+ 
       }
     }
 
-    function mouseDragged() {
+    function mouseDragged(e) {
+      if(e.toElement.tagName === 'CANVAS') {
       switch (mouseButton) {
         case LEFT:
           if(buttonState == 'lasso') {
@@ -674,19 +805,21 @@ img{
           }
         break;
         case CENTER:
-          if (buttonState == 'drag') {
+          // if (buttonState == 'drag') {
             // 根据偏移量修改位置坐标
             posData.forEach((pos, i) => {
                 pos.x = mouseX - pos.ox;
                 pos.y = mouseY - pos.oy;
             })
             document.getElementsByTagName('canvas')[0].setAttribute('class','move-state')
-          }
+          // }
         break;
       }
     }
+    }
 
-    function mouseReleased() {
+    function mouseReleased(e) {
+      if(e.toElement.tagName === 'CANVAS') {
       switch(mouseButton) {
         case LEFT:
           if(buttonState == 'lasso') {
@@ -696,11 +829,12 @@ img{
           }
         break;
         case CENTER:
-          if(buttonState == 'drag') {
+          // if(buttonState == 'drag') {
             document.getElementsByTagName('canvas')[0].removeAttribute('class','move-state')
-          }
+          // }
         break;
       }
+    }
     }
 
     function changeButton(btn) {
@@ -719,10 +853,10 @@ img{
     function mouseWheel(event) {
         // delta = 125 滚动一格的默认高度值，wheelScale 缩放比率
         if (event.delta < 0) {
-            wheelScale = Math.abs(event.delta)/100; // 上滚放大
+            wheelScale = Math.abs(event.delta)/2; // 上滚放大
             R *= (1*wheelScale); // 错位感
         } else {
-            wheelScale = 100/Math.abs(event.delta); // 下滚缩小 取倒数
+            wheelScale = 2/Math.abs(event.delta); // 下滚缩小 取倒数
             R *= (wheelScale/1); // 错位感
         }
         // 大小按照比例缩放
@@ -740,7 +874,7 @@ img{
         })
 
         // 禁用浏览器默认滚动
-        //return false;
+        return false;
     }
 
     // 触控板有时会失控 应该禁用 还未解决
@@ -808,6 +942,23 @@ img{
         return result;
     }
 
+    /* 弹出框 */
+    function showPopup(infoElem) {
+          let popupBox = document.getElementById('popupBox')
+          let age = infoElem['What is your age?']
+          let gender = infoElem['What is your gender?']
+          let comment = infoElem['Why or why not?(mental)']
+          let conditions = infoElem['If so, what condition(s) were you diagnosed with?']
+          let positions = infoElem['Which of the following best describes your work position?']
+          popupBox.innerHTML = '(1) Age: ' + age + '<br/>' 
+          + '(2) Genger: ' + gender + '<br/>'
+          + '(3) Conditions: ' + conditions + '<br/>' 
+          + '(4) Positions: ' + positions + '<br/>' 
+          + '(5) Bring Mental Health in Interview?: ' + comment
+          // console.log(infoElem)
+          popupBox.style.display = 'block'
+      }
+
     d3.csv('2016-csv-pre.csv').then(function(rawData) {
       dataSet = rawData
       // drawPlanet(dataSet)
@@ -826,10 +977,9 @@ img{
             return age
           }
         })
-        
         var rowDataSet = sliceArray(dataSet, sampleNum);
         var width = 500
-        var height = 70*(rowLen+10)
+        var height = 70*(rowLen+15)
         var svg = d3.select('#svgContainer').append('svg').attr('id','svgWrapper').attr('width', width).attr('height', height)
         /* 通过循环row数组达到每行绘制的效果 */
         rowDataSet.forEach((item, i) => {
@@ -842,19 +992,66 @@ img{
           // return 'translate(' + posData[i]['x'] +','+ posData[i]['y'] +'), rotate(0)'
         })
         .on("mouseover", function(d, i) {
-          showPopup(d)
+          // showPopup(d)
           // console.log('000')
         })
 
-        function showPopup(infoElem) {
-          let popupBox = document.getElementsByClassName('popupBox')[0]
-          let age = infoElem.Age
-          let noEmployees = infoElem['no_employees']
-          let comment = infoElem['comments']
-          popupBox.innerHTML = age + '<br/>' +noEmployees + '<br/>' + comment
-          // console.log(infoElem)
-          popupBox.style.display = 'block'
-        }
+        let light_radius = 22
+        let single_angle = Math.PI/13
+        let pos_radius = light_radius - 9
+        let opacity_value = .7
+            // Detect the appropriate vendor prefix.
+        var prefix = "-webkit-transform" in document.body.style ? "-webkit-"
+        : "-moz-transform" in document.body.style ? "-moz-"
+        : "";
+        var conditionsList = ['Mood Disorder (Depression, Bipolar Disorder, etc)', 'Anxiety Disorder (Generalized, Social, Phobia, etc)', 'Attention Deficit Hyperactivity Disorder',
+         'Post-traumatic Stress Disorder' ,'Obsessive-Compulsive Disorder', 'Substance Use Disorder', 
+         'Personality Disorder (Borderline, Antisocial, Paranoid, etc)', 'Stress Response Syndromes', 'Addictive Disorder',
+         'Eating Disorder (Anorexia, Bulimia, etc)', 'Dissociative Disorder', 'Psychotic Disorder (Schizophrenia, Schizoaffective, etc)',
+         'Other']
+
+         let condition_colors = ['#eb3a4b', '#c333f1', '#5d30f5', 
+         '#425ef5', '#407bf7', '#68e2fc',
+         '#6ee5b9', '#69e282', '#9bfb4e',
+         '#fcea4f', '#f19637', '#eb4f27','#ffffff']
+         
+         function filterSplit(str, gap) {
+            let realArr = []
+            let arr = split(str, gap)
+            if(arr[0] !== "") {
+              realArr = arr
+            }
+            return realArr
+         }
+
+         /*  再次绘制光晕*/
+         g.selectAll('.halo').data(function(d) {
+           //循环元素，每一次获取到元素的conditions,
+           //每绘制一个光晕，判断它在当前花瓣应该在的位置
+          let conditions = filterSplit(d['If so, what condition(s) were you diagnosed with?'], '|')
+          let angleForXY = angleSelfAdaption(conditions, pos_radius)
+          let halos = []
+          for(let i = 0; i < conditions.length; i++) {
+            let currentColorForConditionsIndex = conditionsList.indexOf(conditions[i])
+            let conColor = condition_colors[currentColorForConditionsIndex] !== -1 ? condition_colors[currentColorForConditionsIndex] : 13
+            let haloObj = {
+              'cx': angleForXY[i].x,
+              'cy': angleForXY[i].y,
+              'color': conColor
+            }
+            halos.push(haloObj)
+          }
+          //  console.log(d)
+           //根据conditions返回绘制光晕数据的数组，动态的长度
+           return halos
+         }).enter().append('circle')
+         .attr('class','halo')
+         .attr('r', light_radius)
+         .attr('cy', d=>d.cy)
+         .attr('cx', d=>d.cx)
+         .attr('fill',d=>d.color)
+         .attr('fill-opacity', opacity_value)
+         .style("filter", "url(#motionFilter)")
 
         var sizeScale = d3.scaleLinear().domain([d3.min(ageList), d3.max(ageList)]).range([0, 300]);
         var transformScale = d3.scaleLinear().domain([d3.min(ageList), d3.max(ageList)]).range([.5, 1.8]);
@@ -873,52 +1070,6 @@ img{
             //Do a blur of 8 standard deviations in the horizontal
             //direction and 0 in vertical
             .attr("stdDeviation", "5 5");
-        
-        let light_radius = 20
-        let single_angle = 360/13
-        let pos_radius = light_radius - 5
-        let opacity_value = .5
-            // Detect the appropriate vendor prefix.
-        var prefix = "-webkit-transform" in document.body.style ? "-webkit-"
-        : "-moz-transform" in document.body.style ? "-moz-"
-        : "";
-        let conditions = ['Mood Disorder', 'Anxiety Disorder', 'Attention Deficit Hyperactivity Disorder',
-         'Post-traumatic Stress Disorder' ,'Obsessive-Compulsive Disorder', 'Substance Use Disorder', 
-         'Personality Disorder', 'Stress Response Syndromes', 'Addictive Disorder',
-         'Eating Disorder', 'Dissociative Disorder', 'Psychotic Disorder',
-         'Other']
-
-         let condition_colors = ['#eb3a4b', '#c333f1', '#5d30f5', 
-         '#425ef5', '#407bf7', '#68e2fc', 
-         '#6ee5b9', '#69e282', '#9bfb4e',
-         '#fcea4f', '#f19637', '#eb4f27','#fff']
-
-        /* 映射疾病 */
-         for(let i = 0; i < conditions.length; i++) {
-            g.append('circle')
-            .attr('r', light_radius)
-            .attr('cy', function(d) {
-              let angle = single_angle * (i+1)
-              let light_y = Math.sin(angle)*pos_radius
-              return light_y
-            })
-            .attr('cx', function(d) {
-              let angle = single_angle * (i+1)
-              let light_x = Math.cos(angle)*pos_radius
-              return light_x
-            })
-            .attr('fill',function(d) {
-              let str = d['If so, what condition(s) were you diagnosed with?']
-              let state = str.indexOf(conditions[i])
-              if(state !== -1) {
-                return condition_colors[i]
-              } else {
-                return 'transparent'
-              }
-            })
-            .attr('fill-opacity', opacity_value)
-            .style("filter", "url(#motionFilter)")
-         }
       
         //公司环境1：benefits
         g.append("ellipse")
@@ -975,6 +1126,7 @@ img{
         g.append("ellipse")
         .attr("rx", function(d) {
           let seek_help = d['Does your employer offer resources to learn more about mental health concerns and options for seeking help?']
+          // console.log(seek_help,'seek_help')
           if( seek_help === 'Yes') {
             return 25
           } else {
@@ -982,11 +1134,47 @@ img{
           }
         })
         .attr("ry", 10)
-        .attr('stroke','#fffs')
+        .attr('stroke','#fff')
         .attr('fill', 'transparent')
         .attr('stroke-width', 1)
         .attr("transform", "rotate(45)")
         .attr('stroke-dasharray', 1)
+
+        
+        //公司环境5(老板)：medical_coverage
+        g.append("ellipse")
+        .attr("rx", function(d) {
+          let medical_coverage = d['Do you have medical coverage (private insurance or state-provided) which includes treatment of mental health issues?']
+          // console.log(medical_coverage,'medical_coverage')
+          if(medical_coverage == 1) {
+            return 25
+          } else {
+            return 0
+          }
+        })
+        .attr("ry", 10)
+        .attr('stroke','#fff')
+        .attr('fill', 'transparent')
+        .attr('stroke-width', 1)
+        .attr("transform", "rotate(-45)")
+        // .attr('stroke-dasharray', 1)
+
+        //公司环境6(老板)：online_resources
+        g.append("ellipse")
+        .attr("rx", function(d) {
+          let online_resources = d['Do you know local or online resources to seek help for a mental health disorder?']
+          if(online_resources == 'I know some') {
+            return 25
+          } else {
+            return 0
+          }
+        })
+        .attr("ry", 10)
+        .attr('stroke','#fff')
+        .attr('fill', 'transparent')
+        .attr('stroke-width', 1)
+        .attr("transform", "rotate(45)")
+        // .attr('stroke-dasharray', 1)
 
         /**** 倾诉程度 ****/
         //倾诉对象: coworkers
@@ -1041,7 +1229,7 @@ img{
         /****  映射职业啦:卫星  ****/
         let satellite_self_radius = 1
         let satellite_radius = 25
-        let single_satellite_angle = 360/13
+        let single_satellite_angle = Math.PI/13
         let pos_list = ['Back-end Developer', 'Front-end Developer', 'Supervisor/Team Lead', 
         'DevOps/SysAdmin', 'Support', 'One-person shop', 
         'Designer', 'Dev Evangelist/Advocate', 'Executive Leadership',
@@ -1174,8 +1362,32 @@ img{
         })
 
         g.on('click', function(d) {
-          console.log(d,'this')
+          // console.log(d)
+          showPopup(d)
+          let popupBox = document.getElementById("popupBox")
+          let popupBoxBound = d3.select('#popupBox').node().getBoundingClientRect()
+          let mousex = mouseX
+          let mousey = mouseY
+          if(popupBoxBound.width + mousex < tempWindowWidth && popupBoxBound.height + mousey < tempWindowHeight) {
+            //右下角
+             popupBox.style.left =mousex +10 + "px";
+             popupBox.style.top = mousey + 10 + "px";
+          }else if(popupBoxBound.width + mousex > tempWindowWidth && popupBoxBound.height + mousey < tempWindowHeight) {
+            //左下角
+            popupBox.style.left =mousex - popupBoxBound.width  + "px";
+            popupBox.style.top = mousey + 10 + "px";
+          } else if(popupBoxBound.width + mousex > tempWindowWidth && popupBoxBound.height + mousey > tempWindowHeight) {
+            //左上角
+            popupBox.style.left =mousex - popupBoxBound.width  + "px";
+            popupBox.style.top = mousey - popupBoxBound.height + "px";
+          }
         })
+        .on('mouseover', function(d) {
+
+        })
+        // .on('mouseout', function(d) {
+        //   document.getElementById("popupBox").style.display = "none";
+        // })
 
       })
     }
@@ -1184,6 +1396,7 @@ img{
       //   return 'translate(' + i*50 +','+ 10 +')'
       // })
   </script>
+  <script src="tree.js"></script>
 </body>
 
 </html>

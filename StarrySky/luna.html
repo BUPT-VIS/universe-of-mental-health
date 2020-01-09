@@ -2,728 +2,83 @@
 <html>
 <head>
 <title>FUCK</title>
-<style>
-p,h1 {
-    margin: 0
-}
-.right-side {
-    display: flex;
-    position: fixed;
-    top: 15%;
-    right: 3%;
-    z-index: 5;
-    height: 80%;
-}
-.right-desc__box {
-    display: flex;
-    height: 100%;
-    width: 400px;
-    flex-wrap: wrap;
-    border: 1px #eee solid;
-    background-color: rgba(0,0,0);
-    /* background-color: #000; */
-    border-radius: 20px;
-    color: #fff
-}
-.desc-box__title {
-    color: #fff;
-    /* line-height: 40px; */
-    padding: 20px;
-    text-align: left;
-    height: 5%;
-}
-.interact-button {
-    display: flex;
-    flex-wrap: wrap;
-    height: 70px;
-    width: 50px;
-    color: #fff;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-.drag-icon {
-    background-image: url('drag-icon.png');
-    background-position:center;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    width: 50px;
-    height: 50px;
-}
-.lasso-icon {
-    background-image: url('lasso-icon.png');
-    background-position:center;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    width: 50px;
-    height: 50px;
-}
-</style>
-</head>
-<body>
-<div class="right-side">
-    <div class="button-box">
-        <div id="drag" class="interact-button" onclick="changeBtn(this)">
-            <p class="drag-icon"></p>
-            <p>drag</p>
-        </div>
-        <div id="lasso" class="interact-button" onclick="changeBtn(this)">
-            <p class="lasso-icon"></p>
-            <p>select</p>
-        </div>
-    </div>
-    <div class="right-desc__box">
-        <div class="desc-box__title">
-          <h1>Employees</h1>
-          <span>Who have changed jobs?</span>
-        </div>
-        <div id="svgContainer"></div>
-      </div>
-</div>
-
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.min.js"></script>
 <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+
+</head>
+<body>
+<img src="a.png" onmousewheel="zoom()"/>
 <script>
-let data = {}, posData = [], wheelScale = 1, R = 0.8, r, size = 0.8, drag;
-let recPosX, recPosY, recWidth, recHeight, endPosX, endPosY;
-var idList = [] //每次圈选的item的id
-var newDataSet = [] //每次圈选的全局数据
-var dataSet = []; //全局数据
-d3.csv('angeli.csv').then(function(rawData) {
-    dataSet = rawData;
-    console.log("angeli")
-})
+
+
+var canvasWidth = 800, canvasHeight = 800;
+
+var xScale = d3.scaleLinear()
+.domain([-150, 160])
+.range([0, canvasWidth]);
+
+var yScale = d3.scaleLinear()
+.domain([-125, 150])
+.range([0, canvasHeight]);
+
+let data = {}, posData = [];
+
 function preload() {
-    data = loadJSON("angeli.json");
+    data = loadJSON("2016(1).json");
 }
 
 function setup() {
     console.log(typeof(data), data);
 
-    var xScale = windowWidth/(80*2);
-    var yScale = windowHeight/(40*2);
-
     // process data
     for (let i in data) {
-    //if (i < 100) {
-        posData.push({
-            // 画面中心坐标 +- 比例尺
-            'x': windowWidth/2 + xScale*data[i].x,
-            'y': windowHeight/2 + yScale*data[i].y,
-            'ox': 0,
-            'oy': 0,
-            'condition': split(data[i]['If so, what condition(s) were you diagnosed with?'], '|'),
-            'view': data[i]['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
-        })
+        //if (i < 10) {
+            //console.log(data[i].x, data[i].y);
+            posData.push({
+                'x': xScale(data[i].x),
+                'y': yScale(data[i].y),
+                'ox': 0,
+                'oy': 0
+            })
+        //}        
     }
-    //console.log(posData);
+    console.log(posData);
 
-    // create window
-    createCanvas(windowWidth, windowHeight);
+    // create canvas
+    createCanvas(800, 800);
 }
 
 function draw() {
     background(0,0,0);
-
-    var t = millis()/1000;
-
-    posData.forEach((pos, i) => {
-        // 计算明度
-        var brightness = 70 + 5*pos.condition.length;
-
-        // 计算小圆半径 星环半径
-        var r = 0, ring = 0;
-        if (pos.view == "Yes, they do") {
-            r = size * (pos.condition.length*Math.abs(sin(6*t)) + 2);
-        } else if (pos.view == "Yes, I think they would") {
-            r = size * (pos.condition.length*Math.abs(sin(6*t)) + 2);
-        } else if (pos.view == "Maybe") {
-            r = size * (pos.condition.length*Math.abs(sin(6*t)) + 2);
-        } else if (pos.view == "No, I don't think they would") {
-            r = size * (pos.condition.length + 2);
-            ring = 10 * size;
-        } else if (pos.view == "No, they do not") {
-            r = size * (pos.condition.length + 2);
-            ring = 5 * size;
-        }
-
-        // 星环
+    posData.forEach((pos) => {
         push();
-        stroke(255, brightness);
-        strokeWeight(size/2);
-        noFill();
-        if (ring > 0)  ellipse(pos.x, pos.y, ring, ring);
+        fill('yellow');
+        ellipse(pos.x, pos.y, 6, 6);
         pop();
-
-        // 病情
-        var dx, dy; // 小圆偏移
-        pos.condition.forEach((condition, j) => {
-            // 没病的人或一种病 无偏移
-            if (pos.condition.length == 1) {
-                dx = 0; dy = 0;
-            }
-            // 多于一种病 有偏移
-            else {
-                dx = R * sin(j * TWO_PI / pos.condition.length);
-                dy = R * cos(j * TWO_PI / pos.condition.length);
-            }                
-
-            push();
-            colorMode(HSB, 360, 100, 100, 100); //色相 饱和度 明度 透明度
-            //fill(240, 1, brightness, brightness / 10); 
-            blendMode(LIGHTEST); //加色混合
-
-            if (condition == 'Mood Disorder (Depression, Bipolar Disorder, etc)') {
-                fill(354.24, 354.24, brightness);
-            } else if (condition == 'Anxiety Disorder (Generalized, Social, Phobia, etc)') {
-                fill(285.47, 78.84, brightness);
-            } else if (condition == 'Attention Deficit Hyperactivity Disorder') {
-                fill(253.71, 80.41, brightness);
-            } else if (condition == 'Post-traumatic Stress Disorder') {
-                fill(230.61, 73.06, brightness);
-            } else if (condition == 'Obsessive-Compulsive Disorder') {
-                fill(220.66, 74.09, brightness);
-            } else if (condition == 'Substance Use Disorder') {
-                fill(190.54, 58.73, brightness);
-            } else if (condition == 'Personality Disorder (Borderline, Antisocial, Paranoid, etc)') {
-                fill(157.82, 51.97, brightness);
-            } else if (condition == 'Stress Response Syndromes') {
-                fill(132.4, 53.54, brightness);
-            } else if (condition == 'Addictive Disorder') {
-                fill(93.29, 68.92, brightness);
-            } else if (condition == 'Eating Disorder (Anorexia, Bulimia, etc)') {
-                fill(53.76, 68.65, brightness);
-            } else if (condition == 'Dissociative Disorder') {
-                fill(30.65, 77.18, brightness);
-            } else if (condition == 'Psychotic Disorder (Schizophrenia, Schizoaffective, etc)') {
-                fill(12.24, 83.4, brightness);
-            } else if (condition == '') {
-                fill(255, 40);
-                noStroke();
-            } else {
-                fill(100, 100, brightness);
-            }
-
-            ellipse(pos.x + dx, pos.y + dy, r, r);
-            pop();
-        })
-    });
-
-    if (drag == false) {
-        push();
-        fill('rgba(255,255,255, 0.2)');
-        rect(recPosX, recPosY, recWidth, recHeight);
-        pop();
-    }   
+    })
 }
 
 function mousePressed() {
-    console.log("canvas pressed !");
-    if (mouseButton == LEFT) {
-        // 拖动
-        if (drag == true) {
-            // 偏移量 = 鼠标位置 - 元素位置
-            posData.forEach((pos, i) => {
-                pos.ox = mouseX - pos.x;
-                pos.oy = mouseY - pos.y;
-            })
-        } 
-        // 框选
-        else if (drag == false) {
-            idList = [];
-            newDataSet = [];
-            /*recWidth = 0;
-            recHeight = 0;*/
-            recPosX = mouseX;
-            recPosY = mouseY;
-            d3.select('#svgWrapper').remove();
-        }
-    }
+    drag = true;
+    // 记录鼠标相对元素的偏移量
+    posData.forEach((pos, i) => {
+        pos.ox = mouseX - pos.x;
+        pos.oy = mouseY - pos.y;
+    })
 }
 
 function mouseDragged() {
-    if (drag == true) {
-        // 元素位置 = 鼠标位置 - 偏移量
+    if (drag) {
+        // 根据偏移量修改位置坐标
         posData.forEach((pos, i) => {
             pos.x = mouseX - pos.ox;
             pos.y = mouseY - pos.oy;
         })
-    } else if (drag == false) {
-        recWidth = mouseX - recPosX;
-        recHeight = mouseY - recPosY;
     }
 }
 
 function mouseReleased() {
-    if (drag == false) {
-        useLasso();
-    }
-}
-
-function changeBtn(btn) {
-    if (btn.id == "drag") {
-        drag = true;
-    } else if (btn.id == "lasso") {
-        drag = false;
-    }
-    console.log(btn.id, drag);
-}
-
-function useLasso() {
-    console.log("lasson")
-    recWidth = 0;
-    recHeight = 0;
-    endPosX = mouseX;
-    endPosY = mouseY;
-
-    //值得注意的是不同的拖动方向（左上，右上，左下，右下），绘制的方法有区别，需要交换一下值 
-    let tempSwitchX, tempSwitchY
-    if (endPosX < recPosX) {
-        tempSwitchX = recPosX
-        recPosX = endPosX
-        endPosX = tempSwitchX
-    }
-    if (endPosY < recPosY) {
-        tempSwitchY = recPosY
-        recPosY = endPosY
-        endPosY = tempSwitchY
-    }
-
-    //遍历每个bubble，符合位置的即为选中
-    for (let i = 0; i < posData.length; i++) {
-        let CanXX = posData[i].x
-        let CanYY = posData[i].y
-        if (Number(CanXX) < Number(endPosX) && Number(CanXX) > Number(recPosX) && Number(CanYY) < Number(endPosY) && Number(CanYY) > Number(recPosY)) {
-            newDataSet.push(data[i])
-            //if(idList.indexOf(i) === -1) {
-                //idList.push(i)
-            //}
-        } else {
-          // console.log('lasso false!!!')
-        }
-    }
-
-    //for (let i = 0; i < idList.length; i++) {
-       //newDataSet.push(dataSet[idList[i]])
-    //}
-    console.log(newDataSet);
-    drawPlanet(newDataSet)
-    document.getElementById('svgContainer').style.display = 'block'
-    //document.getElementById('svgContainer').setAttribute('class', 'slidedown')
-}
-
-function drawPlanet(dataSet) {
-        /* 开始分隔, 分割后的数据用来直接data()绑定,排序的转折点 */
-        var sampleNum = 4
-        var len = dataSet.length
-        var rowLen = len/sampleNum
-        /*求年龄最大值 最小值*/
-        var ageList = dataSet.map(function(d) {
-          let age = Number(d['What is your age?'])
-          if(age > 0 && age < 100) {
-            return age
-          }
-        })
-        
-        var rowDataSet = sliceArray(dataSet, sampleNum);
-        var width = 500
-        var height = 70*(rowLen+10)
-        var svg = d3.select('#svgContainer').append('svg').attr('id','svgWrapper').attr('width', width).attr('height', height)
-        /* 通过循环row数组达到每行绘制的效果 */
-        rowDataSet.forEach((item, i) => {
-        let row = svg.append('g').attr('rowKey', i).attr('transform', function() {
-          return 'translate(50, '+ (i+1)*100 +')'
-        })
-        let g = row.selectAll('.element').data(item).enter().append('g').attr('class','element')
-        .attr('transform', function(d, i) {
-          return 'translate(' + i*95 +','+ 0 +'), rotate(0)'
-          // return 'translate(' + posData[i]['x'] +','+ posData[i]['y'] +'), rotate(0)'
-        })
-        .on("mouseover", function(d, i) {
-          showPopup(d)
-          // console.log('000')
-        })
-
-        function showPopup(infoElem) {
-          let popupBox = document.getElementsByClassName('popupBox')[0]
-          let age = infoElem.Age
-          let noEmployees = infoElem['no_employees']
-          let comment = infoElem['comments']
-          popupBox.innerHTML = age + '<br/>' +noEmployees + '<br/>' + comment
-          // console.log(infoElem)
-          popupBox.style.display = 'block'
-        }
-
-        var sizeScale = d3.scaleLinear().domain([d3.min(ageList), d3.max(ageList)]).range([0, 300]);
-        var transformScale = d3.scaleLinear().domain([d3.min(ageList), d3.max(ageList)]).range([.5, 1.8]);
-        var defs = svg.append("defs");
-
-        //Initialize the filter
-        defs.append("filter")
-            .attr("id", "motionFilter") //Give it a unique ID
-            //Increase the width of the filter region to remove blur "boundary"
-            .attr("width", "300%")
-            //Put center of the "width" back in the middle of the element
-            .attr("x", "-100%")
-            .append("feGaussianBlur") //Append a filter technique
-            .attr("class", "blurValues") //Needed to select later on
-            .attr("in", "SourceGraphic") //Apply blur on the applied element
-            //Do a blur of 8 standard deviations in the horizontal
-            //direction and 0 in vertical
-            .attr("stdDeviation", "5 5");
-        
-        let light_radius = 20
-        let single_angle = 360/13
-        let pos_radius = light_radius - 5
-        let opacity_value = .5
-            // Detect the appropriate vendor prefix.
-        var prefix = "-webkit-transform" in document.body.style ? "-webkit-"
-        : "-moz-transform" in document.body.style ? "-moz-"
-        : "";
-        let conditions = ['Mood Disorder', 'Anxiety Disorder', 'Attention Deficit Hyperactivity Disorder',
-         'Post-traumatic Stress Disorder' ,'Obsessive-Compulsive Disorder', 'Substance Use Disorder', 
-         'Personality Disorder', 'Stress Response Syndromes', 'Addictive Disorder',
-         'Eating Disorder', 'Dissociative Disorder', 'Psychotic Disorder',
-         'Other']
-
-         let condition_colors = ['#eb3a4b', '#c333f1', '#5d30f5', 
-         '#425ef5', '#407bf7', '#68e2fc', 
-         '#6ee5b9', '#69e282', '#9bfb4e',
-         '#fcea4f', '#f19637', '#eb4f27','#fff']
-
-        /* 映射疾病 */
-         for(let i = 0; i < conditions.length; i++) {
-            g.append('circle')
-            .attr('r', light_radius)
-            .attr('cy', function(d) {
-              let angle = single_angle * (i+1)
-              let light_y = Math.sin(angle)*pos_radius
-              return light_y
-            })
-            .attr('cx', function(d) {
-              let angle = single_angle * (i+1)
-              let light_x = Math.cos(angle)*pos_radius
-              return light_x
-            })
-            .attr('fill',function(d) {
-              let str = d['If so, what condition(s) were you diagnosed with?']
-              let state = str.indexOf(conditions[i])
-              if(state !== -1) {
-                return condition_colors[i]
-              } else {
-                return 'transparent'
-              }
-            })
-            .attr('fill-opacity', opacity_value)
-            .style("filter", "url(#motionFilter)")
-         }
-      
-        //公司环境1：benefits
-        g.append("ellipse")
-        .attr("rx", function(d) {
-          let benefits = d['Does your employer provide mental health benefits as part of healthcare coverage?']
-          if( benefits === 'Yes') {
-            return 25
-          }  else {
-            return 0
-          }
-        })
-        .attr("ry", 10)
-        .attr('stroke', '#fff')
-        .attr('fill', 'transparent')
-        .attr('stroke-width', 1)
-        .attr("transform", "rotate(90)")
-        .attr('stroke-dasharray', 1)
-
-        //公司环境2：options
-        g.append("ellipse")
-        .attr("rx", function(d) {
-          let options = d['Do you know the options for mental health care available under your employer-provided coverage?']
-          if( options === 'Yes') {
-            return 25
-          } else {
-            return 0
-          }
-        })
-        .attr("ry", 10)
-        .attr('stroke','#fff')
-        .attr('fill', 'transparent')
-        .attr('stroke-width', 1)
-        .attr("transform", "rotate(-45)")
-        .attr('stroke-dasharray', 1)
-
-         //公司环境3：discussion
-         g.append("ellipse")
-        .attr("rx", function(d) {
-          let discussion = d['Has your employer ever formally discussed mental health (for example, as part of a wellness campaign or other official communication)?']
-          if( discussion === 'Yes') {
-            return 25
-          } else {
-            return 0
-          }
-        })
-        .attr("ry", 10)
-        .attr('stroke','#fff')
-        .attr('stroke-width', 1)
-        .attr('fill', 'transparent')
-        .attr("transform", "rotate(0)")
-        .attr('stroke-dasharray',1)
-
-        //公司环境4：seek_help
-        g.append("ellipse")
-        .attr("rx", function(d) {
-          let seek_help = d['Does your employer offer resources to learn more about mental health concerns and options for seeking help?']
-          if( seek_help === 'Yes') {
-            return 25
-          } else {
-            return 0
-          }
-        })
-        .attr("ry", 10)
-        .attr('stroke','#fffs')
-        .attr('fill', 'transparent')
-        .attr('stroke-width', 1)
-        .attr("transform", "rotate(45)")
-        .attr('stroke-dasharray', 1)
-
-        /**** 倾诉程度 ****/
-        //倾诉对象: coworkers
-        g.append("circle")
-          // .attr('r', 10)
-          .attr('r',function(d) {
-            let coworkers = d['Would you feel comfortable discussing a mental health disorder with your coworkers?']
-            if( coworkers === 'Yes') {
-              return 15
-            } else {
-              return 0
-            }
-          })
-          .attr('fill', '#fff')
-          .attr('fill-opacity', .2)
-          .attr('stroke-width', .5)
-          // .attr('stroke-dasharray', 1)
-
-        //倾诉对象: supervisor
-        g.append("circle")
-          // .attr('r', 15)
-          .attr("transform", 'rotate(45)')
-          .attr("r", function(d) {
-            let supervisor = d['Would you feel comfortable discussing a mental health disorder with your direct supervisor(s)?']
-            if( supervisor === 'Yes') {
-              return 20
-            } else {
-              return 0
-            }
-          })
-          .attr('fill', '#fff')
-          .attr('fill-opacity', .18)
-          .attr('stroke-width', .5)
-          // .attr('stroke-dasharray', 1)
-
-        //倾诉对象: employer
-        g.append("circle")
-          .attr("transform", 'rotate(-45)')
-          .attr("r", function(d) {
-            let employer = d['Do you think that discussing a mental health disorder with your employer would have negative consequences?']
-            if( employer === 'Yes') {
-              return 25
-            } else {
-              return 0
-            }
-          })
-          .attr('fill', '#fff')
-          .attr('fill-opacity', .12)
-          .attr('stroke-width', .5)
-          // .attr('stroke-dasharray', 1)
-
-        /****  映射职业啦:卫星  ****/
-        let satellite_self_radius = 1
-        let satellite_radius = 25
-        let single_satellite_angle = 360/13
-        let pos_list = ['Back-end Developer', 'Front-end Developer', 'Supervisor/Team Lead', 
-        'DevOps/SysAdmin', 'Support', 'One-person shop', 
-        'Designer', 'Dev Evangelist/Advocate', 'Executive Leadership',
-        'Sales', 'HR', 'Other']
-
-        for(let i = 0; i < 13; i ++) {
-          g.append('circle')
-          .attr('r', satellite_self_radius)
-          .attr('cy', function(d) {
-            let angle = single_satellite_angle * (i+1)
-            let light_y = Math.sin(angle)*satellite_radius
-            return light_y
-          })
-          .attr('cx', function(d) {
-            let angle = single_satellite_angle * (i+1)
-            let light_x = Math.cos(angle)*satellite_radius
-            return light_x
-          })
-          .attr('fill',function(d) {
-            let pos_str = d['Which of the following best describes your work position?']
-            let state = pos_str.indexOf(pos_list[i])
-            if(state !== -1) {
-              return '#fff'
-            } else {
-              return 'transparent'
-            }
-          })
-          // .attr('fill-opacity', 1)
-          // .attr('fill','transparent')
-        }
-
-        //绘制菱形
-        g.append('path')
-        .attr('d', d3.symbol().type(d3.symbolSquare).size(function(d) {
-          let age = Number(d['What is your age?'])
-          if(age > 0 && age < 100) {
-            return sizeScale(age)
-          } else {
-            return 0
-          }
-        }))
-        .attr('fill',function(d) {
-          if(d['What is your gender?'] === 'Male') {
-            return '#fff'
-          }  else {
-            return 'transparent'
-          }
-        })
-        .attr('transform', 'rotate(45)')
-        .attr('class', 'planet-opacity')
-        .style(prefix + "animation-duration", function(d) {
-          let question_str = d['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
-          if( question_str === 'Yes, they do') {
-            return '1s'
-          } else if (question_str === 'Yes, I think they would') {
-            return '2s'
-           }else if (question_str === "Maybe") {
-            return '3s'
-           }else if (question_str === "No, I don't think they would") {
-            return '4s'
-           }else if (question_str === "No, they do not") {
-            return '5s'
-           } else {
-             return '0s'
-           }
-        })
-
-        //绘制圆形
-        g.append('path')
-        .attr('d', d3.symbol().type(d3.symbolCircle).size(function(d) {
-          let age = Number(d['What is your age?'])
-          if(age > 0 && age < 100) {
-            return sizeScale(age)
-          } else {
-            return 0
-          }
-        }))
-        .attr('fill',function(d) {
-          if(d['What is your gender?'] === 'Female') {
-            return '#fff'
-          }  else {
-            return 'transparent'
-          }
-        })
-        .attr('class', 'planet-opacity')
-        .style(prefix + "animation-duration", function(d) {
-          let question_str = d['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
-          if( question_str === 'Yes, they do') {
-            return '1s'
-          } else if (question_str === 'Yes, I think they would') {
-            return '2s'
-           }else if (question_str === "Maybe") {
-            return '3s'
-           }else if (question_str === "No, I don't think they would") {
-            return '4s'
-           }else if (question_str === "No, they do not") {
-            return '5s'
-           } else {
-             return '0s'
-           }
-        })
-
-        //绘制三角形
-        g.append('path')
-        .attr('d', d3.symbol().type(d3.symbolTriangle).size(function(d) {
-          let age = Number(d['What is your age?'])
-          if(d['What is your gender?'] !== 'Female' && d['What is your gender?'] !== 'Male' && age > 0 && age < 100) {
-            return sizeScale(Number(d['What is your age?']))
-          } else {
-            return 0
-          }
-        }))
-        .attr('fill','#fff')
-        .attr('class', 'planet-opacity')
-        .style(prefix + "animation-duration", function(d) {
-          let question_str = d['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
-          if( question_str === 'Yes, they do') {
-            return '1s'
-          } else if (question_str === 'Yes, I think they would') {
-            return '2s'
-           }else if (question_str === "Maybe") {
-            return '3s'
-           }else if (question_str === "No, I don't think they would") {
-            return '4s'
-           }else if (question_str === "No, they do not") {
-            return '5s'
-           } else {
-             return '0s'
-           }
-        })
-
-        g.on('click', function(d) {
-          console.log(d,'this')
-        })
-
-      })
-}
-
-function sliceArray(array, size) {
-    var result = []; //Math.ceil有多余的小数点都取最大整数
-    for (var x = 0; x < Math.ceil(array.length / size); x++) {
-        var start = x * size;
-        var end = start + size;
-        result.push(array.slice(start, end));
-    }
-    return result;
-}
-
-
-// 滚轮改变缩放没有过渡效果，但触控板连续变化
-function mouseWheel(event) {
-    // delta = 125 滚动一格的默认高度值，wheelScale 缩放比率
-    if (event.delta < 0) {
-        wheelScale = Math.abs(event.delta)/100; // 上滚放大
-        R *= (1*wheelScale); // 错位感
-    } else {
-        wheelScale = 100/Math.abs(event.delta); // 下滚缩小 取倒数
-        R *= (wheelScale/1); // 错位感
-    }
-    // 大小按照比例缩放
-    size *= wheelScale;
-    console.log(wheelScale, R);
-    
-    posData.forEach((pos, i) => {
-        // 偏移量 = 缩放比率 * (元素位置 - 画面中心)
-        pos.ox = wheelScale * (pos.x - windowWidth/2);
-        pos.oy = wheelScale * (pos.y - windowHeight/2);
-
-        // 画面中心 + 偏移量 = 元素位置
-        pos.x = windowWidth/2 + pos.ox;
-        pos.y = windowHeight/2 + pos.oy;
-    })
-
-    // 禁用浏览器默认滚动
-    return false;
-}
-// 触控板有时会失控 应该禁用 还未解决
-function touchStarted() {
-    return false;
-}
-function touchMoved() {
-    return false;
-}
-function touchEnded() {
-    return false;
+  drag = false;
 }
 </script>
 </body>

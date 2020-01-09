@@ -77,7 +77,7 @@ var link = treeSvg.selectAll(".link")
 .style("stroke-width", 3)
 .attr('d', horizontal)
 .on("click", function(d) {
-    console.log(d.source.data.name, d.target.data.name);
+    // console.log(d.source.data.name, d.target.data.name);
 });
 
 var node = treeSvg.selectAll(".node")
@@ -88,9 +88,12 @@ var node = treeSvg.selectAll(".node")
 .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
   
 var nodes = node.append("circle")
-.attr("r", 5)
+.attr("r", 6)
 .style("fill", "white")
 .style("cursor", "pointer")
+.attr('class', function(d) {
+  return d.data.name
+})
 .on("mouseover", function(d,i) {
   d3.select(this).style("stroke", "#00ffd4").style("stroke-width", 2);
 })
@@ -99,7 +102,7 @@ var nodes = node.append("circle")
 })
 .on("click", function(d) {
   var current_node = d;
-  console.log(current_node.data.name);
+  // console.log(current_node.data.name);
   var parent_nodes = [current_node.data.name];
     var parent_links = [];
   for (var depth = 0; depth < d.depth; depth++) {
@@ -109,7 +112,58 @@ var nodes = node.append("circle")
     parent_nodes.push(current_node.data.name);
         parent_links.push(current_link);
   }
-  console.log(parent_nodes, parent_links);
+  // console.log(parent_nodes, parent_links);
+/* 筛选 */
+  let selectedNode = d3.select(this).node() //获取当前节点
+  selectedNodeName = selectedNode.getAttribute('class') //获取当前节点的className
+  console.log(selectedNodeName, 'selectedNodeName')
+  switch(selectedNodeName) {
+    case "Self-employed":
+      posDataTotal.forEach((pos, i) => {
+        pos.x = tempWindowWidth/2 + xPosScale*posDataTotal[i].x;
+        pos.y = tempWindowHeight/2 + yPosScale*posDataTotal[i].y;
+      })  
+      console.log(posData, 'posData????')
+    break;
+    case "N star1":
+      posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '1' && d['pre-employers'] == '0'}) //根据className筛选posData里边的人群，从而更新posData
+      // posData.forEach((pos, i) => {
+      //   pos.x = pos.x - tempWindowWidth/2
+      //   pos.y = pos.y - tempWindowHeight/2
+      //   console.log(pos.x, 'pos.x-1')
+      // })
+      // console.log(posData, 'posData')
+    break;
+    case "Y star2":
+      posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '1' && d['pre-employers'] == '1'}) 
+      posData.forEach((pos, i) => {
+        console.log(pos.x, 'pos.x-2')
+      })
+    break;
+    case "N star3":
+      posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '0' && d['pre-employers'] == '0' && d['Tech-role'] == '1'}) 
+    break;
+    case "Y star4":
+      posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '0' && d['pre-employers'] == '1' && d['Tech-role'] == '1'}) 
+    break;
+    case "N star5":
+      posData = posDataTotal.filter(d=> {return d['self-employed'] == '1' && d['pre-employers'] == '0' }) 
+    break;
+    case "Y star6":
+      posData = posDataTotal.filter(d=> {return d['self-employed'] == '1' && d['pre-employers'] == '1' }) 
+    break;
+    case "N":
+      posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '0' && d['Tech-role'] == '0' })
+      // console.log(posData, 'posData')
+    break;
+    default:
+      // console.log('default!!!')
+      // console.log(selectedNodeName, 'selectedNodeName')
+    break;
+  }
+  console.log(posData, 'posData')
+  
+  // console.log(posData, 'success')
 
   nodes.each(function(d) {
     if (parent_nodes.indexOf(d.data.name) > -1) {
@@ -119,13 +173,13 @@ var nodes = node.append("circle")
     }
   });
 
-    link.each(function(d) {
-        if (parent_links.indexOf(d.source.data.name + " To " + d.target.data.name) > -1) {
-            d3.select(this).style("stroke", "#00ffd4");
-        } else {
-            d3.select(this). style("stroke", "white");
-        }
-    });
+  link.each(function(d) {
+      if (parent_links.indexOf(d.source.data.name + " To " + d.target.data.name) > -1) {
+          d3.select(this).style("stroke", "#00ffd4");
+      } else {
+          d3.select(this). style("stroke", "white");
+      }
+  });
 });
   
 var texts = node.append("text")
