@@ -18,7 +18,7 @@ body {
 
 <body>
 <div id="nav"></div>
-<script src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>  
+<script src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>
 <script>
 var svg = d3.select("#nav")
 .append("svg")
@@ -124,6 +124,7 @@ var nodes = node.append("circle")
 .style("fill", "white")
 .style("cursor", "pointer")
 .on("mouseover", function(d,i) {
+    console.log(d3.select(this));
 	d3.select(this).style("stroke", "#00ffd4").style("stroke-width", 2);
 })
 .on("mouseout", function(d,i) {

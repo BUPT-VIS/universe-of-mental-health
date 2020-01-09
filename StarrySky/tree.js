@@ -45,7 +45,7 @@ const hierarchyData = d3.hierarchy(root)
 // console.log(hierarchyData, 'hierarchyData')
 //2. 生成树状布局(数据获取器)
 var tree = d3.tree()
-.size([200, 350])
+.size([200, 280])
 .separation(function (a, b) {
   return (a.parent === b.parent ? 1 : 2) / a.depth
 })
@@ -57,13 +57,10 @@ var nodes = treeData.descendants();
 var links = treeData.links();
 
 //6. 开始绘制树！
-var treeSvg = d3.select("body")			//选择<body>
-      .append('div').attr('id', 'tree-wrap')
+var treeSvg = d3.select("#tree-nav")
       .append("svg")			//在<body>中添加<svg>
-      .attr("width", 450)	//设定<svg>的宽度属性
-      .attr("height", 250)
-      // .style("border", "solid 1px #000")//设定<svg>的高度属性
-      .attr('class', 'svg-tree')
+      .attr("width", 360)	//设定<svg>的宽度属性
+      .attr("height", 200)
       .append("g")
       .attr('transform','translate(50, 20)')
 
