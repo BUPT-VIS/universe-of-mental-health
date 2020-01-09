@@ -73,7 +73,11 @@ var link = treeSvg.selectAll(".link")
 .enter()
 .append("path")
 .style("fill", "none")
-.style("stroke", "white")
+.style("stroke", function(d) {
+  if (d.source.data.name == 'N Tech-role' && d.target.data.name == 'N') {
+    return "#aaa";
+  } else  return "white";
+})
 .style("stroke-width", 3)
 .attr('d', horizontal)
 .on("click", function(d) {
@@ -89,7 +93,11 @@ var node = treeSvg.selectAll(".node")
   
 var nodes = node.append("circle")
 .attr("r", 6)
-.style("fill", "white")
+.style("fill", function(d) {
+    if (d.data.name == 'N') {
+      return "#aaa";
+    } else  return "white";
+})
 .style("cursor", "pointer")
 .attr('class', function(d) {
   return d.data.name
@@ -171,6 +179,9 @@ var nodes = node.append("circle")
     } else {
       d3.select(this). style("fill", "white");
     }
+    if (d.data.name == 'N') {
+      d3.select(this).style("fill", "#aaa")
+    }
   });
 
   link.each(function(d) {
@@ -179,6 +190,9 @@ var nodes = node.append("circle")
       } else {
           d3.select(this). style("stroke", "white");
       }
+      if (d.source.data.name == 'N Tech-role' && d.target.data.name == 'N') {
+      d3.select(this).style("stroke", "#aaa")
+    }
   });
 });
   
