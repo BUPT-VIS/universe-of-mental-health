@@ -40,6 +40,7 @@ body {
   top: 60px;
   right: 10px;
   z-index: 5;
+  height: 90%;
 }
 .left-panel {
   width: 380px;
@@ -81,7 +82,6 @@ body {
 #flicker-legend {
   height: 50px;
   width: 360px;
-  /*border: solid 1px #fff;*/
 }
 @keyframes scaleDraw {  /*定义关键帧、scaleDrew是需要绑定到选择器的关键帧名称*/
   0%{
@@ -97,28 +97,26 @@ body {
       transform: scale(0.4);
   }
 }
-.ring {
-  float: left;
-  border: solid 1px #fff;
-  border-radius: 50%;
-  shape-rendering: crispEdges;
-}
 .flicker{
   shape-rendering: crispEdges;
-  /*display: inline;*/
   margin: 15px 20px 0 20px;
   float: left;
   width: 20px;
   height: 20px;
-  /*background: url("4x/drag-icon.png");
-  background-color: #fff;*/
-  border: solid 1px #fff;
+  background-color: rgba(255,255,255,0.6);
+  border: solid 0px rgba(255,255,255,0.6);
   border-radius: 50%;
   /*background-size: 150px 150px;*/
   -webkit-animation-name: scaleDraw; /*关键帧名称*/
   -webkit-animation-timing-function: ease-in-out; /*动画的速度曲线*/
   -webkit-animation-iteration-count: infinite;  /*动画播放的次数*/
   /*-webkit-animation-duration: 2s; 动画所花费的时间*/
+}
+.ring {
+  float: left;
+  border: solid 1px #fff;
+  border-radius: 50%;
+  shape-rendering: crispEdges;
 }
 .image-legend {
   width: 250px;
@@ -129,6 +127,10 @@ img{
   height: auto;
   max-width: 100%;
   max-height: 100%;
+}
+#pos-legend {
+  width: 140px;
+  float: right;
 }
 .element:hover {
   cursor: pointer;
@@ -163,8 +165,12 @@ img{
       <div class="flicker" style="-webkit-animation-duration: 1s;"></div>
       <div class="flicker" style="-webkit-animation-duration: 5s;"></div>
       <div class="flicker" style="-webkit-animation-duration: 10s;"></div>
-      <div class="ring" style="width: 15px; height: 15px; margin: 17.5px 20px 0 20px;"></div>
-      <div class="ring" style="width: 30px; height: 30px; margin: 10px 20px 0 20px;"></div>
+      <div class="ring" style="width: 15px; height: 15px; margin: 17.5px 20px 0 20px;">
+        <div style="width: 3px; height: 3px; margin: 6px 0 0 6.5px; background-color: rgba(255,255,255,0.6); border: solid 0px rgba(255,255,255,0.6); border-radius: 50%;"></div>
+      </div>
+      <div class="ring" style="width: 30px; height: 30px; margin: 10px 20px 0 20px;">
+        <div style="width: 3px; height: 3px; margin: 13.5px 0 0 13.5px; background-color: rgba(255,255,255,0.6); border: solid 0px rgba(255,255,255,0.6); border-radius: 50%;"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -189,75 +195,94 @@ img{
         </div>
         <div id="svgContainer"></div>
       </div>
-      <!-- <div class="right-panel">
+      <div class="right-panel">
         <div class="panel-title">Legend</div>
         <div class="panel-text">Shape & Area - Individual</div>
         <div class="image-legend"><img src="4x/资源 1.svg"></div>
         <div class="panel-text">Mental Health Benifits - Orbits</div>
         <div class="image-legend"><img src="4x/资源 2.svg"></div>
         <div class="panel-text">Willing to Expose & Work Position</div>
-        <div class="image-legend"><img src="4x/资源 3.svg"></div>
-      </div> -->
+        <!-- <div class="image-legend"><img src="4x/资源 3.svg"></div> -->
+        <div style="height: 150px;">
+          <div id="pos-legend"></div>
+          <div style="width: 120px; padding: 20px 0 0 0;"><image src="4x/资源 4.svg" title="pei"/></div>
+        </div>
+        
+      </div>
 </div>
   <!-- <input></input> -->
   <script>
     document.getElementById("popupBox").style.display = "none";
-    
-    var starSVG = d3.select("#color-legend")
-    .append("svg")
-    .attr("height", 90)
-    .attr("width", 360)
-    //.style("border", "solid 1px #fff");
+
+    // 职位
+    var positions = ["Back-end Developer","Front-end Developer", "Supervisor/Team Lead", "DevOps/SysAdmin", "Support", "One-person shop", "Designer", "Dev Evangelist/Advocate", "Executive Leadership", "Sales", "HR", "Other"];
+
+    var posSVG = d3.select("#pos-legend").append("svg").attr("height", 150).attr("width", 140);
+
+    var position = posSVG.append("text")
+      .attr("transform", "translate(70, 130)")
+      .attr("dy", 7)
+      .style("fill", "white")
+      .style("font-size", 12)
+      .style("text-anchor", "middle");
+
+    posSVG.selectAll("circle")
+      .data(positions).enter().append("circle")
+      .attr("cx", function(d,i) { return 38*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 70; })
+      .attr("cy", function(d,i) { return 38*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; })
+      .attr("r", 4.5).style("fill", "white").style("opacity", 0.6).style("cursor", "pointer")
+      .on("mouseover", function(d,i) {
+        d3.select(this).attr("r", 6).style("opacity", 1)
+        .attr("cx", function() { return 40*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 70; })
+        .attr("cy", function() { return 40*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; });
+        position.text(positions[i]);
+      })
+      .on("mouseout", function(d,i) {
+        d3.select(this).attr("r", 4.5).style("opacity", 0.6)
+        .attr("cx", function() { return 38*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 70; })
+        .attr("cy", function() { return 38*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; });
+      });
+
+    // 花瓣
+    var starSVG = d3.select("#color-legend").append("svg").attr("height", 90).attr("width", 360);
 
     var conditions = ["Mood Disorder (Depression, Bipolar Disorder, etc)", "Anxiety Disorder (Generalized, Social, Phobia, etc)", "Attention Deficit Hyperactivity Disorder", "Post-traumatic Stress Disorder", "Obsessive-Compulsive Disorder", "Substance Use Disorder", "Personality Disorder (Borderline, Antisocial, Paranoid, etc)", "Stress Response Syndromes", "Addictive Disorder", "Eating Disorder (Anorexia, Bulimia, etc)", "Dissociative Disorder", "Psychotic Disorder (Schizophrenia, Schizoaffective, etc)"];//"Other"
 
     var colors = ["#eb3a4b", "#eb4f27", "#f19637", "#fcea4f", "#9bfb4e", "#69e282", "#6ee5b9","#68e2fc", "#407bf7", "#425ef5", "#5d30f5", "#c333f1"]; //
 
-    console.log(conditions.length, colors.length)
-
     var condition = starSVG.append("text")
-    .attr("transform", "translate(90, 45)")
-    .attr("dy", 7)
-    .style("fill", "white")
-    .style("font-size", 12);
+      .attr("transform", "translate(90, 45)")
+      .attr("dy", 7)
+      .style("fill", "white")
+      .style("font-size", 12);
 
     starSVG.selectAll("circle")
-    .data(colors)
-    .enter()
-    .append("circle")
-    .attr("cx", function(d, i) {
-        return 20*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
-    })
-    .attr("cy", function(d, i) {
-        return 20*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
-    })
-    .attr("r", 10)
-    .style("fill", function(d) {
-        return d;
-    })
-    .style("cursor", "pointer")
-    .style("opacity", 0.8)
-    .on("mouseover", function(d, i) {
-        d3.select(this)
-        .attr("r", 10)
-        .attr("cx", function() {
-            return 22*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
-        })
-        .attr("cy", function() {
-            return 22*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
-        });
-        condition.text(conditions[i]);
-    })
-    .on("mouseout", function(d,i) {
-        d3.select(this)
-        .attr("r", 10)
-        .attr("cx", function() {
-            return 20*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
-        })
-        .attr("cy", function() {
-            return 20*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
-        });
-    });
+      .data(colors).enter().append("circle")
+      .attr("cx", function(d, i) { return 20*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46; })
+      .attr("cy", function(d, i) { return 20*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45; })
+      .attr("r", 10).style("fill", function(d) { return d; })
+      .style("cursor", "pointer").style("opacity", 0.8)
+      .on("mouseover", function(d, i) {
+          d3.select(this)
+          .attr("r", 10)
+          .attr("cx", function() {
+              return 22*Math.cos(i*2*Math.PI/12 - 0.5*Math.PI) + 46;
+          })
+          .attr("cy", function() {
+              return 22*Math.sin(i*2*Math.PI/12 - 0.5*Math.PI) + 45;
+          });
+          condition.text(conditions[i]);
+      })
+      .on("mouseout", function(d,i) {
+          d3.select(this)
+          .attr("r", 10)
+          .attr("cx", function() {
+              return 20*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
+          })
+          .attr("cy", function() {
+              return 20*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
+          });
+      });
 
 
     let data = {}; //全局对象
@@ -546,10 +571,10 @@ img{
     function mouseWheel(event) {
         // delta = 125 滚动一格的默认高度值，wheelScale 缩放比率
         if (event.delta < 0) {
-            wheelScale = Math.abs(event.delta)/2; // 上滚放大
+            wheelScale = 1.25; // 上滚放大
             R *= (1*wheelScale); // 错位感
         } else {
-            wheelScale = 2/Math.abs(event.delta); // 下滚缩小 取倒数
+            wheelScale = 0.8; // 下滚缩小 取倒数
             R *= (wheelScale/1); // 错位感
         }
         // 大小按照比例缩放
