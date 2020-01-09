@@ -294,8 +294,8 @@ img{
     var posData = [];//存放点的最终位置的数组
     var posDataTotal = [];
     var initPosData = [];
-    var size = 3;//缩放比率
-    var R = 0.8;//星球的布局半径  
+    var size = 1;//缩放比率
+    R = 0.8;//星球的布局半径  
     var B;
     var drag = false;
     var wheelScale; //缩放常数（1.25 ，-1.25）
@@ -396,16 +396,16 @@ img{
             r = size * (pos.condition.length*Math.abs(sin(2*t+0.1*i)));
         } else if (pos.view == "No, I don't think they would") {
             r = size * (pos.condition.length );
-            ring = 5 * size;
+            ring = 8 * size;
         } else if (pos.view == "No, they do not") {
             r = size * (pos.condition.length);
-            ring = 10 * size;
+            ring = 25 * size;
         }
 
         // 星环
         push();
         stroke(255, brightness);
-        strokeWeight(size/2);
+        strokeWeight(size/4);
         noFill();
         if (ring > 0)  ellipse(pos.x, pos.y, ring, ring);
         pop();
@@ -419,8 +419,8 @@ img{
             }
             // 多于一种病 有偏移
             else {
-                dx = R * sin(j * TWO_PI / pos.condition.length);
-                dy = R * cos(j * TWO_PI / pos.condition.length);
+                dx = (r/3) * sin(j * TWO_PI / pos.condition.length);
+                dy = (r/3) * cos(j * TWO_PI / pos.condition.length);
             }                
             push();
             colorMode(HSB, 360, 100, 100, 100); //色相 饱和度 明度 透明度
@@ -452,8 +452,13 @@ img{
             } else if (condition == 'Psychotic Disorder (Schizophrenia, Schizoaffective, etc)') {
                 fill(12.24, 83.4, brightness);
             } else if (condition == '') {
-                fill(255, 70);
-                noStroke();
+              push();
+            rectMode(CENTER);
+            translate(pos.x,pos.y);
+            rotate(PI / 4);
+            fill(255, 100);
+            rect(0, 0, r,r);
+            pop();
             } else {
                 fill(100, 100, brightness);
             }
