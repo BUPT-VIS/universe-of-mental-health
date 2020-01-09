@@ -427,7 +427,13 @@
           let age = infoElem['What is your age?']
           let gender = infoElem['What is your gender?']
           let comment = infoElem['Why or why not?(mental)']
-          popupBox.innerHTML = 'Age: ' + age + '<br/>' + 'Genger: ' + gender + '<br/>' + 'Bring Mental Health in Interview?: ' + comment
+          let conditions = infoElem['If so, what condition(s) were you diagnosed with?']
+          let positions = infoElem['Which of the following best describes your work position?']
+          popupBox.innerHTML = '(1) Age: ' + age + '<br/>' 
+          + '(2) Genger: ' + gender + '<br/>'
+          + '(3) Conditions: ' + conditions + '<br/>' 
+          + '(4) Positions: ' + positions + '<br/>' 
+          + '(5) Bring Mental Health in Interview?: ' + comment
           // console.log(infoElem)
           popupBox.style.display = 'block'
       }
@@ -484,7 +490,7 @@
          'Other']
 
          let condition_colors = ['#eb3a4b', '#c333f1', '#5d30f5', 
-         '#425ef5', '#407bf7', '#68e2fc', 
+         '#425ef5', '#407bf7', '#68e2fc',
          '#6ee5b9', '#69e282', '#9bfb4e',
          '#fcea4f', '#f19637', '#eb4f27','#ffffff']
          
@@ -854,6 +860,8 @@
             popupBox.style.left =mousex - popupBoxBound.width  + "px";
             popupBox.style.top = mousey - popupBoxBound.height + "px";
           }
+        })
+        .on('mouseover', function(d) {
 
         })
         // .on('mouseout', function(d) {
