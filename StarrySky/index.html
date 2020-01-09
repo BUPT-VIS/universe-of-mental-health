@@ -14,9 +14,14 @@
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <!-- <script src="p5.dom.js"></script> -->
   <title>test</title>
+  <link rel="stylesheet" type="text/css" href="css/luna.css" />
   <style>
+    body {
+      color: white;
+      background-color: black;
+    }
     p,h1 {
-       margin: 0
+       margin: 0;
     }
     #defaultCanvas0 {
       position: absolute;
@@ -169,24 +174,12 @@
       color: #fff;
       justify-content: center;
     }
-
-    .right-side {
-      display: flex;
-      position: fixed;
-      top: 15%;
-      right: 3%;
-      z-index: 5;
-      height: 80%;
-    }
-
     .button-box {
-      margin-right: 20px;
+      margin-right: -50px;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
     }
-
-
 
     @-moz-keyframes slidedown {
       from { -moz-transform: translateY(0); }
@@ -212,18 +205,6 @@
 
     .move-state {
       cursor:move;
-    }
-
-    .sys__title {
-      position: fixed;
-      top: 5%;
-      left: 50%;
-      transform:  translateX(-50%);
-      z-index: 5;
-      color: #fff;
-      font-size: 40px;
-      font-weight: 200;
-      white-space: nowrap;
     }
 
     .interaction-into {
@@ -258,144 +239,154 @@
       z-index: 5;
     }
 
-    #tree-wrap {
-      position: fixed;
-      top: 15%;
-      left: 3%;
-      background-color:transparent;
-      z-index: 5;
-      width: 400px;
-      height: 200px;
-    }
 
-    .svg-tree {
-      border: 0
-    }
-
-    .link {
-      fill: none;
-      stroke: #fff;
-      stroke-width: 3px;
-    } 
-    
-/* 
-    .slider-scale {
-      position: fixed;
-      width: 300px;
-      bottom: 13%;
-      left: 30%
-    } */
-
-    /* @-moz-keyframes rotate {
-      from { -moz-transform: rotateZ(0deg); }
-      to { -moz-transform: rotateZ(-360deg); }
-    }
-
-    @-webkit-keyframes rotate {
-      from { -webkit-transform: rotateZ(0deg); }
-      to { -webkit-transform: rotateZ(-360deg); }
-    }
-
-    @keyframes rotate {
-      from { transform: rotateZ(0deg); }
-      to { transform: rotateZ(-360deg); }
-    }
-
-    .planet-individual {
-      position: absolute;
-      top: 0;
-      left: 0;
-      /* width: 50px;
-      height: 50px; */
-      /* -moz-animation-name: scale;
-      -moz-animation-iteration-count: infinite;
-      -moz-animation-timing-function: linear;
-      -webkit-animation-name: scale;
-      -webkit-animation-iteration-count: infinite;
-      -webkit-animation-timing-function: linear;
-      animation-name: scale;
-      animation-iteration-count: infinite;
-      animation-timing-function: linear;
-    }
-
-    @-moz-keyframes scale {
-      0% { -moz-transform: scale(0,0); }
-      50% { -moz-transform: scale(1,1); }
-      100% { -moz-transform: scale(0,0); }
-    }
-
-    @-webkit-keyframes scale {
-      0% { -webkit-transform: scale(0,0); }
-      50% { -webkit-transform: scale(1,1); }
-      100% { -webkit-transform: scale(0,0); }
-    }
-
-    @keyframes scale {
-      0% { transform: scale(0,0); }
-      50% { transform: scale(1,1); }
-      100% { transform: scale(0,0); }
-    }
-
-    .planet-opacity {
-      position: absolute;
-      top: 0;
-      left: 0;
-      /* width: 50px;
-      height: 50px; */
-      /* -moz-animation-name: opacity;
-      -moz-animation-iteration-count: infinite;
-      -moz-animation-timing-function: linear;
-      -webkit-animation-name: opacity;
-      -webkit-animation-iteration-count: infinite;
-      -webkit-animation-timing-function: linear;
-      animation-name: opacity;
-      animation-iteration-count: infinite;
-      animation-timing-function: linear;
-    }
-
-    @-moz-keyframes opacity {
-      0% { opacity: 0 }
-      50% { opacity: 1 }
-      100% { opacity: 0 }
-    }
-
-    @-webkit-keyframes opacity {
-      0% { opacity: 0 }
-      50% { opacity: 1 }
-      100% { opacity: 0}
-    }
-
-    @keyframes opacity {
-      0% { opacity: 0 }
-      50% { opacity: 1 }
-      100% { opacity: 0 }
-    }  */
-  </style>
+.title {
+  font-size: 24px;
+  font-family: Gilroy;
+  text-align: center;
+}
+.left-side {
+  background-color: transparent;
+  position: absolute;
+  top: 60px;
+  left: 0px;
+  z-index: 5;
+}
+.right-side {
+  /*background-color: transparent;
+  position: absolute;
+  top: 60px;
+  right: 0px;
+  z-index: 5;*/
+  display: flex;
+ position: fixed;
+ top: 15%;
+ right: 3%;
+ z-index: 5;
+ height: 600px;
+}
+.left-panel {
+  width: 380px;
+  padding: 10px 0 10px 20px;
+  border: 0.8px #ccc solid;
+  border-radius: 10px;
+  background-color: black;
+}
+.right-panel {
+  width: 270px;
+  padding: 10px 0 10px 20px;
+  border: 0.8px #ccc solid;
+  border-radius: 10px;
+  background-color: black;
+}
+.panel-title {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+.panel-text {
+  font-family: Microsoft YaHei UI;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+#tree-nav {
+  height: 200px;
+  width: 360px;
+}
+#color-legend {
+  height: 90px;
+  width: 360px;
+  margin-bottom: 10px;
+}
+#radius-legend {
+  height: 40px;
+  width: 360px;
+  margin-bottom: 10px;
+}
+#flicker-legend {
+  height: 40px;
+  width: 360px;
+  border: solid 1px #fff;
+}
+.image-legend {
+  width: 250px;
+  padding: 10px 0 50px 0;
+}
+img{  
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+} 
+</style>
 </head>
 
 <body>
-<!-- 标题区域 -->
-<p class="sys__title">The Universe Of <span style="font-weight: 800;">Mental Health</span> In Tech Company</p>
-<span class="triangle"></span>
-<span class="interaction-into"> Middle-click to drag starry sky & Right-click to select an individual </span>
+<div class="title">The Universe Of Mental Health In Tech Company</div>
+<!-- <span class="triangle"></span>
+<span class="interaction-into"> Middle-click to drag starry sky & Right-click to select an individual </span> -->
+<!-- 左边栏区域 -->
+<div class="left-side">
+  <div class="left-panel">
+    <div class="panel-title">Navigation</div>
+    <div class="panel-text">Employees who have changed jobs</div>
+    <div id="tree-nav"></div>
+  </div>
+  <hr style="background: black; border: none;" />
+  <div class="left-panel">
+    <div class="panel-title">Legend</div>
+    <div class="panel-text">Colors - Mental Health Conditions</div>
+    <div id="color-legend"></div>
+    <div class="panel-text">Radius - Amount of Conditions</div>
+    <div id="radius-legend"></div>
+    <div class="panel-text">Flicker & Starrings - Discrimination</div>
+    <div id="flicker-legend"></div>
+  </div>
+</div>
+<!-- 右边栏区域 -->
+<!-- <div class="right-side">
+  <div class="button-box">
+    <div class="interact-button" id="drag" style="margin-bottom: 20px" onclick="changeButton(this)">
+      <p class="drag-icon"></p>
+      <p>drag</p>
+    </div>
+    <div class="interact-button" id="lasso" onclick="changeButton(this)">
+      <p class="lasso-icon"></p>
+      <p>select</p>
+    </div>
+  </div>
+  <div class="right-panel">
+    <div class="panel-title">Legend</div>
+    <div class="panel-text">Shape & Area - Individual</div>
+    <div class="image-legend"><img src="4x/资源 1.svg"></div>
+    <div class="panel-text">Mental Health Benifits - Orbits</div>
+    <div class="image-legend"><img src="4x/资源 2.svg"></div>
+    <div class="panel-text">Willing to Expose & Work Position</div>
+    <div class="image-legend"><img src="4x/资源 3.svg"></div>
+  </div>
+  <div class="right-panel" style="height: 100%;">
+    <div class="panel-title">Employees</div>
+    <div class="panel-text">Who have changed jobs?</div>    
+    <div id="svgContainer"></div>
+  </div>  
+</div> -->
 <!-- 右边栏区域 -->
 <div class="right-side">
     <!-- 按钮区域 -->
     <div class="button-box">
       <div class="interact-button" id="drag" style="margin-bottom: 20px" onclick="changeButton(this)">
-        <p class="drag-icon"></p>
-        <p>drag</p>
+        <p class="drag-icon"></p >
+        <p>drag</p >
       </div>
       <div class="interact-button" id="lasso" onclick="changeButton(this)">
-        <p class="lasso-icon"></p>
-        <p>select</p>
+        <p class="lasso-icon"></p >
+        <p>select</p >
       </div>
     </div>
     <!-- 细节描述框 -->
       <div class="right-desc__box">
         <div class="desc-box__title">
-          <h1>Employees</h1>
-          <span>Who have changed jobs?</span>
+          <h1>Detail icon</h1>
+          <span>Please CLICK one of the elements to help for analyizing:</span>
         </div>
         <div id="svgContainer"></div>
       </div>
@@ -403,6 +394,63 @@
 <script src="tree.js"></script>
   <!-- <input></input> -->
   <script>
+    var starSVG = d3.select("#color-legend")
+    .append("svg")
+    .attr("height", 90)
+    .attr("width", 360)
+    .style("border", "solid 1px #fff");
+
+    var conditions = ["Mood Disorder (Depression, Bipolar Disorder, etc)", "Anxiety Disorder (Generalized, Social, Phobia, etc)", "Attention Deficit Hyperactivity Disorder", "Post-traumatic Stress Disorder", "Obsessive-Compulsive Disorder", "Substance Use Disorder", "Personality Disorder (Borderline, Antisocial, Paranoid, etc)", "Stress Response Syndromes", "Addictive Disorder", "Eating Disorder (Anorexia, Bulimia, etc)", "Dissociative Disorder", "Psychotic Disorder (Schizophrenia, Schizoaffective, etc)"];//"Other"
+
+    var colors = ["#eb3a4b", "#eb4f27", "#f19637", "#fcea4f", "#9bfb4e", "#69e282", "#6ee5b9","#68e2fc", "#407bf7", "#425ef5", "#5d30f5", "#c333f1"]; //
+
+    console.log(conditions.length, colors.length)
+
+    var condition = starSVG.append("text")
+    .attr("transform", "translate(95, 45)")
+    .attr("dy", 7)
+    .style("fill", "white")
+    .style("font-size", 14);
+
+    starSVG.selectAll("circle")
+    .data(colors)
+    .enter()
+    .append("circle")
+    .attr("cx", function(d, i) {
+        return 32*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
+    })
+    .attr("cy", function(d, i) {
+        return 32*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
+    })
+    .attr("r", 5)
+    .style("fill", function(d) {
+        return d;
+    })
+    .style("cursor", "pointer")
+    .style("opacity", 1)
+    .on("mouseover", function(d, i) {
+        d3.select(this)
+        .attr("r", 6.5)
+        .attr("cx", function() {
+            return 36*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
+        })
+        .attr("cy", function() {
+            return 36*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
+        });
+        condition.text(conditions[i]);
+    })
+    .on("mouseout", function(d,i) {
+        d3.select(this)
+        .attr("r", 5)
+        .attr("cx", function() {
+            return 32*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
+        })
+        .attr("cy", function() {
+            return 32*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
+        });
+    });
+
+
     let data = {}; //全局对象
     let bubbles = []; //全局数组
     var datas = [];
@@ -671,10 +719,10 @@
     function mouseWheel(event) {
         // delta = 125 滚动一格的默认高度值，wheelScale 缩放比率
         if (event.delta < 0) {
-            wheelScale = Math.abs(event.delta)/2; // 上滚放大
+            wheelScale = Math.abs(event.delta)/100; // 上滚放大
             R *= (1*wheelScale); // 错位感
         } else {
-            wheelScale = 2/Math.abs(event.delta); // 下滚缩小 取倒数
+            wheelScale = 100/Math.abs(event.delta); // 下滚缩小 取倒数
             R *= (wheelScale/1); // 错位感
         }
         // 大小按照比例缩放
@@ -692,7 +740,7 @@
         })
 
         // 禁用浏览器默认滚动
-        return false;
+        //return false;
     }
 
     // 触控板有时会失控 应该禁用 还未解决
