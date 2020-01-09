@@ -203,11 +203,13 @@ img{
         <div class="image-legend"><img src="4x/资源 2.svg"></div>
         <div class="panel-text">Willing to Expose & Work Position</div>
         <!-- <div class="image-legend"><img src="4x/资源 3.svg"></div> -->
-        <div style="height: 150px;">
           <div id="pos-legend"></div>
           <div style="width: 120px; padding: 20px 0 0 0;"><image src="4x/资源 4.svg" title="pei"/></div>
         </div>
         
+            <div style="width: 120px; padding: 20px 0 0 0;"><image src="4x/资源 4.svg" title="pei"/></div>
+          </div>
+        <div class="image-legend"><img src="4x/资源 3.svg"></div> -->
       </div>
 </div>
   <!-- <input></input> -->
@@ -333,6 +335,7 @@ img{
       //if (i < 100) {
           posData.push({
               // 画面中心坐标 +- 比例尺
+              'id': i,
               'self-employed': data[i]['Are you self-employed?'],
               'IT-company': data[i]['Is your employer primarily a tech company/organization?'],
               'pre-employers': data[i]['Do you have previous employers?'],
