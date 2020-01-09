@@ -31,15 +31,15 @@ body {
   background-color: transparent;
   position: absolute;
   top: 60px;
-  left: 0px;
+  left: 10px;
   z-index: 5;
 }
 .right-side {
-  /*background-color: transparent;
+  background-color: transparent;
   position: absolute;
   top: 60px;
-  right: 0px;
-  z-index: 5;*/
+  right: 10px;
+  z-index: 5;
 }
 .left-panel {
   width: 380px;
@@ -74,14 +74,51 @@ body {
   margin-bottom: 10px;
 }
 #radius-legend {
-  height: 40px;
+  height: 60px;
   width: 360px;
   margin-bottom: 10px;
 }
 #flicker-legend {
-  height: 40px;
+  height: 50px;
   width: 360px;
+  /*border: solid 1px #fff;*/
+}
+@keyframes scaleDraw {  /*定义关键帧、scaleDrew是需要绑定到选择器的关键帧名称*/
+  0%{
+      transform: scale(1);  /*开始为原始大小*/
+  }
+  25%{
+      transform: scale(0.4);
+  }
+  50%{
+      transform: scale(1);
+  }
+  75%{
+      transform: scale(0.4);
+  }
+}
+.ring {
+  float: left;
   border: solid 1px #fff;
+  border-radius: 50%;
+  shape-rendering: crispEdges;
+}
+.flicker{
+  shape-rendering: crispEdges;
+  /*display: inline;*/
+  margin: 15px 20px 0 20px;
+  float: left;
+  width: 20px;
+  height: 20px;
+  /*background: url("4x/drag-icon.png");
+  background-color: #fff;*/
+  border: solid 1px #fff;
+  border-radius: 50%;
+  /*background-size: 150px 150px;*/
+  -webkit-animation-name: scaleDraw; /*关键帧名称*/
+  -webkit-animation-timing-function: ease-in-out; /*动画的速度曲线*/
+  -webkit-animation-iteration-count: infinite;  /*动画播放的次数*/
+  /*-webkit-animation-duration: 2s; 动画所花费的时间*/
 }
 .image-legend {
   width: 250px;
@@ -96,6 +133,8 @@ img{
 .element:hover {
   cursor: pointer;
 }
+/*css部分*/
+
 </style>
 </head>
 
@@ -120,7 +159,13 @@ img{
     <div class="panel-text">Radius - Amount of Conditions</div>
     <div id="radius-legend"></div>
     <div class="panel-text">Flicker & Starrings - Discrimination</div>
-    <div id="flicker-legend"></div>
+    <div id="flicker-legend">
+      <div class="flicker" style="-webkit-animation-duration: 1s;"></div>
+      <div class="flicker" style="-webkit-animation-duration: 5s;"></div>
+      <div class="flicker" style="-webkit-animation-duration: 10s;"></div>
+      <div class="ring" style="width: 15px; height: 15px; margin: 17.5px 20px 0 20px;"></div>
+      <div class="ring" style="width: 30px; height: 30px; margin: 10px 20px 0 20px;"></div>
+    </div>
   </div>
 </div>
 <!-- 右边栏区域 -->
@@ -139,19 +184,30 @@ img{
     <!-- 细节描述框 -->
       <div class="right-desc__box">
         <div class="desc-box__title">
-          <h1>Detail icon</h1>
-          <span>Please CLICK one of the elements to help for analyizing:</span>
+          <div class="panel-title">Detail icon</div>
+          <div class="panel-text">Please CLICK one of the elements to help for analyizing:</div>
         </div>
         <div id="svgContainer"></div>
       </div>
+      <!-- <div class="right-panel">
+        <div class="panel-title">Legend</div>
+        <div class="panel-text">Shape & Area - Individual</div>
+        <div class="image-legend"><img src="4x/资源 1.svg"></div>
+        <div class="panel-text">Mental Health Benifits - Orbits</div>
+        <div class="image-legend"><img src="4x/资源 2.svg"></div>
+        <div class="panel-text">Willing to Expose & Work Position</div>
+        <div class="image-legend"><img src="4x/资源 3.svg"></div>
+      </div> -->
 </div>
   <!-- <input></input> -->
   <script>
+    document.getElementById("popupBox").style.display = "none";
+    
     var starSVG = d3.select("#color-legend")
     .append("svg")
     .attr("height", 90)
     .attr("width", 360)
-    .style("border", "solid 1px #fff");
+    //.style("border", "solid 1px #fff");
 
     var conditions = ["Mood Disorder (Depression, Bipolar Disorder, etc)", "Anxiety Disorder (Generalized, Social, Phobia, etc)", "Attention Deficit Hyperactivity Disorder", "Post-traumatic Stress Disorder", "Obsessive-Compulsive Disorder", "Substance Use Disorder", "Personality Disorder (Borderline, Antisocial, Paranoid, etc)", "Stress Response Syndromes", "Addictive Disorder", "Eating Disorder (Anorexia, Bulimia, etc)", "Dissociative Disorder", "Psychotic Disorder (Schizophrenia, Schizoaffective, etc)"];//"Other"
 
@@ -160,46 +216,46 @@ img{
     console.log(conditions.length, colors.length)
 
     var condition = starSVG.append("text")
-    .attr("transform", "translate(95, 45)")
+    .attr("transform", "translate(90, 45)")
     .attr("dy", 7)
     .style("fill", "white")
-    .style("font-size", 14);
+    .style("font-size", 12);
 
     starSVG.selectAll("circle")
     .data(colors)
     .enter()
     .append("circle")
     .attr("cx", function(d, i) {
-        return 32*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
+        return 20*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
     })
     .attr("cy", function(d, i) {
-        return 32*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
+        return 20*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
     })
-    .attr("r", 5)
+    .attr("r", 10)
     .style("fill", function(d) {
         return d;
     })
     .style("cursor", "pointer")
-    .style("opacity", 1)
+    .style("opacity", 0.8)
     .on("mouseover", function(d, i) {
         d3.select(this)
-        .attr("r", 6.5)
+        .attr("r", 10)
         .attr("cx", function() {
-            return 36*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
+            return 22*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
         })
         .attr("cy", function() {
-            return 36*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
+            return 22*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
         });
         condition.text(conditions[i]);
     })
     .on("mouseout", function(d,i) {
         d3.select(this)
-        .attr("r", 5)
+        .attr("r", 10)
         .attr("cx", function() {
-            return 32*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
+            return 20*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
         })
         .attr("cy", function() {
-            return 32*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
+            return 20*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
         });
     });
 
