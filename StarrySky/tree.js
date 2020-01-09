@@ -127,10 +127,24 @@ var nodes = node.append("circle")
   console.log(selectedNodeName, 'selectedNodeName')
   switch(selectedNodeName) {
     case "Self-employed":
-      posDataTotal.forEach((pos, i) => {
-        pos.x = tempWindowWidth/2 + xPosScale*posDataTotal[i].x;
-        pos.y = tempWindowHeight/2 + yPosScale*posDataTotal[i].y;
-      })  
+      posData = []
+      for (let i in data) {
+        //if (i < 100) {
+            posData.push({
+                // 画面中心坐标 +- 比例尺
+                'id': i,
+                'self-employed': data[i]['Are you self-employed?'],
+                'IT-company': data[i]['Is your employer primarily a tech company/organization?'],
+                'pre-employers': data[i]['Do you have previous employers?'],
+                'Tech-role': data[i]['Is your primary role within your company related to tech/IT?'],
+                'x': tempWindowWidth/2 + xPosScale*data[i].x,
+                'y': tempWindowHeight/2 + yPosScale*data[i].y,
+                'ox': 0,
+                'oy': 0,
+                'condition': split(data[i]['If so, what condition(s) were you diagnosed with?'], '|'),
+                'view': data[i]['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
+            })
+        } 
       console.log(posData, 'posData????')
     break;
     case "N star1":
@@ -162,6 +176,30 @@ var nodes = node.append("circle")
     break;
     case "N":
       posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '0' && d['Tech-role'] == '0' })
+      // console.log(posData, 'posData')
+    break;
+    case "Y Pre-employers 1":
+      posData = posDataTotal.filter(d=> {return d['self-employed'] == '1' })
+      // console.log(posData, 'posData')
+    break;
+    case "N Tech-company":
+      posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' })
+      // console.log(posData, 'posData')
+    break;
+    case "Y Pre-employers 2":
+      posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '1'})
+      // console.log(posData, 'posData')
+    break;
+    case "Y Pre-employers 2":
+      posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '1'})
+      // console.log(posData, 'posData')
+    break;
+    case "N Tech-role":
+      posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '0'})
+      // console.log(posData, 'posData')
+    break;
+    case "Y Pre-employers 3":
+      posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '0' && d['Tech-role'] == '1'})
       // console.log(posData, 'posData')
     break;
     default:
