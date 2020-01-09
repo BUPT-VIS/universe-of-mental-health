@@ -62,7 +62,7 @@ var treeSvg = d3.select("#tree-nav")
       .attr("width", 360)	//设定<svg>的宽度属性
       .attr("height", 200)
       .append("g")
-      .attr('transform','translate(50, 20)')
+      .attr('transform','translate(50, 0)')
 
 var horizontal = d3.linkHorizontal() //linkHorizontal生成的曲线在曲线的终点和起点处的切线是水平方向
   .x(d => d.y)
