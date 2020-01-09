@@ -78,7 +78,7 @@ var link = treeSvg.selectAll(".link")
     return "#aaa";
   } else  return "white";
 })
-.style("stroke-width", 3)
+.style("stroke-width", 2.5)
 .attr('d', horizontal)
 .on("click", function(d) {
     // console.log(d.source.data.name, d.target.data.name);
@@ -92,7 +92,7 @@ var node = treeSvg.selectAll(".node")
 .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
   
 var nodes = node.append("circle")
-.attr("r", 6)
+.attr("r", 5)
 .style("fill", function(d) {
     if (d.data.name == 'N') {
       return "#aaa";
