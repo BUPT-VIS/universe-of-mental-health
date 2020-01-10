@@ -55,6 +55,7 @@ p,h1 {
 }
 
 #svgContainer {
+  display: none;
  width: 380px;
  height: 90%;
  overflow-y: scroll;
@@ -113,7 +114,7 @@ p,h1 {
 }
 
 .close-icon {
-  background-image: url('4x/close.svg');
+  background-image: url('img/close.svg');
   background-position:center;
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -126,7 +127,7 @@ p,h1 {
 }
 
 .detail-icon {
- background-image: url('4x/detail-icon.png');
+ background-image: url('img/detail-icon.png');
  background-position:center;
  background-size: 100% 100%;
  background-repeat: no-repeat;
@@ -135,7 +136,7 @@ p,h1 {
 }
 
 .drag-icon {
- background-image: url('4x/drag-icon.png');
+ background-image: url('img/drag-icon.png');
  background-position:center;
  background-size: 100% 100%;
  background-repeat: no-repeat;
@@ -144,7 +145,7 @@ p,h1 {
 }
 
 .lasso-icon {
- background-image: url('4x/lasso-icon.png');
+ background-image: url('img/lasso-icon.png');
  background-position:center;
  background-size: 100% 100%;
  background-repeat: no-repeat;
