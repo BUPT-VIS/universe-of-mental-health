@@ -151,6 +151,23 @@ img{
 .element:hover {
   cursor: pointer;
 }
+
+#empty-container {
+  display: flex;
+  /* justify-content: center; */
+  flex-direction: column;
+  height: 90%;
+  align-items: center;
+  justify-content: center;
+}
+#empty-container img {
+  opacity: .5;
+  width: 150px;
+}
+#empty-container p {
+  margin: 20px 0; 
+  color: #999
+}
 /*css部分*/
 
 </style>
@@ -213,20 +230,24 @@ img{
     <!-- 细节描述框 -->
     <div class="right-panel" style="width: 380px;">
       <div class="panel-title">Detail icon</div>
-      <div class="panel-text">Please CLICK one of the elements to help for analyizing:</div>
+      <div class="panel-text" style="margin-bottom: 20px;">Please CLICK one of the elements for analyizing:</div>
+      <div id="empty-container">
+        <img src="img/empty-icon.png" alt="">
+        <p>Please select the stars in starry sky.</p>
+      </div>
       <div id="svgContainer"></div>
     </div>
     <!-- 细节标签 -->
     <div class="right-panel">
       <div class="panel-title">Legend</div>
       <div class="panel-text">Shape & Area - Individual</div>
-      <div class="image-legend"><img src="4x/资源 1.svg"></div>
+      <div class="image-legend"><img src=img/资源 1.svg"></div>
       <div class="panel-text">Mental Health Benifits - Orbits</div>
-      <div class="image-legend"><img src="4x/资源 2.svg"></div>
+      <div class="image-legend"><img src="img/资源 2.svg"></div>
       <div class="panel-text">Willing to Expose & Work Position</div>
       <div style="height: 150px;">
         <div id="pos-legend"></div>
-          <div style="width: 120px; padding: 20px 0 0 0;"><image src="4x/资源 4.svg" title="pei"/></div>
+          <div style="width: 120px; padding: 20px 0 0 0;"><image src="img/资源 4.svg" title="pei"/></div>
         </div>
     </div>
 </div>
@@ -234,16 +255,18 @@ img{
   <script>
     function showDetail() {
       var showDetail = document.getElementById("showBtn").getAttribute("value");
-      console.log("before", showDetail);
+      // console.log("before", showDetail);
       if (showDetail == "false") {
+        document.getElementsByClassName('detail-icon')[0].style.opacity = .6
         document.getElementsByClassName("right-side")[0].style.right = "-292px";
         document.getElementById("showBtn").setAttribute("value", "true");
-        console.log("a")
+        // console.log("a")
       }
       else if(showDetail == "true") {
+        document.getElementsByClassName('detail-icon')[0].style.opacity = 1
         document.getElementsByClassName("right-side")[0].style.right = "-704px";
         document.getElementById("showBtn").setAttribute("value", "false");
-        console.log("b")
+        // console.log("b")
       }
       console.log("after", document.getElementById("showBtn").getAttribute("value"));
 
@@ -682,15 +705,19 @@ img{
           if(idList.indexOf(posData[i].id) === -1) {
             idList.push(posData[i].id)
           }
-        } else {
-          // console.log('lasso false!!!')
         }
       }
       for(let i=0; i< idList.length; i++) {
            newDataSet.push(dataSet[idList[i]])
       }
       drawPlanet(newDataSet)
-      document.getElementById('svgContainer').style.display = 'block'
+      if(idList.length > 0) {
+        document.getElementById('empty-container').style.display = 'none'
+        document.getElementById('svgContainer').style.display = 'block'
+      } else {
+        document.getElementById('empty-container').style.display = 'flex'
+        document.getElementById('svgContainer').style.display = 'none'
+      }
       document.getElementById('svgContainer').setAttribute('class', 'slidedown')
     }
 
