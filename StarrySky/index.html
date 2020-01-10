@@ -390,7 +390,7 @@ img{
     }
 
     /* 角度自适应封装方法 */
-    function angleSelfAdaption(arr, r) {
+    function angleSelfAdaption(arr, r, delta) {
       let angleArr = []
       if(arr.length > 0) {
         for(let i = 0; i < arr.length; i++) {
@@ -401,8 +401,8 @@ img{
           // }
           // // 多于一种病 有偏移
           // else {
-              d.x = r * sin(i * TWO_PI / arr.length);
-              d.y = r * cos(i * TWO_PI / arr.length);
+              d.x = r * (sin(-i * TWO_PI / arr.length + delta));
+              d.y = r * (cos(-i * TWO_PI / arr.length+ delta));
           // }
           angleArr.push(d)
         } 
@@ -797,7 +797,7 @@ img{
            //循环元素，每一次获取到元素的conditions,
            //每绘制一个光晕，判断它在当前花瓣应该在的位置
           let conditions = filterSplit(d['If so, what condition(s) were you diagnosed with?'], '|')
-          let angleForXY = angleSelfAdaption(conditions, pos_radius)
+          let angleForXY = angleSelfAdaption(conditions, pos_radius, 0)
           let halos = []
           for(let i = 0; i < conditions.length; i++) {
             let currentColorForConditionsIndex = conditionsList.indexOf(conditions[i])
@@ -997,38 +997,65 @@ img{
 
         /****  映射职业啦:卫星  ****/
         let satellite_self_radius = 1
-        let satellite_radius = 25
+        let satellite_radius = 27
         let single_satellite_angle = Math.PI/12
         let pos_list = ['Back-end Developer', 'Front-end Developer', 'Supervisor/Team Lead', 
         'DevOps/SysAdmin', 'Support', 'One-person shop', 
         'Designer', 'Dev Evangelist/Advocate', 'Executive Leadership',
         'Sales', 'HR', 'Other']
 
-        for(let i = 0; i < 13; i ++) {
-          g.append('circle')
-          .attr('r', satellite_self_radius)
-          .attr('cy', function(d) {
-            let angle = single_satellite_angle*i - Math.PI/2
-            let light_y = Math.sin(angle)*satellite_radius
-            return light_y
-          })
-          .attr('cx', function(d) {
-            let angle = single_satellite_angle*i - Math.PI/2
-            let light_x = Math.cos(angle)*satellite_radius
-            return light_x
-          })
-          .attr('fill',function(d) {
-            let pos_str = d['Which of the following best describes your work position?']
-            let state = pos_str.indexOf(pos_list[i])
-            if(state !== -1) {
-              return '#fff'
-            } else {
-              return 'transparent'
+        g.selectAll('.satellite').data(function(d) {
+           //循环元素，每一次获取到元素的positions,
+           //每绘制一个光晕，判断它在当前花瓣应该在的位置
+          let positions = filterSplit(d['Which of the following best describes your work position?'], '|')
+          let angleForXY = angleSelfAdaption(pos_list, satellite_radius, -Math.PI)
+          let satellites = []
+          for(let i = 0; i < positions.length; i++) {
+            let currentColorForPositionsIndex = pos_list.indexOf(positions[i])
+            currentColorForPositionsIndex= currentColorForPositionsIndex !== -1 ? currentColorForPositionsIndex : 11
+            // let conColor = condition_colors[currentColorForConditionsIndex]
+            let satellitesObj = {
+              'cx': angleForXY[currentColorForPositionsIndex].x,
+              'cy': angleForXY[currentColorForPositionsIndex].y,
             }
-          })
-          // .attr('fill-opacity', 1)
-          // .attr('fill','transparent')
-        }
+            satellites.push(satellitesObj)
+          }
+          //  console.log(d)
+           //根据conditions返回绘制光晕数据的数组，动态的长度
+           return satellites
+         }).enter().append('circle')
+         .attr('class','satellite')
+         .attr('r', satellite_self_radius)
+         .attr('cy', d=>d.cy)
+         .attr('cx', d=>d.cx)
+         .attr('fill', '#fff')
+        //  .style("filter", "url(#motionFilter)")
+
+        // for(let i = 0; i < 13; i ++) {
+        //   g.append('circle')
+        //   .attr('r', satellite_self_radius)
+        //   .attr('cy', function(d) {
+        //     let angle = single_satellite_angle*i - Math.PI/2
+        //     let light_y = Math.sin(angle)*satellite_radius
+        //     return light_y
+        //   })
+        //   .attr('cx', function(d) {
+        //     let angle = single_satellite_angle*i - Math.PI/2
+        //     let light_x = Math.cos(angle)*satellite_radius
+        //     return light_x
+        //   })
+        //   .attr('fill',function(d) {
+        //     let pos_str = d['Which of the following best describes your work position?']
+        //     let state = pos_str.indexOf(pos_list[i])
+        //     if(state !== -1) {
+        //       return '#fff'
+        //     } else {
+        //       return 'transparent'
+        //     }
+        //   })
+        //   // .attr('fill-opacity', 1)
+        //   // .attr('fill','transparent')
+        // }
 
         //绘制菱形
         g.append('path')
