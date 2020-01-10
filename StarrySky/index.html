@@ -18,6 +18,9 @@
 body {
   background-color: black;
   color: white;
+  position: fixed;
+  height: 100%;
+  width: 100%
 }
 #popupBox {
   /*color: black;
@@ -156,7 +159,7 @@ img{
   display: flex;
   /* justify-content: center; */
   flex-direction: column;
-  height: 90%;
+  height: 80%;
   align-items: center;
   justify-content: center;
 }
@@ -213,7 +216,7 @@ img{
 <!-- 右边栏区域 -->
 <div class="right-side" style=" right: -704px;">
     <!-- 按钮区域 -->
-    <div style="width: 60px; height: 200px; bottom: 0; left: -60px; position: absolute;">
+    <div style="width: 60px; height: 200px; bottom: 20px; left: -60px; position: absolute;">
       <div class="interact-button" id="showBtn" style="margin-bottom: 20px" value="false" onclick="showDetail(this)">
         <p class="detail-icon"></p>
         <p>Detail</p>
@@ -258,7 +261,7 @@ img{
       // console.log("before", showDetail);
       if (showDetail == "false") {
         document.getElementsByClassName('detail-icon')[0].style.opacity = .6
-        document.getElementsByClassName("right-side")[0].style.right = "-292px";
+        document.getElementsByClassName("right-side")[0].style.right = "-272px";
         document.getElementById("showBtn").setAttribute("value", "true");
         // console.log("a")
       }
