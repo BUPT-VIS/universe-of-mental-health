@@ -6,18 +6,6 @@ p,h1 {
  position: absolute;
  /* top: 800px; */
 }
-
-#popupBox {
- background-color: #ffffff;
- box-shadow: 0 0 2px 2px #999;
- padding: 5px;
- position: absolute;
- /* position: fixed; */
- right: 200px;
- width: 300px;
- z-index: 6;
- /* height: 200px; */
-}
 #selectBenefits {
  position: fixed;
  top: 220px;
@@ -122,6 +110,19 @@ p,h1 {
  animation-name: slidedown;
  animation-iteration-count: 1;
  animation-timing-function: linear;
+}
+
+.close-icon {
+  background-image: url('4x/close.svg');
+  background-position:center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .detail-icon {
