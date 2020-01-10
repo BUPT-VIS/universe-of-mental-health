@@ -94,9 +94,12 @@ body {
   margin-bottom: 10px;
 }
 #radius-legend {
-  height: 60px;
-  width: 360px;
-  margin-bottom: 10px;
+  height: 100px;
+  width: 260px;
+  margin: 20px 0 20px;
+}
+#radius-legend img {
+  width: 100%;
 }
 #flicker-legend {
   height: 50px;
@@ -198,7 +201,9 @@ img{
     <div class="panel-text">Colors - Mental Health Conditions</div>
     <div id="color-legend"></div>
     <div class="panel-text">Radius - Amount of Conditions</div>
-    <div id="radius-legend"></div>
+    <div id="radius-legend">
+      <img src="img/scale-legend.png" alt="">
+    </div>
     <div class="panel-text">Flicker & Starrings - Discrimination</div>
     <div id="flicker-legend">
       <div class="flicker" style="-webkit-animation-duration: 1s;"></div>
@@ -244,7 +249,7 @@ img{
     <div class="right-panel">
       <div class="panel-title">Legend</div>
       <div class="panel-text">Shape & Area - Individual</div>
-      <div class="image-legend"><img src=img/资源 1.svg"></div>
+      <div class="image-legend"><img src="img/资源 1.svg"></div>
       <div class="panel-text">Mental Health Benifits - Orbits</div>
       <div class="image-legend"><img src="img/资源 2.svg"></div>
       <div class="panel-text">Willing to Expose & Work Position</div>
@@ -256,13 +261,20 @@ img{
 </div>
   <!-- <input></input> -->
   <script>
+    var showDetailClickCount = 0;
     function showDetail() {
       var showDetail = document.getElementById("showBtn").getAttribute("value");
       // console.log("before", showDetail);
       if (showDetail == "false") {
+        showDetailClickCount += 1
         document.getElementsByClassName('detail-icon')[0].style.opacity = .6
-        document.getElementsByClassName("right-side")[0].style.right = "-272px";
-        document.getElementById("showBtn").setAttribute("value", "true");
+        if(showDetailClickCount === 1) {
+          document.getElementsByClassName("right-side")[0].style.right = "-272px";
+        } else if(showDetailClickCount === 2){
+          document.getElementsByClassName("right-side")[0].style.right = "20px";
+          showDetailClickCount = 0
+          document.getElementById("showBtn").setAttribute("value", "true");
+        }
         // console.log("a")
       }
       else if(showDetail == "true") {
@@ -271,7 +283,7 @@ img{
         document.getElementById("showBtn").setAttribute("value", "false");
         // console.log("b")
       }
-      console.log("after", document.getElementById("showBtn").getAttribute("value"));
+      // console.log("after", document.getElementById("showBtn").getAttribute("value"));
 
       //getElementsByClassName("left-side")[0].
     }
@@ -684,6 +696,9 @@ img{
 
     /* 使用套索工具 */
     function useLasso() {
+      showDetailClickCount = 1;
+      document.getElementsByClassName('detail-icon')[0].style.opacity = .6
+      document.getElementsByClassName("right-side")[0].style.right = "-272px";
       recWidth = 0;
       recHeight = 0;
       endPosX = mouseX;
