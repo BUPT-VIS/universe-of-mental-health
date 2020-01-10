@@ -368,7 +368,7 @@ img{
       // SizeSlider.class('size-sliderbar')
       // process data
       for (let i in data) {
-      //if (i < 100) {
+      //if (i < 500) {
           posData.push({
               // 画面中心坐标 +- 比例尺
               'id': i,
@@ -383,6 +383,7 @@ img{
               'condition': split(data[i]['If so, what condition(s) were you diagnosed with?'], '|'),
               'view': data[i]['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
           })
+      //}
       } 
       posDataTotal = posData;
       initPosData = copyArr(posData)
@@ -753,7 +754,7 @@ img{
         /* 通过循环row数组达到每行绘制的效果 */
         rowDataSet.forEach((item, i) => {
         let row = svg.append('g').attr('rowKey', i).attr('transform', function() {
-          return 'translate(50, '+ (i*90+90) +')'
+          return 'translate(50, '+ (i*110+90) +')'
         })
         let g = row.selectAll('.element').data(item).enter().append('g').attr('class','element')
         .attr('transform', function(d, i) {
