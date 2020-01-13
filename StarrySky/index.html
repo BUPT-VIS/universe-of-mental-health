@@ -51,10 +51,11 @@ body {
   z-index: 5;
 }
 .right-side {
+  right: 10px;
   background-color: transparent;
   position: absolute;
   top: 60px;
-  z-index: 5;
+  z-index: 10;
   height: 90%;
   transition: right 0.5s;
   transition-timing-function: ease-in-out;
@@ -67,13 +68,12 @@ body {
   background-color: black;
 }
 .right-panel {
-  width: 270px;
   padding: 10px 0 10px 20px;
   border: 0.8px #ccc solid;
   border-radius: 10px;
   background-color: black;
-  float: right;
   margin-left: 10px;
+  position: relative;
 }
 .panel-title {
   font-size: 22px;
@@ -219,16 +219,15 @@ img{
   </div>
 </div>
 <!-- 右边栏区域 -->
-<div class="right-side" style=" right: -704px;">
-    <!-- 按钮区域 -->
-    <div style="width: 60px; height: 200px; bottom: 20px; left: -60px; position: absolute;">
+<div class="right-side">
+    <!-- 按钮 -->
+    <div style="width: 60px; height: 200px; top: 50%; left: -40px; position: absolute;">
       <div class="interact-button" id="showBtn" style="margin-bottom: 20px" value="false" onclick="showDetail(this)">
-        <p class="detail-icon"></p>
-        <p>Detail</p>
+        <div class="detail-icon"></div>
       </div>
     </div>
-    <!-- 细节描述框 -->
-    <div class="right-panel" style="width: 380px;">
+    <!-- 细节图 -->
+    <div class="right-panel">
       <div class="panel-title">Detail icon</div>
       <div class="panel-text" style="margin-bottom: 20px;">Please CLICK one of the elements for analyizing:</div>
       <div id="empty-container">
@@ -236,9 +235,10 @@ img{
         <p>Please select the stars in starry sky.</p>
       </div>
       <div id="svgContainer"></div>
+      <div id="detail-legend" style="background-color: #000; width: 340px; height: 220px; position: absolute; bottom: 0; padding: 10px 0 0 0;">legend</div>
     </div>
     <!-- 细节标签 -->
-    <div class="right-panel">
+    <!-- <div class="right-panel">
       <div class="panel-title">Legend</div>
       <div class="panel-text">Shape & Area - Individual</div>
       <div class="image-legend"><img src="img/资源 1.svg"></div>
@@ -249,16 +249,20 @@ img{
         <div id="pos-legend"></div>
           <div style="width: 120px; padding: 20px 0 0 0;"><image src="img/资源 4.svg" title="pei"/></div>
         </div>
-    </div>
+    </div> -->
 </div>
   <!-- <input></input> -->
   <script>
-    var showDetailClickCount = 0;
+    //var showDetailClickCount = 0;
     function showDetail() {
-      var showDetail = document.getElementById("showBtn").getAttribute("value");
+      //var showDetail = document.getElementById("showBtn").getAttribute("value");
       // console.log("before", showDetail);
-      if (showDetail == "false") {
-        showDetailClickCount += 1
+      //if (showDetail == "false") {
+        //width = windowWidth;
+        //useLasso(windowWidth);
+        drawPlanet(newDataSet, windowWidth-50)
+
+        /*showDetailClickCount += 1
         document.getElementsByClassName('detail-icon')[0].style.opacity = .6
         if(showDetailClickCount === 1) {
           document.getElementsByClassName("right-side")[0].style.right = "-272px";
@@ -266,15 +270,14 @@ img{
           document.getElementsByClassName("right-side")[0].style.right = "20px";
           showDetailClickCount = 0
           document.getElementById("showBtn").setAttribute("value", "true");
-        }
+        }*/
         // console.log("a")
-      }
-      else if(showDetail == "true") {
+      //}
+      /*else if(showDetail == "true") {
         document.getElementsByClassName('detail-icon')[0].style.opacity = 1
-        document.getElementsByClassName("right-side")[0].style.right = "-704px";
+        document.getElementsByClassName("right-side")[0].style.right = "-730px";
         document.getElementById("showBtn").setAttribute("value", "false");
-        // console.log("b")
-      }
+      }*/
       // console.log("after", document.getElementById("showBtn").getAttribute("value"));
 
       //getElementsByClassName("left-side")[0].
@@ -545,11 +548,12 @@ img{
     let recPosX, recPosY, recWidth, recHeight, endPosX, endPosY;
 
     // js 禁用鼠标右键功能
-    document.oncontextmenu = () => false;
+    //document.oncontextmenu = () => false;
     function mousePressed(e) {
       //判断是否在svg区域上，是的话禁用鼠标
       // console.log(d3.event.target,'d3.event.target.localName')
       if(e.toElement.tagName === 'CANVAS') {
+        console.log("canvas");
         // console.log(e.toElement.tagName,'e')
         switch (mouseButton) {
           case LEFT:
@@ -597,7 +601,7 @@ img{
       if(e.toElement.tagName === 'CANVAS') {
         switch(mouseButton) {
           case LEFT:
-              useLasso();
+              useLasso(350);
           break;
           case RIGHT:
               document.getElementsByTagName('canvas')[0].removeAttribute('class','move-state')
@@ -650,7 +654,7 @@ img{
     }
 
     // 触控板有时会失控 应该禁用 还未解决
-    function touchStarted() {
+    /*function touchStarted() {
         return false;
     }
     function touchMoved() {
@@ -658,13 +662,13 @@ img{
     }
     function touchEnded() {
         return false;
-    }
+    }*/
 
     /* 使用套索工具 */
-    function useLasso() {
+    function useLasso(width) {
       showDetailClickCount = 1;
       document.getElementsByClassName('detail-icon')[0].style.opacity = .6
-      document.getElementsByClassName("right-side")[0].style.right = "-272px";
+      document.getElementsByClassName("right-side")[0].style.right = "10px";
       recWidth = 0;
       recHeight = 0;
       endPosX = mouseX;
@@ -694,7 +698,7 @@ img{
       for(let i=0; i< idList.length; i++) {
            newDataSet.push(dataSet[idList[i]])
       }
-      drawPlanet(newDataSet)
+      drawPlanet(newDataSet, 380)
       if(idList.length > 0) {
         document.getElementById('empty-container').style.display = 'none'
         document.getElementById('svgContainer').style.display = 'block'
@@ -739,9 +743,18 @@ img{
       // console.log(dataSet) //有数据
       // let treatment = dataSet.filter(d=>{return d['treatment'] === 'Yes' && d['comments'] !== 'NA'})
     })
-    function drawPlanet(dataSet) {
+    function drawPlanet(dataSet, width) {
         /* 开始分隔, 分割后的数据用来直接data()绑定,排序的转折点 */
-        var sampleNum = 4
+        console.log("luna",width,dataSet);
+        var sampleNum;
+        if (width == 380) {
+          sampleNum = 4;
+          console.log("4")
+        } else {
+          sampleNum = int(width/90); //这里的数量根据显示器宽度修改
+          console.log(sampleNum)
+          //document.getElementById("left-side").style.display = "none";
+        }
         var len = dataSet.length
         var rowLen = len/sampleNum
         /*求年龄最大值 最小值*/
@@ -752,9 +765,10 @@ img{
           }
         })
         var rowDataSet = sliceArray(dataSet, sampleNum);
-        var width = 350
+        //var width = 350
         var height = 70*(rowLen+15)
-        var svg = d3.select('#svgContainer').append('svg').attr('id','svgWrapper').attr('width', width).attr('height', height)
+        d3.select('#svgContainer').select("svg").remove();
+        var svg = d3.select('#svgContainer').append('svg').attr('id','svgWrapper').attr('width', width).attr('height', height);
         /* 通过循环row数组达到每行绘制的效果 */
         rowDataSet.forEach((item, i) => {
         let row = svg.append('g').attr('rowKey', i).attr('transform', function() {

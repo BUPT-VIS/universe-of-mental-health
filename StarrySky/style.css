@@ -55,8 +55,7 @@ p,h1 {
 }
 
 #svgContainer {
-  display: none;
- width: 380px;
+ display: none;
  height: 90%;
  overflow-y: scroll;
  overflow-x: hidden;
@@ -127,12 +126,12 @@ p,h1 {
 }
 
 .detail-icon {
- background-image: url('img/detail-icon.png');
+ background-image: url('img/arrow-icon.svg');
  background-position:center;
  background-size: 100% 100%;
  background-repeat: no-repeat;
- width: 40px;
- height: 40px;
+ width: 25px;
+ height: 25px;
 }
 
 .drag-icon {
@@ -164,11 +163,6 @@ p,h1 {
 
 .right-side {
  display: flex;
- position: fixed;
- top: 15%;
- right: 3%;
- z-index: 5;
- height: 80%;
 }
 
 .button-box {
