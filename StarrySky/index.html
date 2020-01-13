@@ -194,7 +194,7 @@ img{
 
 <body>
 <div id="popupBox">
-  <span class="close-icon" onclick="this.parentNode.style.display = 'none'"></span>
+  <span class="close-icon" style="background-image: url('img/close.svg'); top: 10px; right: 10px;" onclick="this.parentNode.style.display = 'none'"></span>
   <div id="popupText"></div>
 </div>
 <!-- 标题区域 -->
@@ -244,6 +244,7 @@ img{
     </div>
     <!-- 细节图 -->
     <div class="right-panel">
+      <span class="close-icon" style="background-image: url('img/close.svg'); top: 20px; right: 20px;" onclick="document.getElementsByClassName('right-side')[0].style.right = '-450px';"></span>
       <div class="panel-title">Detail icon</div>
       <div class="panel-text" style="margin-bottom: 20px;">Please CLICK one of the elements for analyizing:</div>
       <div id="empty-container">
@@ -253,21 +254,7 @@ img{
       <div id="svgContainer"></div>
       <div id="detail-legend" style="background-color: #000; width: 340px; height: 220px; position: absolute; bottom: 0; right: 50px; padding: 10px 0 0 0; transition: 0.5s ease-in-out;">legend</div>
     </div>
-    <!-- 细节标签 -->
-    <!-- <div class="right-panel">
-      <div class="panel-title">Legend</div>
-      <div class="panel-text">Shape & Area - Individual</div>
-      <div class="image-legend"><img src="img/资源 1.svg"></div>
-      <div class="panel-text">Mental Health Benifits - Orbits</div>
-      <div class="image-legend"><img src="img/资源 2.svg"></div>
-      <div class="panel-text">Willing to Expose & Work Position</div>
-      <div style="height: 150px;">
-        <div id="pos-legend"></div>
-          <div style="width: 120px; padding: 20px 0 0 0;"><image src="img/资源 4.svg" title="pei"/></div>
-        </div>
-    </div> -->
 </div>
-  <!-- <input></input> -->
   <script>
     var showLeft = false;
     //var showDetailClickCount = 0;
@@ -280,28 +267,13 @@ img{
         document.getElementsByClassName("detail-icon")[0].style['background-image'] = 'url(img/arrow-fold.svg)';
         document.getElementsByClassName("right-side")[0].style.right = "10px";
         document.getElementById("showBtn").setAttribute("value", "true");
-
-        /*showDetailClickCount += 1
-        document.getElementsByClassName('detail-icon')[0].style.opacity = .6
-        if(showDetailClickCount === 1) {
-          document.getElementsByClassName("right-side")[0].style.right = "-272px";
-        } else if(showDetailClickCount === 2){
-          document.getElementsByClassName("right-side")[0].style.right = "20px";
-          showDetailClickCount = 0
-          document.getElementById("showBtn").setAttribute("value", "true");
-        }*/
-        // console.log("a")
       }
       else if(showDetail == "true") {
         drawPlanet(newDataSet, 380);
-        /*document.getElementsByClassName('detail-icon')[0].style.opacity = 1
-        document.getElementsByClassName("right-side")[0].style.right = "-730px";*/
+        document.getElementsByClassName("left-side")[0].style.display = "block";
         document.getElementsByClassName("detail-icon")[0].style['background-image'] = 'url(img/arrow.svg)';
         document.getElementById("showBtn").setAttribute("value", "false");
       }
-      // console.log("after", document.getElementById("showBtn").getAttribute("value"));
-
-      //getElementsByClassName("left-side")[0].
     }
 
     function showLeftDetail(obj) {
@@ -701,7 +673,6 @@ img{
       newDataSet = [];
       d3.select('#svgWrapper').remove();
       showDetailClickCount = 1;
-      document.getElementsByClassName('detail-icon')[0].style.opacity = .6
       document.getElementsByClassName("right-side")[0].style.right = "10px";
       recWidth = 0;
       recHeight = 0;
@@ -741,10 +712,8 @@ img{
         document.getElementById('empty-container').style.display = 'none'
         document.getElementById('svgContainer').style.display = 'block'
       } else {
-        document.getElementById('empty-container').style.display = 'flex'
-        document.getElementById('svgContainer').style.width = '380px'
-        document.getElementById('svgContainer').innerHTML = ''
-        document.getElementById('detail-legend').style.display = 'none'
+        //document.getElementById('empty-container').style.display = 'flex'
+        document.getElementsByClassName('right-side')[0].style.right = '-450px'
 
       }
       document.getElementById('svgContainer').setAttribute('class', 'slidedown')
