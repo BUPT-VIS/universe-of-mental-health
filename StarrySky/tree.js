@@ -91,7 +91,7 @@ var node = treeSvg.selectAll(".node")
 .attr("class", "node")
 .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
   
-var nodes = node.append("circle")
+var nodesCircles = node.append("circle")
 .attr("r", 5)
 .style("fill", function(d) {
     if (d.data.name == 'N') {
@@ -103,7 +103,7 @@ var nodes = node.append("circle")
   return d.data.name
 })
 .on("mouseover", function(d,i) {
-  d3.select(this).style("stroke", "#00ffd4").style("stroke-width", 2);
+  d3.select(this).style("stroke", "#00ffd4").style("stroke-width", 3);
 })
 .on("mouseout", function(d,i) {
   d3.select(this).style("stroke", "none");
@@ -124,7 +124,7 @@ var nodes = node.append("circle")
 /* 筛选 */
   let selectedNode = d3.select(this).node() //获取当前节点
   selectedNodeName = selectedNode.getAttribute('class') //获取当前节点的className
-  console.log(selectedNodeName, 'selectedNodeName')
+  // console.log(selectedNodeName, 'selectedNodeName')
   switch(selectedNodeName) {
     case "Self-employed":
       posData = []
@@ -145,7 +145,7 @@ var nodes = node.append("circle")
                 'view': data[i]['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
             })
         } 
-      console.log(posData, 'posData????')
+      // console.log(posData, 'posData????')
     break;
     case "N star1":
       posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '1' && d['pre-employers'] == '0'}) //根据className筛选posData里边的人群，从而更新posData
@@ -159,7 +159,7 @@ var nodes = node.append("circle")
     case "Y star2":
       posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '1' && d['pre-employers'] == '1'}) 
       posData.forEach((pos, i) => {
-        console.log(pos.x, 'pos.x-2')
+        // console.log(pos.x, 'pos.x-2')
       })
     break;
     case "N star3":
@@ -207,11 +207,11 @@ var nodes = node.append("circle")
       // console.log(selectedNodeName, 'selectedNodeName')
     break;
   }
-  console.log(posData, 'posData')
+  // console.log(posData, 'posData')
   
   // console.log(posData, 'success')
 
-  nodes.each(function(d) {
+  nodesCircles.each(function(d) {
     if (parent_nodes.indexOf(d.data.name) > -1) {
       d3.select(this).style("fill", "#00ffd4");
     } else {
@@ -232,7 +232,27 @@ var nodes = node.append("circle")
       d3.select(this).style("stroke", "#aaa")
     }
   });
-});
+})
+  setInterval(function() {
+    let random = Math.round(Math.random() * ((nodes.length - 1) + 1))
+    nodesCircles.attr("stroke", function(d, i) {
+      if(i === random) {
+        return "#00ffd4"
+      }
+    }).attr("stroke-width", function(d, i) {
+      // let random = Math.round(Math.random() * ((nodes.length - 1) + 1))
+      if(i === random) {
+        return "3px"
+      }
+    }).attr("fill", function(d, i) {
+      // let random = Math.round(Math.random() * ((nodes.length - 1) + 1))
+      if(i === random) {
+        return "#00ffd4"
+      }
+    })
+  // console.log('sss')
+}, 1000)
+
   
 var texts = node.append("text")
 .attr("dx", function(d) { return d.children ? -8 : 8; })
@@ -243,3 +263,4 @@ var texts = node.append("text")
 .style("stroke-width", 0.1)
 .style("font-size", 10)
 .text(function(d) { return d.data.name; });
+

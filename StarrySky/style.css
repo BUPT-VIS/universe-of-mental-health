@@ -224,8 +224,8 @@ p,h1 {
  top: 9%;
  z-index: 5;
  padding: 10px 20px;
- width: 700px;
- height: 20px;
+ /* width: 650px; */
+ /* height: 20px; */
 }
 
 .triangle {

@@ -49,6 +49,7 @@ body {
   top: 60px;
   left: 10px;
   z-index: 5;
+    transition: 0.5s ease-in-out;
 }
 .right-side {
   right: -450px;
@@ -174,6 +175,18 @@ img{
   margin: 20px 0; 
   color: #999
 }
+
+.left-show__btn {
+    position: absolute;
+    left: 400px;
+    transform: rotate(180deg);
+    top: 65%;
+}
+
+.left-show__btn:hover {
+  cursor: pointer;
+}
+
 /*css部分*/
 
 </style>
@@ -187,12 +200,12 @@ img{
 <!-- 标题区域 -->
 <div class="title">The Universe of Mental Health in Tech Company</div>
 <span class="triangle"></span>
-<span class="interaction-into">Click the left button to select, click the right button to drag, and scroll the wheel to zoom. </span>
+<span class="interaction-into">Left mouse button to select, right mouse button to drag, and scroll the wheel to zoom. </span>
 <!-- 左边栏区域 -->
 <div class="left-side">
   <div class="left-panel">
     <div class="panel-title">Navigation</div>
-    <div class="panel-text">Employees who have changed jobs</div>
+    <div class="panel-text">Please CLICK one of the circle:</div>
     <div id="tree-nav"></div>
   </div>
   <hr style="background: black; border: none;" />
@@ -216,6 +229,9 @@ img{
         <div style="width: 3px; height: 3px; margin: 13.5px 0 0 13.5px; background-color: rgba(255,255,255,0.6); border: solid 0px rgba(255,255,255,0.6); border-radius: 50%;"></div>
       </div>
     </div>
+  </div>
+  <div class="interact-button left-show__btn"  id="showNavigation" style="margin-bottom: 20px" value="false" onclick="showLeftDetail(this)">
+    <div class="detail-icon"></div>
   </div>
 </div>
 <!-- 右边栏区域 -->
@@ -253,10 +269,11 @@ img{
 </div>
   <!-- <input></input> -->
   <script>
+    var showLeft = false;
     //var showDetailClickCount = 0;
     function showDetail() {
       var showDetail = document.getElementById("showBtn").getAttribute("value");
-      console.log(showDetail);
+      // console.log(showDetail);
       if (showDetail == "false") {
         drawPlanet(newDataSet, windowWidth-90);
         document.getElementsByClassName("left-side")[0].style.display = "none";
@@ -285,6 +302,18 @@ img{
       // console.log("after", document.getElementById("showBtn").getAttribute("value"));
 
       //getElementsByClassName("left-side")[0].
+    }
+
+    function showLeftDetail(obj) {
+      if(obj.id === 'showNavigation') {
+        if(showLeft === false) {
+          document.getElementsByClassName("left-side")[0].style.left = "-400px";
+          showLeft = true
+        } else {
+          document.getElementsByClassName("left-side")[0].style.left = "10px";
+          showLeft = false
+        }
+      }
     }
     document.getElementById("popupBox").style.display = "none";
 
@@ -552,7 +581,7 @@ img{
     let recPosX, recPosY, recWidth, recHeight, endPosX, endPosY;
 
     // js 禁用鼠标右键功能
-    document.oncontextmenu = () => false;
+    // document.oncontextmenu = () => false;
     function mousePressed(e) {
       //判断是否在svg区域上，是的话禁用鼠标
       // console.log(d3.event.target,'d3.event.target.localName')
