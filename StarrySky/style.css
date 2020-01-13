@@ -224,9 +224,6 @@ p,h1 {
  z-index: 5;
  padding: 7px 20px;
  font-size: 12px;
- top: 7%;
- z-index: 5;
- padding: 10px 20px;
  display: flex;
  align-items: center;
 }
@@ -237,7 +234,7 @@ p,h1 {
  position: fixed;
  left: 50%;
  transform: translateX(-50%) rotate(45deg);
- top: 6%;
+ top: 50px;
  z-index: 5;
  background-color: #fff;
 }
