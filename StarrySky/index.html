@@ -548,12 +548,12 @@ img{
     let recPosX, recPosY, recWidth, recHeight, endPosX, endPosY;
 
     // js 禁用鼠标右键功能
-    //document.oncontextmenu = () => false;
+    document.oncontextmenu = () => false;
     function mousePressed(e) {
       //判断是否在svg区域上，是的话禁用鼠标
       // console.log(d3.event.target,'d3.event.target.localName')
       if(e.toElement.tagName === 'CANVAS') {
-        console.log("canvas");
+        // console.log("canvas");
         // console.log(e.toElement.tagName,'e')
         switch (mouseButton) {
           case LEFT:
@@ -601,7 +601,8 @@ img{
       if(e.toElement.tagName === 'CANVAS') {
         switch(mouseButton) {
           case LEFT:
-              useLasso(350);
+              useLasso();
+              // console.log(e, 'e')
           break;
           case RIGHT:
               document.getElementsByTagName('canvas')[0].removeAttribute('class','move-state')
@@ -665,7 +666,7 @@ img{
     }*/
 
     /* 使用套索工具 */
-    function useLasso(width) {
+    function useLasso() {
       showDetailClickCount = 1;
       document.getElementsByClassName('detail-icon')[0].style.opacity = .6
       document.getElementsByClassName("right-side")[0].style.right = "10px";
@@ -689,7 +690,11 @@ img{
       for (let i = 0; i < posData.length; i++) {
         let CanXX = posData[i].x
         let CanYY = posData[i].y
-        if(Number(CanXX) < Number(endPosX) && Number(CanXX) > Number(recPosX) && Number(CanYY) < Number(endPosY) && Number(CanYY) > Number(recPosY)) {
+        //如果没有拖拽，只有点击：
+        let d = int(dist(mouseX, mouseY, CanXX, CanYY ))
+        let dragConditions = Number(CanXX) < Number(endPosX) && Number(CanXX) > Number(recPosX) && Number(CanYY) < Number(endPosY) && Number(CanYY) > Number(recPosY)
+        if(dragConditions || d < 10 ) {
+          // console.log(d,'d')
           if(idList.indexOf(posData[i].id) === -1) {
             idList.push(posData[i].id)
           }
@@ -745,14 +750,14 @@ img{
     })
     function drawPlanet(dataSet, width) {
         /* 开始分隔, 分割后的数据用来直接data()绑定,排序的转折点 */
-        console.log("luna",width,dataSet);
+        // console.log("luna",width,dataSet);
         var sampleNum;
         if (width == 380) {
           sampleNum = 4;
-          console.log("4")
+          // console.log("4")
         } else {
           sampleNum = int(width/90); //这里的数量根据显示器宽度修改
-          console.log(sampleNum)
+          // console.log(sampleNum)
           //document.getElementById("left-side").style.display = "none";
         }
         var len = dataSet.length
