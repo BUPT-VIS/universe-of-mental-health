@@ -222,8 +222,13 @@ p,h1 {
  top: 9%;
  z-index: 5;
  padding: 10px 20px;
+<<<<<<< HEAD
  /* width: 650px; */
  /* height: 20px; */
+=======
+ width: 720px;
+ height: 20px;
+>>>>>>> 9a22210ec0e2abbef48e518c538fcf8c8d54abc9
 }
 
 .triangle {
