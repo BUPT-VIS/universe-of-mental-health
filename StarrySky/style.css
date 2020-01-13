@@ -219,16 +219,10 @@ p,h1 {
  border-radius: 20px;
  color: #000;
  position: fixed;
- top: 9%;
+ top: 60px;
  z-index: 5;
- padding: 10px 20px;
-<<<<<<< HEAD
- /* width: 650px; */
- /* height: 20px; */
-=======
- width: 720px;
- height: 20px;
->>>>>>> 9a22210ec0e2abbef48e518c538fcf8c8d54abc9
+ padding: 7px 20px;
+ font-size: 12px;
 }
 
 .triangle {
@@ -237,7 +231,7 @@ p,h1 {
  position: fixed;
  left: 50%;
  transform: translateX(-50%) rotate(45deg);
- top: 8%;
+ top: 50px;
  z-index: 5;
  background-color: #fff;
 }

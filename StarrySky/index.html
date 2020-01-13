@@ -39,7 +39,7 @@ body {
  width: 300px;
 }
 .title {
-  font-size: 36px;
+  font-size: 30px;
   font-family: Gilroy;
   text-align: center;
 }
@@ -65,7 +65,7 @@ body {
   padding: 10px 0 10px 20px;
   border: 0.8px #ccc solid;
   border-radius: 10px;
-  background-color: black;
+  background-color: rgba(0,0,0,0.7);
 }
 .right-panel {
   padding: 10px 0 10px 20px;
@@ -75,14 +75,15 @@ body {
   margin-left: 10px;
   position: relative;
   transition: 0.5s ease-in-out;
+  background-color: rgba(0,0,0,0.7);
 }
 .panel-title {
-  font-size: 22px;
+  font-size: 20px;
   margin-bottom: 6px;
 }
 .panel-text {
   font-family: Microsoft YaHei UI;
-  font-size: 14px;
+  font-size: 12px;
   margin-bottom: 4px;
 }
 #tree-nav {
@@ -200,7 +201,7 @@ img{
 <!-- 标题区域 -->
 <div class="title">The Universe of Mental Health in Tech Company</div>
 <span class="triangle"></span>
-<span class="interaction-into">Click the left button to select, click the right button to drag, and scroll the wheel to zoom. <span class="close-icon" style="background-image: url('img/close-black.svg'); top: 15px; right: 25px;" onclick="this.parentNode.style.display = 'none'; document.getElementsByClassName('triangle')[0].style.display = 'none';"></span></span>
+<span class="interaction-into">Click the left mouse button to select, click the right mouse button to drag, and scroll the wheel to zoom. <span class="close-icon" style="background-image: url('img/close-black.svg'); top: 15px; right: 25px;" onclick="this.parentNode.style.display = 'none'; document.getElementsByClassName('triangle')[0].style.display = 'none';"></span></span>
 <!-- 左边栏区域 -->
 <div class="left-side">
   <div class="left-panel">
@@ -230,7 +231,7 @@ img{
       </div>
     </div>
   </div>
-  <div class="interact-button left-show__btn"  id="showNavigation" style="margin-bottom: 20px" value="false" onclick="showLeftDetail(this)">
+  <div class="interact-button left-show__btn" id="showNavigation" style="margin-bottom: 20px" value="false" onclick="showLeftDetail(this)">
     <div class="detail-icon"></div>
   </div>
 </div>
@@ -244,8 +245,8 @@ img{
     </div>
     <!-- 细节图 -->
     <div class="right-panel">
-      <span class="close-icon" style="background-image: url('img/close.svg'); top: 20px; right: 20px;" onclick="document.getElementsByClassName('right-side')[0].style.right = '-450px';"></span>
-      <div class="panel-title">Detail icon</div>
+      <span class="close-icon" style="background-image: url('img/close.svg'); top: 20px; right: 20px;" onclick="closeDetail()"></span>
+      <div class="panel-title">Planet Detail</div>
       <div class="panel-text" style="margin-bottom: 20px;">Please CLICK one of the elements for analyizing:</div>
       <div id="empty-container">
         <img src="img/empty-icon.png" alt="">
@@ -260,7 +261,7 @@ img{
     //var showDetailClickCount = 0;
     function showDetail() {
       var showDetail = document.getElementById("showBtn").getAttribute("value");
-      // console.log(showDetail);
+      console.log(showDetail)
       if (showDetail == "false") {
         drawPlanet(newDataSet, windowWidth-90);
         document.getElementsByClassName("left-side")[0].style.display = "none";
@@ -274,6 +275,16 @@ img{
         document.getElementsByClassName("detail-icon")[0].style['background-image'] = 'url(img/arrow.svg)';
         document.getElementById("showBtn").setAttribute("value", "false");
       }
+    }
+
+    function closeDetail() {
+        d3.select("#svgContainer").select("svg").remove();
+        document.getElementById('empty-container').style.display = 'flex'
+        var showDetail = document.getElementById("showBtn").getAttribute("value");
+        document.getElementsByClassName("right-side")[0].style.right = "-450px";
+        recHeight = 0;
+        recWidth = 0;
+        document.getElementById("detail-legend").style.display = "none";
     }
 
     function showLeftDetail(obj) {
@@ -458,9 +469,9 @@ img{
       push();
       fill('rgba(255,255,255,0.2)');
       //noFill();
-      stroke('rgba(255,255,255,0.6)');
-      strokeWeight(1.5);
-      rect(recPosX, recPosY, recWidth, recHeight, 5);
+      stroke('rgba(255,255,255,0.4)');
+      strokeWeight(1);
+      rect(recPosX, recPosY, recWidth, recHeight, 2);
       pop();
       tempWindowWidth = windowWidth;
       tempWindowHeight = windowHeight;
@@ -539,7 +550,7 @@ img{
             translate(pos.x,pos.y);
             rotate(PI / 4);
             fill(255, 100);
-            rect(0, 0, r,r);
+            rect(0, 0, r, r);
             pop();
             } else {
                 fill(100, 100, brightness);
@@ -566,10 +577,12 @@ img{
               recHeight = 0;
               recPosX = mouseX;
               recPosY = mouseY;
-              //d3.select('#svgWrapper').remove();
+              console.log(recPosX, recPosY);
           break;
           case RIGHT:
               // 记录鼠标相对元素的偏移量
+              recX = mouseX - recPosX;
+              recY = mouseY - recPosY;
               posData.forEach((pos, i) => {
                   pos.ox = mouseX - pos.x;
                   pos.oy = mouseY - pos.y;
@@ -590,6 +603,8 @@ img{
           break;
           case RIGHT:
             // 根据偏移量修改位置坐标
+            recPosX = mouseX - recX;
+            recPosY = mouseY - recY;
             posData.forEach((pos, i) => {
                 pos.x = mouseX - pos.ox;
                 pos.y = mouseY - pos.oy;
@@ -640,9 +655,21 @@ img{
         }
         // 大小按照比例缩放
         size *= wheelScale;
-        // console.log('size', size);
+
+        // 放大后的终点位置
+        endPosX = windowWidth/2 + wheelScale * ((recPosX + recWidth) - windowWidth/2);
+        endPosY = windowHeight/2 + wheelScale * ((recPosY + recHeight) - windowHeight/2);
+
+        // 放大后的起点位置
+        recPosX = windowWidth/2 + wheelScale * (recPosX - windowWidth/2);
+        recPosY = windowHeight/2 + wheelScale * (recPosY - windowHeight/2);
+
+        // 放大后的长度和宽度
+        recWidth = endPosX - recPosX;
+        recHeight = endPosY - recPosY;
         
         posData.forEach((pos, i) => {
+
             // 偏移量 = 缩放比率 * (元素位置 - 画面中心)
             pos.ox = wheelScale * (pos.x - windowWidth/2);
             pos.oy = wheelScale * (pos.y - windowHeight/2);
@@ -656,17 +683,6 @@ img{
         return false;
     }
 
-    // 触控板有时会失控 应该禁用 还未解决
-    /*function touchStarted() {
-        return false;
-    }
-    function touchMoved() {
-        return false;
-    }
-    function touchEnded() {
-        return false;
-    }*/
-
     /* 使用套索工具 */
     function useLasso() {
       idList = [];
@@ -674,8 +690,7 @@ img{
       d3.select('#svgWrapper').remove();
       showDetailClickCount = 1;
       document.getElementsByClassName("right-side")[0].style.right = "10px";
-      recWidth = 0;
-      recHeight = 0;
+      
       endPosX = mouseX;
       endPosY = mouseY;
       //值得注意的是不同的拖动方向（左上，右上，左下，右下），绘制的方法有区别，需要交换一下值 
@@ -712,9 +727,9 @@ img{
         document.getElementById('empty-container').style.display = 'none'
         document.getElementById('svgContainer').style.display = 'block'
       } else {
-        //document.getElementById('empty-container').style.display = 'flex'
+        document.getElementById('empty-container').style.display = 'flex'
+        d3.select("#svgContainer").select("svg").remove()
         document.getElementsByClassName('right-side')[0].style.right = '-450px'
-
       }
       document.getElementById('svgContainer').setAttribute('class', 'slidedown')
     }
