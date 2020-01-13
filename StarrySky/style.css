@@ -59,6 +59,7 @@ p,h1 {
  height: 90%;
  overflow-y: scroll;
  overflow-x: hidden;
+ transition: 0.5s ease-in-out;
 }
 
 #svgWrapper {
@@ -126,12 +127,13 @@ p,h1 {
 }
 
 .detail-icon {
- background-image: url('img/arrow-icon.svg');
+ background-image: url('img/arrow.svg');
  background-position:center;
  background-size: 100% 100%;
  background-repeat: no-repeat;
  width: 25px;
  height: 25px;
+ transition: 0.25s ease-in-out;
 }
 
 .drag-icon {
