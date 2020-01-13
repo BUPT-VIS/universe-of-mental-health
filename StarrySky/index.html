@@ -12,7 +12,7 @@
   <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/addons/p5.sound.min.js"></script> -->
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <!-- <script src="p5.dom.js"></script> -->
-  <title>test</title>
+  <title>Universe of Mental Health</title>
   <link rel="stylesheet" href="style.css">
 <style type="text/css">
 body {
@@ -186,8 +186,8 @@ img{
 </div>
 <!-- 标题区域 -->
 <div class="title">The Universe of Mental Health in Tech Company</div>
-<!-- <span class="triangle"></span>
-<span class="interaction-into"> Middle-click to drag starry sky & Right-click to select an individual </span> -->
+<span class="triangle"></span>
+<span class="interaction-into">Click the left button to select, click the right button to drag, and scroll the wheel to zoom. </span>
 <!-- 左边栏区域 -->
 <div class="left-side">
   <div class="left-panel">
@@ -225,14 +225,6 @@ img{
       <div class="interact-button" id="showBtn" style="margin-bottom: 20px" value="false" onclick="showDetail(this)">
         <p class="detail-icon"></p>
         <p>Detail</p>
-      </div>
-      <div class="interact-button" id="drag" style="margin-bottom: 20px" onclick="changeButton(this)">
-        <p class="drag-icon"></p>
-        <p>Drag</p>
-      </div>
-      <div class="interact-button" id="lasso" onclick="changeButton(this)">
-        <p class="lasso-icon"></p>
-        <p>Select</p>
       </div>
     </div>
     <!-- 细节描述框 -->
@@ -379,7 +371,6 @@ img{
     var wheelScale; //缩放常数（1.25 ，-1.25）
     var currentSliderBarValue; //
     var selectedNodeName; //树：筛选名
-    var buttonState ='lasso'; 
     var xPosScale, yPosScale;
     var tempWindowWidth, tempWindowHeight
     var useCanvasValid = false;
@@ -552,7 +543,9 @@ img{
     }
 
     let recPosX, recPosY, recWidth, recHeight, endPosX, endPosY;
-    
+
+    // js 禁用鼠标右键功能
+    document.oncontextmenu = () => false;
     function mousePressed(e) {
       //判断是否在svg区域上，是的话禁用鼠标
       // console.log(d3.event.target,'d3.event.target.localName')
@@ -560,86 +553,57 @@ img{
         // console.log(e.toElement.tagName,'e')
         switch (mouseButton) {
           case LEFT:
-            if(buttonState == 'lasso') {
               idList = [];
               newDataSet = [];
               recWidth = 0;
               recHeight = 0;
               recPosX = mouseX;
               recPosY = mouseY;
-              d3.select('#svgWrapper').remove()
-            }
-            else if(buttonState == 'drag') {
-              posData.forEach((pos, i) => {
-                pos.ox = mouseX - pos.x;
-                pos.oy = mouseY - pos.y;
-              })
-              document.getElementsByTagName('canvas')[0].setAttribute('class','move-state')
-            }
+              d3.select('#svgWrapper').remove();
           break;
-          case CENTER:
-            // if(buttonState == 'drag') {
-                // 记录鼠标相对元素的偏移量
-                posData.forEach((pos, i) => {
-                    pos.ox = mouseX - pos.x;
-                    pos.oy = mouseY - pos.y;
-                })
-                document.getElementsByTagName('canvas')[0].setAttribute('class','move-state')
-            // }
+          case RIGHT:
+              // 记录鼠标相对元素的偏移量
+              posData.forEach((pos, i) => {
+                  pos.ox = mouseX - pos.x;
+                  pos.oy = mouseY - pos.y;
+              })
+              document.getElementsByTagName('canvas')[0].setAttribute('class','move-state');
           break;
         }
-        document.getElementById("popupBox").style.display = "none";
- 
+        document.getElementById("popupBox").style.display = "none"; 
       }
     }
 
     function mouseDragged(e) {
       if(e.toElement.tagName === 'CANVAS') {
-      switch (mouseButton) {
-        case LEFT:
-          if(buttonState == 'lasso') {
+        switch (mouseButton) {
+          case LEFT:
             recWidth = mouseX - recPosX;
             recHeight = mouseY - recPosY;
-          } else if (buttonState == 'drag'){
-            // 元素位置 = 鼠标位置 - 偏移量
-            posData.forEach((pos, i) => {
-                pos.x = mouseX - pos.ox;
-                pos.y = mouseY - pos.oy;
-            })
-            document.getElementsByTagName('canvas')[0].setAttribute('class','move-state')
-          }
-        break;
-        case CENTER:
-          // if (buttonState == 'drag') {
+          break;
+          case RIGHT:
             // 根据偏移量修改位置坐标
             posData.forEach((pos, i) => {
                 pos.x = mouseX - pos.ox;
                 pos.y = mouseY - pos.oy;
             })
-            document.getElementsByTagName('canvas')[0].setAttribute('class','move-state')
-          // }
-        break;
+            document.getElementsByTagName('canvas')[0].setAttribute('class','move-state');
+          break;
+        }
       }
-    }
     }
 
     function mouseReleased(e) {
       if(e.toElement.tagName === 'CANVAS') {
-      switch(mouseButton) {
-        case LEFT:
-          if(buttonState == 'lasso') {
-            useLasso()
-          } else if (buttonState == 'drag'){
-            document.getElementsByTagName('canvas')[0].removeAttribute('class','move-state')
-          }
-        break;
-        case CENTER:
-          // if(buttonState == 'drag') {
-            document.getElementsByTagName('canvas')[0].removeAttribute('class','move-state')
-          // }
-        break;
+        switch(mouseButton) {
+          case LEFT:
+              useLasso();
+          break;
+          case RIGHT:
+              document.getElementsByTagName('canvas')[0].removeAttribute('class','move-state')
+          break;
+        }
       }
-    }
     }
 
     function changeButton(btn) {
@@ -740,11 +704,6 @@ img{
       }
       document.getElementById('svgContainer').setAttribute('class', 'slidedown')
     }
-
-    //初始化:选中套索工具(样式选中状态)
-    if(buttonState === 'lasso') {
-        document.getElementsByClassName('lasso-icon')[0].style.opacity = .6
-      }
 
     /* 数组分段函数 */
     function sliceArray(array, size) {
