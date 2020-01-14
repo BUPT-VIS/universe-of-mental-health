@@ -5,8 +5,8 @@ var root = {
     {
       'name': 'Y Pre-employers 1',
       'children': [
-        {'name': 'Y star6'},
-        {'name': 'N star5'}
+        {'name': 'Y cluster1'},
+        {'name': 'N cluster2'}
       ]
     },
     {
@@ -15,8 +15,8 @@ var root = {
         {
           'name': 'Y Pre-employers 2',
           'children': [
-            {'name': 'Y star2'},
-            {'name': 'N star1'}
+            {'name': 'Y cluster3'},
+            {'name': 'N cluster4'}
           ]
         },
         {
@@ -25,8 +25,8 @@ var root = {
             {
               'name': 'Y Pre-employers 3',
               'children': [
-                {'name': 'Y star4'},
-                {'name': 'N star3'}
+                {'name': 'Y cluster5'},
+                {'name': 'N cluster6'}
               ]
             },
             {'name': 'N'}
@@ -45,7 +45,7 @@ const hierarchyData = d3.hierarchy(root)
 // console.log(hierarchyData, 'hierarchyData')
 //2. 生成树状布局(数据获取器)
 var tree = d3.tree()
-.size([200, 280])
+.size([180, 230])
 .separation(function (a, b) {
   return (a.parent === b.parent ? 1 : 2) / a.depth
 })
@@ -60,9 +60,9 @@ var links = treeData.links();
 var treeSvg = d3.select("#tree-nav")
       .append("svg")			//在<body>中添加<svg>
       .attr("width", 360)	//设定<svg>的宽度属性
-      .attr("height", 200)
+      .attr("height", 170)
       .append("g")
-      .attr('transform','translate(50, 0)')
+      .attr('transform','translate(80, -10)')
 
 var horizontal = d3.linkHorizontal() //linkHorizontal生成的曲线在曲线的终点和起点处的切线是水平方向
   .x(d => d.y)
@@ -110,7 +110,7 @@ var nodesCircles = node.append("circle")
 })
 .on("click", function(d) {
   var current_node = d;
-  // console.log(current_node.data.name);
+  console.log(current_node.depth);
   var parent_nodes = [current_node.data.name];
     var parent_links = [];
   for (var depth = 0; depth < d.depth; depth++) {
@@ -125,6 +125,7 @@ var nodesCircles = node.append("circle")
   let selectedNode = d3.select(this).node() //获取当前节点
   selectedNodeName = selectedNode.getAttribute('class') //获取当前节点的className
   // console.log(selectedNodeName, 'selectedNodeName')
+  console.log(selectedNodeName)
   switch(selectedNodeName) {
     case "Self-employed":
       posData = []
@@ -147,7 +148,7 @@ var nodesCircles = node.append("circle")
         } 
       // console.log(posData, 'posData????')
     break;
-    case "N star1":
+    case "N cluster4":
       posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '1' && d['pre-employers'] == '0'}) //根据className筛选posData里边的人群，从而更新posData
       // posData.forEach((pos, i) => {
       //   pos.x = pos.x - tempWindowWidth/2
@@ -156,22 +157,22 @@ var nodesCircles = node.append("circle")
       // })
       // console.log(posData, 'posData')
     break;
-    case "Y star2":
+    case "Y cluster3":
       posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '1' && d['pre-employers'] == '1'}) 
       posData.forEach((pos, i) => {
         // console.log(pos.x, 'pos.x-2')
       })
     break;
-    case "N star3":
+    case "N cluster6":
       posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '0' && d['pre-employers'] == '0' && d['Tech-role'] == '1'}) 
     break;
-    case "Y star4":
+    case "Y cluster5":
       posData = posDataTotal.filter(d=> {return d['self-employed'] == '0' && d['IT-company'] == '0' && d['pre-employers'] == '1' && d['Tech-role'] == '1'}) 
     break;
-    case "N star5":
+    case "N cluster2":
       posData = posDataTotal.filter(d=> {return d['self-employed'] == '1' && d['pre-employers'] == '0' }) 
     break;
-    case "Y star6":
+    case "Y cluster1":
       posData = posDataTotal.filter(d=> {return d['self-employed'] == '1' && d['pre-employers'] == '1' }) 
     break;
     case "N":
@@ -256,11 +257,21 @@ var nodesCircles = node.append("circle")
   
 var texts = node.append("text")
 .attr("dx", function(d) { return d.children ? -8 : 8; })
-.attr("dy", 15)
-.style("text-anchor", "middle"/*function(d) { return d.children ? "end" : "start"; }*/)
+.attr("dy", 4)
+.style("text-anchor", function(d) { return d.children ? "end" : "start"; })
 .style("fill", "#aaa")
 .style("stroke", "#aaa")
 .style("stroke-width", 0.1)
 .style("font-size", 10)
-.text(function(d) { return d.data.name; });
+.text(function(d) { 
+  if (d.depth > 0) {    
+    if (d.data.name.slice(2) == 'Pre-employers 1' || d.data.name.slice(2) == 'Pre-employers 2' || d.data.name.slice(2) == 'Pre-employers 3' ) {
+      return 'Pre-employers';
+    } else {
+      return d.data.name.slice(2);
+    }
+  } else {
+    return d.data.name;
+  }
+});
 

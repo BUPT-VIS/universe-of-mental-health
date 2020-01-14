@@ -87,7 +87,7 @@ body {
   margin-bottom: 4px;
 }
 #tree-nav {
-  height: 200px;
+  height: 170px;
   width: 360px;
 }
 #color-legend {
@@ -96,9 +96,9 @@ body {
   margin-bottom: 10px;
 }
 #radius-legend {
-  height: 100px;
-  width: 260px;
-  margin: 20px 0 20px;
+  height: 80px;
+  width: 200px;
+  margin: 10px 0 0 10px;
 }
 #radius-legend img {
   width: 100%;
@@ -181,7 +181,7 @@ img{
     position: absolute;
     left: 400px;
     transform: rotate(180deg);
-    top: 65%;
+    top: 46%;
 }
 
 .left-show__btn:hover {
@@ -202,7 +202,7 @@ img{
 <div class="title">The Universe of Mental Health in Tech Company</div>
 <span class="triangle"></span>
 
-<span class="interaction-into">Click the left mouse button to select, click the right mouse button to drag, and scroll the wheel to zoom. <span class="close-icon" style="background-image: url('img/close-black.svg'); top: 15px; right: 25px;" onclick="this.parentNode.style.display = 'none'; document.getElementsByClassName('triangle')[0].style.display = 'none';"></span></span>
+<span class="interaction-into">Click the qleft mouse button to select, click the right mouse button to drag, and scroll the wheel to zoom. <span class="close-icon" style="background-image: url('img/close-black.svg'); top: 15px; right: 25px;" onclick="this.parentNode.style.display = 'none'; document.getElementsByClassName('triangle')[0].style.display = 'none';"></span></span>
 
 <!-- 左边栏区域 -->
 <div class="left-side">
@@ -214,21 +214,23 @@ img{
   <hr style="background: black; border: none;" />
   <div class="left-panel">
     <div class="panel-title">Legend</div>
-    <div class="panel-text">Colors - Mental Health Conditions</div>
+    <div class="panel-text">Colors - Mental Health Condition</div>
     <div id="color-legend"></div>
     <div class="panel-text">Radius - Amount of Conditions</div>
     <div id="radius-legend">
-      <img src="img/scale-legend.png" alt="">
+      <img src="img/scale-legend_1.png" alt="">
     </div>
     <div class="panel-text">Flicker & Starrings - Discrimination</div>
+    <div style="font-size: 9px; line-height: 14px; width: 360px; font-family: 微软雅黑 Light">"Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue ?"
+</div>
     <div id="flicker-legend">
-      <div class="flicker" style="-webkit-animation-duration: 1s;"></div>
-      <div class="flicker" style="-webkit-animation-duration: 5s;"></div>
-      <div class="flicker" style="-webkit-animation-duration: 10s;"></div>
-      <div class="ring" style="width: 15px; height: 15px; margin: 17.5px 20px 0 20px;">
+      <div class="flicker" style="-webkit-animation-duration: 1s;" title="Yes, I think they do!"></div>
+      <div class="flicker" style="-webkit-animation-duration: 5s;" title="Yes, I think they would…"></div>
+      <div class="flicker" style="-webkit-animation-duration: 10s;" title="Maybe…"></div>
+      <div class="ring" style="width: 15px; height: 15px; margin: 17.5px 20px 0 20px;" title="No, I don't think they would…">
         <div style="width: 3px; height: 3px; margin: 6px 0 0 6.5px; background-color: rgba(255,255,255,0.6); border: solid 0px rgba(255,255,255,0.6); border-radius: 50%;"></div>
       </div>
-      <div class="ring" style="width: 30px; height: 30px; margin: 10px 20px 0 20px;">
+      <div class="ring" style="width: 30px; height: 30px; margin: 10px 20px 0 20px;" title="No, I don't think they do!">
         <div style="width: 3px; height: 3px; margin: 13.5px 0 0 13.5px; background-color: rgba(255,255,255,0.6); border: solid 0px rgba(255,255,255,0.6); border-radius: 50%;"></div>
       </div>
     </div>
@@ -334,12 +336,12 @@ img{
     // 花瓣
     var starSVG = d3.select("#color-legend").append("svg").attr("height", 90).attr("width", 360);
 
-    var conditions = ["Mood Disorder", "Anxiety Disorder", "Attention Deficit Hyperactivity Disorder", "Post-traumatic Stress Disorder", "Obsessive-Compulsive Disorder", "Substance Use Disorder", "Personality Disorder", "Stress Response Syndromes", "Addictive Disorder", "Eating Disorder", "Dissociative Disorder", "Psychotic Disorder"];//"Other"
+    var conditions = ["Mood Disorder", "Anxiety Disorder", "Attention Deficit Hyperactivity Disorder", "Post-traumatic Stress Disorder", "Obsessive-Compulsive Disorder", "Substance Use Disorder", "Personality Disorder", "Stress Response Syndromes", "Addictive Disorder", "Eating Disorder", "Dissociative Disorder", "Psychotic Disorder"];
 
-    var colors = ["#eb3a4b", "#eb4f27", "#f19637", "#fcea4f", "#9bfb4e", "#69e282", "#6ee5b9","#68e2fc", "#407bf7", "#425ef5", "#5d30f5", "#c333f1"]; //
+    var colors = ["#eb4f27", "#f19637", "#fcea4f", "#9bfb4e", "#69e282", "#6ee5b9","#68e2fc", "#407bf7", "#425ef5", "#5d30f5", "#c333f1", "#eb3a4b"].reverse(); //
 
     var condition = starSVG.append("text")
-      .attr("transform", "translate(90, 45)")
+      .attr("transform", "translate(100, 45)")
       .attr("dy", 7)
       .style("fill", "white")
       .style("font-size", 12);
@@ -349,7 +351,7 @@ img{
       .attr("cx", function(d, i) { return 24*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46; })
       .attr("cy", function(d, i) { return 24*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45; })
       .attr("r", 10).style("fill", function(d) { return d; })
-      .style("cursor", "pointer").style("opacity", 0.8)
+      .style("opacity", 0.8)
       .on("mouseover", function(d, i) {
           d3.select(this)
           .attr("r", 12)
