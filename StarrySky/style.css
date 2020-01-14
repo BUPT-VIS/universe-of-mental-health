@@ -122,6 +122,7 @@ p,h1 {
   cursor: pointer;
   /* position: absolute; */
   float: right;
+  margin-right: 10px;
 }
 
 .detail-icon {
