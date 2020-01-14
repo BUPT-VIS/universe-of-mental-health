@@ -257,7 +257,12 @@ img{
         <p>Please select the stars in starry sky.</p>
       </div>
       <div id="svgContainer"></div>
-      <div id="detail-legend" style="background-color: #000; width: 340px; height: 220px; position: absolute; bottom: 0; right: 50px; padding: 10px 0 0 0; transition: 0.5s ease-in-out;">legend</div>
+      <div id="detail-legend" style="background-color: #000; width: 340px; height: 240px; position: absolute; bottom: 0; right: 50px; padding: 20px 0 0 0; transition: 0.5s ease-in-out; border-top: solid 1px rgba(255,255,255,0.6)">
+        <div class="panel-text" style="margin-bottom: 10px; font-size: 14px;">Legend</div>
+        <img width="280px;" src="img/detail-legend_2.svg" />
+        <div id="orbit-svg" style="float: left;"></div>
+        <div id="pos-svg" style="float: left;"></div>
+      </div>
     </div>
 </div>
   <script>
@@ -307,10 +312,10 @@ img{
     // 职位
     var positions = ["Back-end Developer","Front-end Developer", "Supervisor/Team Lead", "DevOps/SysAdmin", "Support", "One-person shop", "Designer", "Dev Evangelist/Advocate", "Executive Leadership", "Sales", "HR", "Other"];
 
-    var posSVG = d3.select("#pos-legend").append("svg").attr("height", 150).attr("width", 140);
+    var posSVG = d3.select("#pos-svg").append("svg").attr("height", 150).attr("width", 160).attr("transform", "translate(0,0)");
 
     var position = posSVG.append("text")
-      .attr("transform", "translate(70, 130)")
+      .attr("transform", "translate(80, 130)")
       .attr("dy", 7)
       .style("fill", "white")
       .style("font-size", 12)
@@ -318,19 +323,45 @@ img{
 
     posSVG.selectAll("circle")
       .data(positions).enter().append("circle")
-      .attr("cx", function(d,i) { return 38*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 70; })
+      .attr("cx", function(d,i) { return 38*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 80; })
       .attr("cy", function(d,i) { return 38*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; })
       .attr("r", 4.5).style("fill", "white").style("opacity", 0.6).style("cursor", "pointer")
       .on("mouseover", function(d,i) {
         d3.select(this).attr("r", 6).style("opacity", 1)
-        .attr("cx", function() { return 40*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 70; })
+        .attr("cx", function() { return 40*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 80; })
         .attr("cy", function() { return 40*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; });
         position.text(positions[i]);
       })
       .on("mouseout", function(d,i) {
         d3.select(this).attr("r", 4.5).style("opacity", 0.6)
-        .attr("cx", function() { return 38*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 70; })
+        .attr("cx", function() { return 38*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 80; })
         .attr("cy", function() { return 38*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; });
+      });
+
+      var benefits = ["provide mental health benefits", "know options for mental health care available", "Has employer discussed mental health", "offer resources to learn more about mental health"];
+
+      var befSVG = d3.select("#orbit-svg").append("svg").attr("height", 150).attr("width", 160).attr("transform", "translate(0,0)");
+
+      var benifit = befSVG.append("text")
+      .attr("transform", "translate(80, 130)")
+      .attr("dy", 7)
+      .style("fill", "white")
+      .style("font-size", 12)
+      .style("text-anchor", "middle");
+
+      befSVG.selectAll("ellipse")
+      .data(benefits).enter().append("ellipse")
+      .attr("cx", 80).attr("cy", 60).attr("rx", 12).attr("ry", 30)
+      .style("stroke", "#fff").style("stroke-width", 1).style("stroke-dasharray", "1")
+      .style("fill", "none")
+      .attr("transform", function(d,i) {
+        return "rotate(" + (45*i) + ",80 60)";
+      })
+      .on("mouseover", function(d,i) {
+        benifit.text(benefits[i]);
+      })
+      .on("mouseout", function(d,i) {
+        benifit.text('');
       });
 
     // 花瓣
@@ -568,7 +599,7 @@ img{
     let recPosX, recPosY, recWidth, recHeight, endPosX, endPosY;
 
     // js 禁用鼠标右键功能
-    // document.oncontextmenu = () => false;
+    document.oncontextmenu = () => false;
     function mousePressed(e) {
       //判断是否在svg区域上，是的话禁用鼠标
       // console.log(d3.event.target,'d3.event.target.localName')
