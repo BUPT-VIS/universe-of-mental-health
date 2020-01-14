@@ -75,7 +75,7 @@ body {
   margin-left: 10px;
   position: relative;
   transition: 0.5s ease-in-out;
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0,0,0,1);
 }
 .panel-title {
   font-size: 20px;
@@ -197,6 +197,16 @@ img{
   margin-left: 6px;
 }
 
+#detail-legend__btn {
+  font-size: 14px;
+  display: none;
+  float: right;
+  margin-right: 40px;
+}
+#detail-legend__btn:hover {
+  cursor: pointer;
+}
+
 /*css部分*/
 
 </style>
@@ -266,7 +276,9 @@ img{
         <p>Please select the stars in starry sky.</p>
       </div>
       <div id="svgContainer"></div>
-      <div id="detail-legend" style="background-color: #000; width: 340px; height: 240px; position: absolute; bottom: 0; right: 50px; padding: 20px 0 0 0; transition: 0.5s ease-in-out; border-top: solid 1px rgba(255,255,255,0.6)">
+      <div id="detail-legend__btn" onclick="changeLegend()">Show Legend</div>
+      <div id="detail-legend" style="background-color: #000; height: 240px; position: absolute; bottom: 0; right: 50px; padding: 10px 10px 0px; transition: 0.5s ease-in-out; border-top: solid 1px rgba(255,255,255,0.6)">
+        <span class="close-icon" id="closeLegend" style="background-image: url('img/close.svg');" onclick="changeLegend()"></span>
         <div class="panel-text" style="margin-bottom: 10px; font-size: 14px;">Legend</div>
         <img width="280px;" src="img/detail-legend.svg" />
         <div id="orbit-svg" style="float: left;">
@@ -310,6 +322,20 @@ img{
         document.getElementById("detail-legend").style.display = "none";
     }
 
+    var showLegend = true
+    function changeLegend() {
+      if(showLegend === true) {
+        document.getElementById("detail-legend").style.display = "none"
+        document.getElementById("detail-legend__btn").style.display = "block"
+        showLegend = false
+      } else {
+        document.getElementById("detail-legend").style.display = "block"
+        document.getElementById("detail-legend__btn").style.display = "none"
+        showLegend = true
+      }
+    }
+
+
     function showLeftDetail(obj) {
       if(obj.id === 'showNavigation') {
         if(showLeft === false) {
@@ -339,18 +365,19 @@ img{
       .data(positions).enter().append("circle")
       .attr("cx", function(d,i) { return 34*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 80; })
       .attr("cy", function(d,i) { return 34*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; })
-      .attr("r", 3).style("fill", "white").style("opacity", 0.6).style("cursor", "pointer")
-      .on("mouseover", function(d,i) {
-        d3.select(this).attr("r", 6).style("opacity", 1)
-        .attr("cx", function() { return 40*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 80; })
-        .attr("cy", function() { return 40*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; });
-        position.text(positions[i]);
-      })
-      .on("mouseout", function(d,i) {
-        d3.select(this).attr("r", 4.5).style("opacity", 0.6)
-        .attr("cx", function() { return 38*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 80; })
-        .attr("cy", function() { return 38*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; });
-      });
+      .attr("r", 3).style("fill", "white").style("opacity", 0.6)
+      // .style("cursor", "pointer")
+      // .on("mouseover", function(d,i) {
+      //   d3.select(this).attr("r", 6).style("opacity", 1)
+      //   .attr("cx", function() { return 40*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 80; })
+      //   .attr("cy", function() { return 40*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; });
+      //   position.text(positions[i]);
+      // })
+      // .on("mouseout", function(d,i) {
+      //   d3.select(this).attr("r", 4.5).style("opacity", 0.6)
+      //   .attr("cx", function() { return 38*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 80; })
+      //   .attr("cy", function() { return 38*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; });
+      // });
 
       var benefits = ["Provide mental health benefits", "Know options for mental health care available", "Has employer discussed mental health", "Offer resources to learn more about mental health"];
 
@@ -647,7 +674,7 @@ img{
     let recPosX, recPosY, recWidth, recHeight, endPosX, endPosY;
 
     // js 禁用鼠标右键功能
-    document.oncontextmenu = () => false;
+    // document.oncontextmenu = () => false;
     function mousePressed(e) {
       //判断是否在svg区域上，是的话禁用鼠标
       // console.log(d3.event.target,'d3.event.target.localName')
