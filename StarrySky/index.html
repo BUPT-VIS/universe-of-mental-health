@@ -188,6 +188,15 @@ img{
   cursor: pointer;
 }
 
+.legend-text {
+  position: absolute;
+  bottom: 10px;
+  font-size: 12px;
+  width: 150px;
+  text-align: center;
+  margin-left: 6px;
+}
+
 /*css部分*/
 
 </style>
@@ -202,7 +211,7 @@ img{
 <div class="title">The Universe of Mental Health in Tech Company</div>
 <span class="triangle"></span>
 
-<span class="interaction-into">Click the qleft mouse button to select, click the right mouse button to drag, and scroll the wheel to zoom. <span class="close-icon" style="background-image: url('img/close-black.svg'); top: 15px; right: 25px;" onclick="this.parentNode.style.display = 'none'; document.getElementsByClassName('triangle')[0].style.display = 'none';"></span></span>
+<span class="interaction-into">Click the qleft mouse button to select, click the right mouse button to drag, and scroll the wheel to zoom. <span class="close-icon" style="background-image: url('img/close-black.svg'); margin-right: -10px;" onclick="this.parentNode.style.display = 'none'; document.getElementsByClassName('triangle')[0].style.display = 'none';"></span></span>
 
 <!-- 左边栏区域 -->
 <div class="left-side">
@@ -249,7 +258,7 @@ img{
     </div>
     <!-- 细节图 -->
     <div class="right-panel">
-      <span class="close-icon" style="background-image: url('img/close.svg'); top: 20px; right: 20px;" onclick="closeDetail()"></span>
+      <span class="close-icon" style="background-image: url('img/close.svg');" onclick="closeDetail()"></span>
       <div class="panel-title">Planet Detail</div>
       <div class="panel-text" style="margin-bottom: 20px;">Please CLICK one of the elements for analyizing:</div>
       <div id="empty-container">
@@ -260,8 +269,12 @@ img{
       <div id="detail-legend" style="background-color: #000; width: 340px; height: 240px; position: absolute; bottom: 0; right: 50px; padding: 20px 0 0 0; transition: 0.5s ease-in-out; border-top: solid 1px rgba(255,255,255,0.6)">
         <div class="panel-text" style="margin-bottom: 10px; font-size: 14px;">Legend</div>
         <img width="280px;" src="img/detail-legend.svg" />
-        <div id="orbit-svg" style="float: left;"></div>
-        <div id="pos-svg" style="float: left;"></div>
+        <div id="orbit-svg" style="float: left;">
+          <div id="orbit-span" class="legend-text"></div>
+        </div>
+        <div id="pos-svg" style="float: left;">
+          <div id="pos-span" class="legend-text"></div>
+        </div>
       </div>
     </div>
 </div>
@@ -322,11 +335,11 @@ img{
       .style("font-size", 12)
       .style("text-anchor", "middle");
 
-    posSVG.selectAll("circle")
+    var posCircles = posSVG.selectAll("circle")
       .data(positions).enter().append("circle")
-      .attr("cx", function(d,i) { return 38*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 80; })
-      .attr("cy", function(d,i) { return 38*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; })
-      .attr("r", 4.5).style("fill", "white").style("opacity", 0.6).style("cursor", "pointer")
+      .attr("cx", function(d,i) { return 34*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 80; })
+      .attr("cy", function(d,i) { return 34*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; })
+      .attr("r", 3).style("fill", "white").style("opacity", 0.6).style("cursor", "pointer")
       .on("mouseover", function(d,i) {
         d3.select(this).attr("r", 6).style("opacity", 1)
         .attr("cx", function() { return 40*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 80; })
@@ -339,31 +352,65 @@ img{
         .attr("cy", function() { return 38*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; });
       });
 
-      var benefits = ["provide mental health benefits", "know options for mental health care available", "Has employer discussed mental health", "offer resources to learn more about mental health"];
+      var benefits = ["Provide mental health benefits", "Know options for mental health care available", "Has employer discussed mental health", "Offer resources to learn more about mental health"];
 
       var befSVG = d3.select("#orbit-svg").append("svg").attr("height", 150).attr("width", 160).attr("transform", "translate(0,0)");
 
-      var benifit = befSVG.append("text")
-      .attr("transform", "translate(80, 130)")
-      .attr("dy", 7)
-      .style("fill", "white")
-      .style("font-size", 12)
-      .style("text-anchor", "middle");
+      // var benifit = befSVG.append("text")
+      // .attr("transform", "translate(80, 130)")
+      // .attr("dy", 7)
+      // .style("fill", "white")
+      // .style("font-size", 12)
+      // .style("text-anchor", "middle")
+      // .append('tspan');
 
-      befSVG.selectAll("ellipse")
+      var benefitCircles = befSVG.selectAll("ellipse")
       .data(benefits).enter().append("ellipse")
       .attr("cx", 80).attr("cy", 60).attr("rx", 12).attr("ry", 30)
-      .style("stroke", "#fff").style("stroke-width", 1).style("stroke-dasharray", "1")
-      .style("fill", "none")
+      .style("stroke", "#595959").style("stroke-width", 1).style("stroke-dasharray", "1")
+      .style("fill", "transparent")
       .attr("transform", function(d,i) {
         return "rotate(" + (45*i) + ",80 60)";
       })
-      .on("mouseover", function(d,i) {
-        benifit.text(benefits[i]);
-      })
-      .on("mouseout", function(d,i) {
-        benifit.text('');
-      });
+      // .on("mouseover", function(d,i) {
+      //   d3.select(this).style("stroke", "#fff")
+      //   benifit.text(benefits[i]);
+      // })
+      // .on("mouseout", function(d,i) {
+      //   d3.select(this).style("stroke", "#595959")
+      //   benifit.text('');
+      // });
+
+      let beneCount = 0
+      let posCount = 0
+      setInterval(function() {
+        if(beneCount < benefits.length) {
+          benefitCircles.style("stroke", function(d, i) {
+            if(i === beneCount) {
+              document.getElementById('orbit-span').innerHTML = benefits[i]
+              // benifit.text();
+              return "#fff"
+            } else {
+              return "#595959"
+            }
+          })
+          beneCount += 1
+        } else {
+          beneCount = 0
+        }
+
+        if(posCount < positions.length) {
+          posCircles.attr("r", (d, i)=>{if(i === posCount) return 6; else return 3;}).style("opacity", (d, i)=>{if(i === posCount) return 1; else return 0.6;})
+            .attr("cx", function(d,i) {if(i === posCount) return 40*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 80; else return 38*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 80; })
+            .attr("cy", function(d,i) {if(i === posCount) return 40*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64; else return 38*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 64;});
+            document.getElementById('pos-span').innerHTML = positions[posCount]
+            posCount += 1
+        } else {
+          posCount = 0
+        }
+      }, 1000)
+
+      
 
     // 花瓣
     var starSVG = d3.select("#color-legend").append("svg").attr("height", 90).attr("width", 360);
@@ -613,7 +660,7 @@ img{
               recHeight = 0;
               recPosX = mouseX;
               recPosY = mouseY;
-              console.log(recPosX, recPosY);
+              // console.log(recPosX, recPosY);
           break;
           case RIGHT:
               // 记录鼠标相对元素的偏移量
@@ -636,6 +683,7 @@ img{
           case LEFT:
             recWidth = mouseX - recPosX;
             recHeight = mouseY - recPosY;
+            // console.log(recWidth, 'recWidth')
           break;
           case RIGHT:
             // 根据偏移量修改位置坐标
@@ -655,6 +703,8 @@ img{
       if(e.toElement.tagName === 'CANVAS') {
         switch(mouseButton) {
           case LEFT:
+              recWidth = Math.abs(recWidth)
+              recHeight = Math.abs(recHeight)
               useLasso();
           break;
           case RIGHT:
@@ -671,7 +721,7 @@ img{
         document.getElementsByClassName('drag-icon')[0].style.opacity = 1
         document.getElementsByClassName('right-side')[0].style.right = "-292px"
         document.getElementById("showBtn").setAttribute("value", "true")
-        console.log(document.getElementById("showBtn").getAttribute("value"))
+        // console.log(document.getElementById("showBtn").getAttribute("value"))
       } else if(btn.id == 'drag') {
         buttonState = 'drag'
         document.getElementsByClassName('drag-icon')[0].style.opacity = .6
