@@ -1,0 +1,149 @@
+.left-side {
+    background-color: transparent;
+    position: absolute;
+    top: 60px;
+    left: 10px;
+    z-index: 5;
+      transition: 0.5s ease-in-out;
+  }
+  .right-side {
+    right: -450px;
+    background-color: transparent;
+    position: absolute;
+    top: 60px;
+    z-index: 10;
+    height: 90%;
+    transition: 0.5s ease-in-out;
+  }
+  .left-panel {
+    width: 380px;
+    padding: 10px 0 10px 20px;
+    border: 0.8px #ccc solid;
+    border-radius: 10px;
+    background-color: rgba(0,0,0,0.7);
+  }
+  .right-panel {
+    padding: 10px 0 10px 20px;
+    border: 0.8px #ccc solid;
+    border-radius: 10px;
+    background-color: black;
+    margin-left: 10px;
+    position: relative;
+    transition: 0.5s ease-in-out;
+    background-color: rgba(0,0,0,1);
+  }
+  .panel-title {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  .panel-text {
+    font-family: Microsoft YaHei UI;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+
+  #empty-container {
+    display: flex;
+    /* justify-content: center; */
+    flex-direction: column;
+    height: 80%;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  #empty-container img {
+    opacity: .5;
+    width: 150px;
+  }
+  
+  #empty-container p {
+    margin: 20px 0; 
+    color: #999
+  }
+
+  .left-show__btn {
+    position: absolute;
+    left: 400px;
+    transform: rotate(180deg);
+    top: 46%;
+}
+
+.left-show__btn:hover {
+  cursor: pointer;
+}
+
+.right-desc__box {
+    display: flex;
+    height: 100%;
+    width: 400px;
+    flex-wrap: wrap;
+    border: 1px #eee solid;
+    background-color: rgba(0,0,0);
+    /* background-color: #000; */
+    border-radius: 20px;
+    color: #fff
+}
+
+.desc-box__title {
+padding: 10px 0 10px 20px;
+height: 5%;
+}
+
+.desc-box__title span {
+    font-size: 14px;
+font-weight: 200;
+}
+
+.right-side {
+    display: flex;
+}
+
+.button-box {
+    margin-right: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+   
+   @-moz-keyframes slidedown {
+    from { -moz-transform: translateY(0); }
+    to { -moz-transform: translateY(-20); }
+   }
+   
+   @-webkit-keyframes slidedown {
+    from { -webkit-transform: translateY(0); }
+    to { -webkit-transform: translateY(-20); }
+   }
+   
+   @keyframes slidedown {
+    from { transform: translateY(0); }
+    to { transform: translateY(-20); }
+   }
+   
+   .slider-interval {
+    position: fixed;
+    width: 300px;
+    bottom: 30%;
+    left: 30%
+   }
+
+   .size-sliderbar {
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    /* width: 500px; */
+    transform: translateX(-50%);
+    z-index: 5;
+  }
+
+  .slidedown {
+    -moz-animation-name: slidedown;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: linear;
+    -webkit-animation-name: slidedown;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: linear;
+    animation-name: slidedown;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+   }

@@ -1,0 +1,130 @@
+#color-legend {
+    height: 90px;
+    width: 360px;
+    margin-bottom: 10px;
+  }
+  #radius-legend {
+    height: 80px;
+    width: 200px;
+    margin: 10px 0 0 10px;
+  }
+  #radius-legend img {
+    width: 100%;
+  }
+  #flicker-legend {
+    height: 50px;
+    width: 360px;
+  }
+
+@keyframes scaleDraw {  /*定义关键帧、scaleDrew是需要绑定到选择器的关键帧名称*/
+    0%{
+        transform: scale(1);  /*开始为原始大小*/
+    }
+    25%{
+        transform: scale(0.4);
+    }
+    50%{
+        transform: scale(1);
+    }
+    75%{
+        transform: scale(0.4);
+    }
+  }
+
+  .flicker{
+    shape-rendering: crispEdges;
+    margin: 15px 20px 0 20px;
+    float: left;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255,255,255,0.6);
+    border: solid 0px rgba(255,255,255,0.6);
+    border-radius: 50%;
+    /*background-size: 150px 150px;*/
+    -webkit-animation-name: scaleDraw; /*关键帧名称*/
+    -webkit-animation-timing-function: ease-in-out; /*动画的速度曲线*/
+    -webkit-animation-iteration-count: infinite;  /*动画播放的次数*/
+    /*-webkit-animation-duration: 2s; 动画所花费的时间*/
+  }
+  
+.ring {
+    float: left;
+    border: solid 1px #fff;
+    border-radius: 50%;
+    shape-rendering: crispEdges;
+}
+.image-legend {
+    width: 250px;
+    padding: 10px 0 50px 0;
+}
+img{  
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#pos-legend {
+    width: 140px;
+    float: right;
+}
+
+.legend-text {
+    position: absolute;
+    bottom: 10px;
+    font-size: 12px;
+    width: 150px;
+    text-align: center;
+    margin-left: 6px;
+}
+
+#detail-legend__btn {
+    font-size: 14px;
+    display: none;
+    float: right;
+    margin-right: 40px;
+}
+#detail-legend__btn:hover {
+    cursor: pointer;
+}
+
+#defaultCanvas0 {
+    position: absolute;
+    /* top: 800px; */
+}
+
+#selectBenefits {
+    position: fixed;
+    top: 220px;
+    right: 200px;
+}
+
+#selectOptions {
+    position: fixed;
+    top: 280px;
+    right: 200px;
+}
+
+#selectWellness {
+    position: fixed;
+    top: 340px;
+    right: 200px;
+}
+
+#selectSeekHelp {
+    position: fixed;
+    top: 400px;
+    right: 200px;
+}
+
+#selectAnonymity {
+    position: fixed;
+    top: 460px;
+    right: 200px;
+}
+
+#selectLeave {
+    position: fixed;
+    top: 520px;
+    right: 200px;
+}

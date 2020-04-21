@@ -1,0 +1,14 @@
+#tree-nav {
+    height: 170px;
+    width: 360px;
+  }
+
+.svg-tree {
+    border: 0
+}
+
+.link {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 3px;
+}

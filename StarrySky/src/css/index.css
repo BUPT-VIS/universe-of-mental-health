@@ -1,0 +1,133 @@
+body {
+  background-color: black;
+  color: white;
+  position: fixed;
+  height: 100%;
+  width: 100%
+}
+
+.title {
+  font-size: 30px;
+  font-family: Gilroy;
+  text-align: center;
+}
+
+p,h1 {
+  margin: 2px;
+  font-size: 14px;
+}
+
+#svgContainer {
+ display: none;
+ height: 90%;
+ overflow-y: scroll;
+ overflow-x: hidden;
+ transition: 0.5s ease-in-out;
+}
+
+#svgWrapper {
+ margin-top: -50px;
+}
+
+.system {
+ display: inline-block;
+ position: relative;
+ vertical-align: middle;
+ width: 50px;
+ height: 50px;
+}
+
+.close-icon {
+  background-position:center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+  /* position: absolute; */
+  float: right;
+  margin-right: 10px;
+}
+
+.detail-icon {
+ background-image: url('../../img/arrow.svg');
+ background-position:center;
+ background-size: 100% 100%;
+ background-repeat: no-repeat;
+ width: 25px;
+ height: 25px;
+ /*transition: 0.25s ease-in-out;*/
+}
+
+.drag-icon {
+ background-image: url('../../img/drag-icon.png');
+ background-position:center;
+ background-size: 100% 100%;
+ background-repeat: no-repeat;
+ width: 40px;
+ height: 40px;
+}
+
+.lasso-icon {
+ background-image: url('../../img/lasso-icon.png');
+ background-position:center;
+ background-size: 100% 100%;
+ background-repeat: no-repeat;
+ width: 40px;
+ height: 40px;
+}
+
+.interact-button {
+ display: flex;
+ flex-wrap: wrap;
+ height: 60px;
+ width: 50px;
+ color: #fff;
+ justify-content: center;
+ cursor: pointer;
+}
+
+.move-state {
+ cursor:move;
+}
+
+.sys__title {
+ position: fixed;
+ top: 5%;
+ left: 50%;
+ transform:  translateX(-50%);
+ z-index: 5;
+ color: #fff;
+ font-size: 40px;
+ font-weight: 200;
+ white-space: nowrap;
+}
+
+.interaction-into {
+ background-color: #fff;
+ left: 50%;
+ transform: translateX(-50%);
+ border-radius: 20px;
+ color: #000;
+ position: fixed;
+ top: 60px;
+ z-index: 5;
+ padding: 7px 20px;
+ font-size: 12px;
+ display: flex;
+ align-items: center;
+}
+
+.triangle {
+  width: 30px;
+  height: 30px;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  top: 50px;
+  z-index: 5;
+  background-color: #fff;
+}
+
+
+
