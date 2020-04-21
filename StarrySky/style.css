@@ -1,3 +1,196 @@
+body {
+  background-color: black;
+  color: white;
+  position: fixed;
+  height: 100%;
+  width: 100%
+}
+#popupBox {
+  /*color: black;
+  background-color: #ddd;*/
+  color: white;
+  background-color: black;
+  border: solid 1px rgba(255,255,255,0.4);
+  padding: 6px 0 6px 10px;
+  font-size: 12px;
+  /* line-height: 14px; */
+  line-height: 22px;
+  z-index: 15;
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgba(255,255,255,0.5);
+  display: none;
+  position: absolute;
+  width: 300px;
+}
+.title {
+  font-size: 30px;
+  font-family: Gilroy;
+  text-align: center;
+}
+.left-side {
+  background-color: transparent;
+  position: absolute;
+  top: 60px;
+  left: 10px;
+  z-index: 5;
+    transition: 0.5s ease-in-out;
+}
+.right-side {
+  right: -450px;
+  background-color: transparent;
+  position: absolute;
+  top: 60px;
+  z-index: 10;
+  height: 90%;
+  transition: 0.5s ease-in-out;
+}
+.left-panel {
+  width: 380px;
+  padding: 10px 0 10px 20px;
+  border: 0.8px #ccc solid;
+  border-radius: 10px;
+  background-color: rgba(0,0,0,0.7);
+}
+.right-panel {
+  padding: 10px 0 10px 20px;
+  border: 0.8px #ccc solid;
+  border-radius: 10px;
+  background-color: black;
+  margin-left: 10px;
+  position: relative;
+  transition: 0.5s ease-in-out;
+  background-color: rgba(0,0,0,1);
+}
+.panel-title {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+.panel-text {
+  font-family: Microsoft YaHei UI;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+#tree-nav {
+  height: 170px;
+  width: 360px;
+}
+#color-legend {
+  height: 90px;
+  width: 360px;
+  margin-bottom: 10px;
+}
+#radius-legend {
+  height: 80px;
+  width: 200px;
+  margin: 10px 0 0 10px;
+}
+#radius-legend img {
+  width: 100%;
+}
+#flicker-legend {
+  height: 50px;
+  width: 360px;
+}
+@keyframes scaleDraw {  /*定义关键帧、scaleDrew是需要绑定到选择器的关键帧名称*/
+  0%{
+      transform: scale(1);  /*开始为原始大小*/
+  }
+  25%{
+      transform: scale(0.4);
+  }
+  50%{
+      transform: scale(1);
+  }
+  75%{
+      transform: scale(0.4);
+  }
+}
+.flicker{
+  shape-rendering: crispEdges;
+  margin: 15px 20px 0 20px;
+  float: left;
+  width: 20px;
+  height: 20px;
+  background-color: rgba(255,255,255,0.6);
+  border: solid 0px rgba(255,255,255,0.6);
+  border-radius: 50%;
+  /*background-size: 150px 150px;*/
+  -webkit-animation-name: scaleDraw; /*关键帧名称*/
+  -webkit-animation-timing-function: ease-in-out; /*动画的速度曲线*/
+  -webkit-animation-iteration-count: infinite;  /*动画播放的次数*/
+  /*-webkit-animation-duration: 2s; 动画所花费的时间*/
+}
+.ring {
+  float: left;
+  border: solid 1px #fff;
+  border-radius: 50%;
+  shape-rendering: crispEdges;
+}
+.image-legend {
+  width: 250px;
+  padding: 10px 0 50px 0;
+}
+img{  
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+#pos-legend {
+  width: 140px;
+  float: right;
+}
+.element:hover {
+  cursor: pointer;
+}
+
+#empty-container {
+  display: flex;
+  /* justify-content: center; */
+  flex-direction: column;
+  height: 80%;
+  align-items: center;
+  justify-content: center;
+}
+#empty-container img {
+  opacity: .5;
+  width: 150px;
+}
+#empty-container p {
+  margin: 20px 0; 
+  color: #999
+}
+
+.left-show__btn {
+    position: absolute;
+    left: 400px;
+    transform: rotate(180deg);
+    top: 46%;
+}
+
+.left-show__btn:hover {
+  cursor: pointer;
+}
+
+.legend-text {
+  position: absolute;
+  bottom: 10px;
+  font-size: 12px;
+  width: 150px;
+  text-align: center;
+  margin-left: 6px;
+}
+
+#detail-legend__btn {
+  font-size: 14px;
+  display: none;
+  float: right;
+  margin-right: 40px;
+}
+#detail-legend__btn:hover {
+  cursor: pointer;
+}
+
 p,h1 {
   margin: 2px;
   font-size: 14px;
