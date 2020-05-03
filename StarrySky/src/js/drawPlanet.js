@@ -2,7 +2,7 @@
         /* 开始分隔, 分割后的数据用来直接data()绑定,排序的转折点 */
         // console.log("luna",width,dataSet);
         var sampleNum;
-        if (width == 380) {
+        if (width == 350) {
           sampleNum = 4;
           // console.log("4")
         } else {
@@ -27,11 +27,11 @@
         /* 通过循环row数组达到每行绘制的效果 */
         rowDataSet.forEach((item, i) => {
         let row = svg.append('g').attr('rowKey', i).attr('transform', function() {
-          return 'translate(50, '+ (i*110+90) +')'
+          return 'translate(60, '+ (i*110+90) +')'
         })
         let g = row.selectAll('.element').data(item).enter().append('g').attr('class','element')
         .attr('transform', function(d, i) {
-          return 'translate(' + (i*90-10) +','+ 0 +'), rotate(0)'
+          return 'translate(' + (i*90-30) +','+ 0 +'), rotate(0)'
           // return 'translate(' + posData[i]['x'] +','+ posData[i]['y'] +'), rotate(0)'
         })
         .on("mouseover", function(d, i) {

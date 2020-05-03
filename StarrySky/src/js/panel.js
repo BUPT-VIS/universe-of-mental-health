@@ -6,18 +6,19 @@ document.getElementById("popupBox").style.display = "none";
 
 function showDetail() {
     var showDetail = document.getElementById("showBtn").getAttribute("value");
-    // console.log(showDetail)
     if (showDetail == "false") {
       drawPlanet(newDataSet, windowWidth-90);
       document.getElementsByClassName("left-side")[0].style.display = "none";
       document.getElementsByClassName("detail-icon")[0].style['background-image'] = '';
-      document.getElementsByClassName("right-side")[0].style.right = "10px";
+      // document.getElementsByClassName("right-side")[0].style.right = "10px";
+      document.getElementsByClassName("right-panel")[0].style.width = '100%'
       document.getElementById("showBtn").setAttribute("value", "true");
     }
     else if(showDetail == "true") {
-      drawPlanet(newDataSet, 380);
+      drawPlanet(newDataSet, 350);
       document.getElementsByClassName("left-side")[0].style.display = "block";
       document.getElementsByClassName("detail-icon")[0].style['background-image'] = 'url(img/arrow.svg)';
+      document.getElementsByClassName("right-panel")[0].style.width = 350 + 'px';
       document.getElementById("showBtn").setAttribute("value", "false");
     }
   }

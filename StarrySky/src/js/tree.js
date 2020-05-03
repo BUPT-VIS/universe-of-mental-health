@@ -36,7 +36,9 @@ var root = {
     }
   ]
 }
-  
+
+var highlightColor = '#FF00B1'
+var this_node = null
 //1. 根据root整理出数结构的数据
 const hierarchyData = d3.hierarchy(root)
                         .sum(function(d){
@@ -45,7 +47,7 @@ const hierarchyData = d3.hierarchy(root)
 // console.log(hierarchyData, 'hierarchyData')
 //2. 生成树状布局(数据获取器)
 var tree = d3.tree()
-.size([180, 230])
+.size([180, 200])
 .separation(function (a, b) {
   return (a.parent === b.parent ? 1 : 2) / a.depth
 })
@@ -59,7 +61,7 @@ var links = treeData.links();
 //6. 开始绘制树！
 var treeSvg = d3.select("#tree-nav")
       .append("svg")			//在<body>中添加<svg>
-      .attr("width", 360)	//设定<svg>的宽度属性
+      .attr("width", 350)	//设定<svg>的宽度属性
       .attr("height", 170)
       .append("g")
       .attr('transform','translate(80, -10)')
@@ -72,17 +74,14 @@ var link = treeSvg.selectAll(".link")
 .data(links)
 .enter()
 .append("path")
-.style("fill", "none")
-.style("stroke", function(d) {
+.attr("fill", "none")
+.attr("stroke", function(d) {
   if (d.source.data.name == 'N Tech-role' && d.target.data.name == 'N') {
     return "#aaa";
   } else  return "white";
 })
-.style("stroke-width", 2.5)
+.attr("stroke-width", 2.5)
 .attr('d', horizontal)
-.on("click", function(d) {
-    // console.log(d.source.data.name, d.target.data.name);
-});
 
 var node = treeSvg.selectAll(".node")
 .data(nodes)
@@ -93,31 +92,34 @@ var node = treeSvg.selectAll(".node")
   
 var nodesCircles = node.append("circle")
 .attr("r", 5)
-.style("fill", function(d) {
+.attr("fill", function(d) {
     if (d.data.name == 'N') {
       return "#aaa";
-    } else  return "white";
+    } else {
+      return "white";
+    }
 })
 .style("cursor", "pointer")
 .attr('class', function(d) {
   return d.data.name
 })
 .on("mouseover", function(d,i) {
-  d3.select(this).style("stroke", "#00ffd4").style("stroke-width", 3);
+  d3.select(this).attr("r", 6)
 })
 .on("mouseout", function(d,i) {
-  d3.select(this).style("stroke", "none");
+  d3.select(this).attr("r", 5)
 })
 .on("click", function(d) {
-  var current_node = d;
-  console.log(current_node.depth);
+  this_node = d;
+  current_node = d;
+  // console.log(current_node.depth);
   var parent_nodes = [current_node.data.name];
-    var parent_links = [];
+  var parent_links = [];
   for (var depth = 0; depth < d.depth; depth++) {
         var current_link = current_node.data.name;
-    current_node = current_node.parent;
+        current_node = current_node.parent;
         current_link = current_node.data.name + " To " + current_link;
-    parent_nodes.push(current_node.data.name);
+        parent_nodes.push(current_node.data.name);
         parent_links.push(current_link);
   }
   // console.log(parent_nodes, parent_links);
@@ -125,25 +127,27 @@ var nodesCircles = node.append("circle")
   let selectedNode = d3.select(this).node() //获取当前节点
   selectedNodeName = selectedNode.getAttribute('class') //获取当前节点的className
   // console.log(selectedNodeName, 'selectedNodeName')
-  console.log(selectedNodeName)
+  // console.log(selectedNodeName)
   switch(selectedNodeName) {
     case "Self-employed":
       posData = []
-      for (let i in data) {
+      for (let i in data.rows) {
         //if (i < 100) {
+          // console.log(data[i]['Are you self-employed?'], '?@@@!!!')
+          let item = data.rows[i].obj;
             posData.push({
                 // 画面中心坐标 +- 比例尺
                 'id': i,
-                'self-employed': data[i]['Are you self-employed?'],
-                'IT-company': data[i]['Is your employer primarily a tech company/organization?'],
-                'pre-employers': data[i]['Do you have previous employers?'],
-                'Tech-role': data[i]['Is your primary role within your company related to tech/IT?'],
-                'x': tempWindowWidth/2 + xPosScale*data[i].x,
-                'y': tempWindowHeight/2 + yPosScale*data[i].y,
+                'self-employed': item['Are you self-employed?'],
+                'IT-company': item['Is your employer primarily a tech company/organization?'],
+                'pre-employers': item['Do you have previous employers?'],
+                'Tech-role': item['Is your primary role within your company related to tech/IT?'],
+                'x': tempWindowWidth/2 + xPosScale*item.x,
+                'y': tempWindowHeight/2 + yPosScale*item.y,
                 'ox': 0,
                 'oy': 0,
-                'condition': split(data[i]['If so, what condition(s) were you diagnosed with?'], '|'),
-                'view': data[i]['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
+                'condition': item['If so, what condition(s) were you diagnosed with?'].split('|'),
+                'view': item['Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?']
             })
         } 
       // console.log(posData, 'posData????')
@@ -204,54 +208,51 @@ var nodesCircles = node.append("circle")
       // console.log(posData, 'posData')
     break;
     default:
-      // console.log('default!!!')
-      // console.log(selectedNodeName, 'selectedNodeName')
+   
     break;
   }
-  // console.log(posData, 'posData')
-  
-  // console.log(posData, 'success')
-
   nodesCircles.each(function(d) {
-    if (parent_nodes.indexOf(d.data.name) > -1) {
-      d3.select(this).style("fill", "#00ffd4");
-    } else {
-      d3.select(this). style("fill", "white");
-    }
     if (d.data.name == 'N') {
-      d3.select(this).style("fill", "#aaa")
+      d3.select(this).attr("fill", "#aaa")
     }
   });
 
   link.each(function(d) {
       if (parent_links.indexOf(d.source.data.name + " To " + d.target.data.name) > -1) {
-          d3.select(this).style("stroke", "#00ffd4");
+          d3.select(this).attr("stroke", "#00ffd4");
       } else {
-          d3.select(this). style("stroke", "white");
+          d3.select(this). attr("stroke", "white");
       }
       if (d.source.data.name == 'N Tech-role' && d.target.data.name == 'N') {
-      d3.select(this).style("stroke", "#aaa")
+      d3.select(this).attr("stroke", "#aaa")
     }
   });
 })
+
   setInterval(function() {
     let random = Math.round(Math.random() * ((nodes.length - 1) + 1))
     nodesCircles.attr("stroke", function(d, i) {
       if(i === random) {
-        return "#00ffd4"
-      }
-    }).attr("stroke-width", function(d, i) {
-      // let random = Math.round(Math.random() * ((nodes.length - 1) + 1))
-      if(i === random) {
-        return "3px"
-      }
+        // return "#00ffd4"
+        return '#ff99e5'
+      } 
     }).attr("fill", function(d, i) {
       // let random = Math.round(Math.random() * ((nodes.length - 1) + 1))
       if(i === random) {
-        return "#00ffd4"
+        return '#ff99e5'
       }
+
+      if(this_node) {
+        if(((d.data.name === this_node.data.name) && (i !== random))) {
+          // console.log(d.data.name, this_node.data.name, '??##')
+          // return "#00ffd4"
+          return highlightColor
+        }
+      }
+      
+      return 'white'
+
     })
-  // console.log('sss')
 }, 1000)
 
   
@@ -259,9 +260,9 @@ var texts = node.append("text")
 .attr("dx", function(d) { return d.children ? -8 : 8; })
 .attr("dy", 4)
 .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
-.style("fill", "#aaa")
-.style("stroke", "#aaa")
-.style("stroke-width", 0.1)
+.attr("fill", "white")
+.attr("stroke", "white")
+.attr("stroke-width", 0.1)
 .style("font-size", 10)
 .text(function(d) { 
   if (d.depth > 0) {    

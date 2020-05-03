@@ -41,8 +41,8 @@ p,h1 {
   background-position:center;
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  width: 12px;
-  height: 12px;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
   /* position: absolute; */
   float: right;

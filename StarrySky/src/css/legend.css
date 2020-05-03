@@ -80,9 +80,9 @@ img{
 
 #detail-legend__btn {
     font-size: 14px;
-    display: none;
-    float: right;
-    margin-right: 40px;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
 }
 #detail-legend__btn:hover {
     cursor: pointer;

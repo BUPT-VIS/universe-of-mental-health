@@ -65,36 +65,38 @@
     var colors = ["#eb4f27", "#f19637", "#fcea4f", "#9bfb4e", "#69e282", "#6ee5b9","#68e2fc", "#407bf7", "#425ef5", "#5d30f5", "#c333f1", "#eb3a4b"].reverse(); //
 
     var condition = starSVG.append("text")
-      .attr("transform", "translate(100, 45)")
-      .attr("dy", 7)
-      .style("fill", "white")
-      .style("font-size", 12);
+        .attr("transform", "translate(100, 45)")
+        .attr("dy", 7)
+        .style("fill", "white")
+        .style("font-size", 12)
+        .text('<- Hover the circle');
+
 
     starSVG.selectAll("circle")
       .data(colors).enter().append("circle")
-      .attr("cx", function(d, i) { return 24*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46; })
-      .attr("cy", function(d, i) { return 24*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45; })
-      .attr("r", 10).style("fill", function(d) { return d; })
-      .style("opacity", 0.8)
+      .attr("cx", function(d, i) { return 12*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46; })
+      .attr("cy", function(d, i) { return 12*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45; })
+      .attr("r", 12).style("fill", function(d) { return d; })
+      .style("opacity", 1)
       .on("mouseover", function(d, i) {
           d3.select(this)
-          .attr("r", 12)
+          .attr("r", 15)
           .attr("cx", function() {
-              return 27*Math.cos(i*2*Math.PI/12 - 0.5*Math.PI) + 46;
+              return 15*Math.cos(i*2*Math.PI/12 - 0.5*Math.PI) + 46;
           })
           .attr("cy", function() {
-              return 27*Math.sin(i*2*Math.PI/12 - 0.5*Math.PI) + 45;
+              return 15*Math.sin(i*2*Math.PI/12 - 0.5*Math.PI) + 45;
           });
           condition.text(conditions[i]);
       })
       .on("mouseout", function(d,i) {
           d3.select(this)
-          .attr("r", 10)
+          .attr("r", 12)
           .attr("cx", function() {
-              return 24*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
+              return 12*Math.cos(i*2*Math.PI/12 + 1.5*Math.PI) + 46;
           })
           .attr("cy", function() {
-              return 24*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
+              return 12*Math.sin(i*2*Math.PI/12 + 1.5*Math.PI) + 45;
           });
-          condition.text('');
+          condition.text('<- Hover the circle');
       });

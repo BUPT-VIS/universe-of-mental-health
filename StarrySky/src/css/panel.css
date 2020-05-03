@@ -1,3 +1,17 @@
+
+::-webkit-scrollbar{
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb{
+  border-radius: 1em;
+  background-color: rgba(50,50,50,.3);
+}
+::-webkit-scrollbar-track{
+  border-radius: 1em;
+  background-color: rgba(50,50,50,.1);
+}
+
 .left-side {
     background-color: transparent;
     position: absolute;
@@ -16,25 +30,29 @@
     transition: 0.5s ease-in-out;
   }
   .left-panel {
-    width: 380px;
-    padding: 10px 0 10px 20px;
+    width: 350px;
+    padding: 15px 0 15px 20px;
     border: 0.8px #ccc solid;
     border-radius: 10px;
     background-color: rgba(0,0,0,0.7);
   }
   .right-panel {
-    padding: 10px 0 10px 20px;
+    width: 350px;
+    padding: 15px 0 15px 20px;
     border: 0.8px #ccc solid;
     border-radius: 10px;
     background-color: black;
     margin-left: 10px;
     position: relative;
-    transition: 0.5s ease-in-out;
-    background-color: rgba(0,0,0,1);
+    /* transition: 0.5s ease-in-out; */
+    background-color: rgba(0,0,0,.7);
+    /* overflow-y: scroll; */
   }
+
   .panel-title {
     font-size: 20px;
     margin-bottom: 6px;
+    font-weight: 800;
   }
   .panel-text {
     font-family: Microsoft YaHei UI;
@@ -63,7 +81,7 @@
 
   .left-show__btn {
     position: absolute;
-    left: 400px;
+    left: 370px;
     transform: rotate(180deg);
     top: 46%;
 }

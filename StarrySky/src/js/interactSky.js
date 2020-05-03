@@ -84,42 +84,46 @@ function mouseDragged(e) {
 
 // 滚轮改变缩放没有过渡效果，但触控板连续变化
 function mouseWheel(event) {
+// console.log(event, 'event')
+if(event.toElement.tagName === 'CANVAS') {
 // delta = 125 滚动一格的默认高度值，wheelScale 缩放比率
 if (event.delta < 0) {
-    wheelScale = 1.25; // 上滚放大
-    R *= (1*wheelScale); // 错位感
+  wheelScale = 1.25; // 上滚放大
+  R *= (1*wheelScale); // 错位感
 } else {
-    wheelScale = 0.8; // 下滚缩小 取倒数
-    R *= (wheelScale/1); // 错位感
+  wheelScale = 0.8; // 下滚缩小 取倒数
+  R *= (wheelScale/1); // 错位感
 }
-    // 大小按照比例缩放
-    size *= wheelScale;
+  // 大小按照比例缩放
+  size *= wheelScale;
 
-    // 放大后的终点位置
-    endPosX = windowWidth/2 + wheelScale * ((recPosX + recWidth) - windowWidth/2);
-    endPosY = windowHeight/2 + wheelScale * ((recPosY + recHeight) - windowHeight/2);
+  // 放大后的终点位置
+  endPosX = windowWidth/2 + wheelScale * ((recPosX + recWidth) - windowWidth/2);
+  endPosY = windowHeight/2 + wheelScale * ((recPosY + recHeight) - windowHeight/2);
 
-    // 放大后的起点位置
-    recPosX = windowWidth/2 + wheelScale * (recPosX - windowWidth/2);
-    recPosY = windowHeight/2 + wheelScale * (recPosY - windowHeight/2);
+  // 放大后的起点位置
+  recPosX = windowWidth/2 + wheelScale * (recPosX - windowWidth/2);
+  recPosY = windowHeight/2 + wheelScale * (recPosY - windowHeight/2);
 
-    // 放大后的长度和宽度
-    recWidth = endPosX - recPosX;
-    recHeight = endPosY - recPosY;
+  // 放大后的长度和宽度
+  recWidth = endPosX - recPosX;
+  recHeight = endPosY - recPosY;
 
-    posData.forEach((pos, i) => {
+  posData.forEach((pos, i) => {
 
-        // 偏移量 = 缩放比率 * (元素位置 - 画面中心)
-        pos.ox = wheelScale * (pos.x - windowWidth/2);
-        pos.oy = wheelScale * (pos.y - windowHeight/2);
+      // 偏移量 = 缩放比率 * (元素位置 - 画面中心)
+      pos.ox = wheelScale * (pos.x - windowWidth/2);
+      pos.oy = wheelScale * (pos.y - windowHeight/2);
 
-        // 画面中心 + 偏移量 = 元素位置
-        pos.x = windowWidth/2 + pos.ox;
-        pos.y = windowHeight/2 + pos.oy;
-    })
+      // 画面中心 + 偏移量 = 元素位置
+      pos.x = windowWidth/2 + pos.ox;
+      pos.y = windowHeight/2 + pos.oy;
+  })
 
-    // 禁用浏览器默认滚动
-    return false;
+  // 禁用浏览器默认滚动
+  return false;
+}
+
 }
 
 /* 使用套索工具 */
@@ -172,5 +176,5 @@ function useLasso() {
         document.getElementById('detail-legend').style.display = 'none'
         document.getElementsByClassName('right-side')[0].style.right = '-450px'
     }
-    document.getElementById('svgContainer').setAttribute('class', 'slidedown')
+    // document.getElementById('svgContainer').setAttribute('class', 'slidedown')
     }
