@@ -1,6 +1,6 @@
     // 职位
     var positions = ["Back-end Developer","Front-end Developer", "Supervisor/Team Lead", "DevOps/SysAdmin", "Support", "One-person shop", "Designer", "Dev Evangelist/Advocate", "Executive Leadership", "Sales", "HR", "Other"];
-    var posSVG = d3.select("#pos-svg").append("svg").attr("height", 150).attr("width", 160).attr("transform", "translate(0,0)");
+    var posSVG = d3.select("#pos-svg").append("svg").attr("height", 150).attr("width", 150).attr("transform", "translate(0,0)");
    
     var position = posSVG.append("text")
       .attr("transform", "translate(80, 130)")
@@ -16,7 +16,7 @@
       .attr("r", 3).style("fill", "white").style("opacity", 0.6)
 
     var benefits = ["Provide mental health benefits", "Know options for mental health care available", "Has employer discussed mental health", "Offer resources to learn more about mental health"];
-    var befSVG = d3.select("#orbit-svg").append("svg").attr("height", 150).attr("width", 160).attr("transform", "translate(0,0)");
+    var befSVG = d3.select("#orbit-svg").append("svg").attr("height", 150).attr("width", 150).attr("transform", "translate(0,0)");
    
     var benefitCircles = befSVG.selectAll("ellipse")
     .data(benefits).enter().append("ellipse")
