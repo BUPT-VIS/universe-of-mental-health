@@ -6,5 +6,5 @@ Our work includes an overview of the universe and a detail view of the planets. 
 
 This work won the [2020 PacificVis Visual Data Storytelling Contest Winner Award](http://vis.tju.edu.cn/pvis2020/storytelling.html) in June 2020.
 
-![detail](/Users/luna/Documents/project/universe-of-mental-health/img/detail.png)
+![](img/detail.png)
 
